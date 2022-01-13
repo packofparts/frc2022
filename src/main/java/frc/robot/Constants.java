@@ -12,4 +12,13 @@ package frc.robot;
  * <p>It is advised to statically import this class (or one of its inner classes) wherever the
  * constants are needed, to reduce verbosity.
  */
-public final class Constants {}
+public final class Constants {
+    public static final double maxSpeed = 6;
+    public static final double maxTurn = Math.toRadians(5);
+    public static final double wheelDisFromCenter = 0.5;
+
+    public static final int frontLeftSparkID = 11;
+    public static final int frontRightSparkID = 12;
+    public static final int backLeftSparkID = 13;
+    public static final int backRightSparkID = 14;
+}
