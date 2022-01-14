@@ -10,12 +10,11 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.GenericHID.Hand;
-import edu.wpi.first.wpilibj.geometry.Rotation2d;
-import edu.wpi.first.wpilibj.geometry.Translation2d;
-import edu.wpi.first.wpilibj.kinematics.ChassisSpeeds;
-import edu.wpi.first.wpilibj.kinematics.MecanumDriveKinematics;
-import edu.wpi.first.wpilibj.kinematics.MecanumDriveWheelSpeeds;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.kinematics.MecanumDriveKinematics;
+import edu.wpi.first.math.kinematics.MecanumDriveWheelSpeeds;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj.SPI;
@@ -54,19 +53,19 @@ public class DriveSubsystem extends SubsystemBase {
     }
 
     /** Creates a new DriveSubsystem. */
-    ChassisSpeeds speeds = ChassisSpeeds.fromFieldRelativeSpeeds(Constants.maxSpeed/driveJoystick.getX(Hand.kLeft),
-                                                                Constants.maxSpeed/driveJoystick.getY(Hand.kLeft),
-                                                                Constants.maxTurn/driveJoystick.getX(Hand.kRight),
+    ChassisSpeeds speeds = ChassisSpeeds.fromFieldRelativeSpeeds(Constants.maxSpeed/driveJoystick.getLeftX(),
+                                                                Constants.maxSpeed/driveJoystick.getLeftY(),
+                                                                Constants.maxTurn/driveJoystick.getRightX(),
                                                                 Rotation2d.fromDegrees(gyro.getAngle()));
 
     // ChassisSpeeds speeds = ChassisSpeeds.fromFieldRelativeSpeeds(Constants.maxSpeed/driveJoystickMain.getX(),
     // Constants.maxSpeed/driveJoystickMain.getY(),
     // Constants.maxTurn/driveJoystickSide.getX(),
     // Rotation2d.fromDegrees(gyro.getAngle()));
-    
+   
     // Convert to wheel speeds
     MecanumDriveWheelSpeeds wheelSpeeds = m_kinematics.toWheelSpeeds(speeds);
-    wheelSpeeds.normalize(Constants.maxSpeed);
+    wheelSpeeds.desaturate(Constants.maxSpeed);
 
     // Get the individual wheel speeds
     double frontLeft = wheelSpeeds.frontLeftMetersPerSecond;
