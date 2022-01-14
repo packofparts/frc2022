@@ -16,6 +16,7 @@ import edu.wpi.first.wpilibj.geometry.Translation2d;
 import edu.wpi.first.wpilibj.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.kinematics.MecanumDriveKinematics;
 import edu.wpi.first.wpilibj.kinematics.MecanumDriveWheelSpeeds;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj.SPI;
 import frc.robot.Constants;
@@ -77,5 +78,10 @@ public class DriveSubsystem extends SubsystemBase {
     m_frontRightSpark.set(Constants.maxSpeed/frontRight);
     m_backLeftSpark.set(Constants.maxSpeed/backLeft);
     m_backRightSpark.set(Constants.maxSpeed/backRight);
+
+    SmartDashboard.putNumber("frontLeft", m_frontLeftSpark.getEncoder().getPosition());
+    SmartDashboard.putNumber("frontRightt", m_frontRightSpark.getEncoder().getPosition());
+    SmartDashboard.putNumber("rearLeft", m_backLeftSpark.getEncoder().getPosition());
+    SmartDashboard.putNumber("rearRight", m_backRightSpark.getEncoder().getPosition());
   }
 }
