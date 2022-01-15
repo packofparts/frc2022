@@ -40,6 +40,7 @@ public class DriveSubsystem extends SubsystemBase {
   XboxController driveJoystick = new XboxController(0);
   Joystick driveJoystickMain = new Joystick(0);
   Joystick driveJoystickSide = new Joystick(1);
+  boolean usingXboxController = true;
 
   public DriveSubsystem() {
     gyro = new AHRS(SPI.Port.kMXP);
@@ -52,16 +53,19 @@ public class DriveSubsystem extends SubsystemBase {
       if (!gyro.isConnected()) gyro = null;
     }
 
-    /** Creates a new DriveSubsystem. */
-    ChassisSpeeds speeds = ChassisSpeeds.fromFieldRelativeSpeeds(Constants.maxSpeed/driveJoystick.getLeftX(),
-                                                                Constants.maxSpeed/driveJoystick.getLeftY(),
-                                                                Constants.maxTurn/driveJoystick.getRightX(),
-                                                                Rotation2d.fromDegrees(gyro.getAngle()));
-
-    // ChassisSpeeds speeds = ChassisSpeeds.fromFieldRelativeSpeeds(Constants.maxSpeed/driveJoystickMain.getX(),
-    // Constants.maxSpeed/driveJoystickMain.getY(),
-    // Constants.maxTurn/driveJoystickSide.getX(),
-    // Rotation2d.fromDegrees(gyro.getAngle()));
+    ChassisSpeeds speeds;
+    if (usingXboxController) {
+      speeds = ChassisSpeeds.fromFieldRelativeSpeeds(Constants.maxSpeed/driveJoystick.getLeftX(),
+      Constants.maxSpeed/driveJoystick.getLeftY(),
+      Constants.maxTurn/driveJoystick.getRightX(),
+      Rotation2d.fromDegrees(gyro.getAngle()));
+    }
+    else {
+      speeds = ChassisSpeeds.fromFieldRelativeSpeeds(Constants.maxSpeed/driveJoystickMain.getX(),
+      Constants.maxSpeed/driveJoystickMain.getY(),
+      Constants.maxTurn/driveJoystickSide.getX(),
+      Rotation2d.fromDegrees(gyro.getAngle()));
+    }
    
     // Convert to wheel speeds
     MecanumDriveWheelSpeeds wheelSpeeds = m_kinematics.toWheelSpeeds(speeds);
