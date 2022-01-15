@@ -25,10 +25,10 @@ import frc.robot.Constants;
 import frc.robot.Gains;
 
 public class DriveSubsystem extends SubsystemBase {
-  CANSparkMax m_frontLeftSpark = new CANSparkMax(Constants.frontLeftSparkID, MotorType.kBrushless);
-  CANSparkMax m_frontRightSpark = new CANSparkMax(Constants.frontRightSparkID, MotorType.kBrushless);
-  CANSparkMax m_backLeftSpark = new CANSparkMax(Constants.backLeftSparkID, MotorType.kBrushless);
-  CANSparkMax m_backRightSpark = new CANSparkMax(Constants.backRightSparkID, MotorType.kBrushless);
+  CANSparkMax m_frontLeftSpark;
+  CANSparkMax m_frontRightSpark;
+  CANSparkMax m_backLeftSpark;
+  CANSparkMax m_backRightSpark;
 
   // Locations of the wheels relative to the robot center.
   Translation2d m_frontLeftLocation = new Translation2d(Constants.wheelDisFromCenter, Constants.wheelDisFromCenter);
@@ -49,6 +49,11 @@ public class DriveSubsystem extends SubsystemBase {
 
   public DriveSubsystem() {
     gyro = new AHRS(SPI.Port.kMXP);
+
+    m_frontLeftSpark = new CANSparkMax(Constants.frontLeftSparkID, MotorType.kBrushless);
+    m_frontRightSpark = new CANSparkMax(Constants.frontRightSparkID, MotorType.kBrushless);
+    m_backLeftSpark = new CANSparkMax(Constants.backLeftSparkID, MotorType.kBrushless);
+    m_backRightSpark = new CANSparkMax(Constants.backRightSparkID, MotorType.kBrushless);
 
     m_frontLeftSpark.restoreFactoryDefaults(true);
     m_frontRightSpark.restoreFactoryDefaults(true);
@@ -76,12 +81,7 @@ public class DriveSubsystem extends SubsystemBase {
     m_frontLeftSpark.setInverted(false);
     m_frontRightSpark.setInverted(false);
     m_backLeftSpark.setInverted(false);
-    m_backRightSpark.setInverted(false);
-
-    m_frontLeftSpark.getPIDController().setP(0);
-    m_frontRightSpark.getPIDController().setP(0);
-    m_backLeftSpark.getPIDController().setP(0);
-    m_backRightSpark.getPIDController().setP(0);
+    m_backRightSpark.setInverted(true);
   }
 
   @Override
@@ -90,18 +90,38 @@ public class DriveSubsystem extends SubsystemBase {
       gyro = new AHRS(SPI.Port.kMXP);
       if (!gyro.isConnected()) gyro = null;
     }
+    else {
+      SmartDashboard.putNumber("Gyro Yaw", gyro.getYaw());
+      SmartDashboard.putNumber("Gyro Rate", gyro.getRate());
+    }
 
-    drive();
+    // m_frontLeftSpark.set(0.1);
+    // m_frontRightSpark.set(0.1);
+    m_backLeftSpark.set(0.1);
+    m_backRightSpark.set(0.1);
+    // drive();
+
+    if (usingXboxController) {
+      if (driveJoystick.getRawButton(9)) {
+        gyro.reset();
+      }
+    }
+    else {
+      if (driveJoystickMain.getRawButton(8)) {
+        gyro.reset();
+      }
+    }
   }
 
   public void drive() {
-    //controller inputs
     double xSpeed = 0;
     double ySpeed = 0;
     double rotation = 0;
+
+    //controller inputs
     if (usingXboxController) {
       xSpeed = driveJoystick.getLeftX();
-      ySpeed = driveJoystick.getLeftY();
+      ySpeed = -driveJoystick.getLeftY();
       rotation = driveJoystick.getRightX();
     }
     else {
@@ -134,19 +154,28 @@ public class DriveSubsystem extends SubsystemBase {
     }
     //GYRO HOLD
     // else {
-    //   if (gyroHold == null) {
+    //   if (gyroHold == null && gyro.getRate() < Constants.gyroDeadzone) {
     //     gyroHold = gyro.getAngle();
     //   }
     //   else {
     //     rotation = Constants.pGyro * (gyro.getAngle()-gyroHold);
     //     if (rotation > 1) rotation = 1;
     //     else if (rotation < -1) rotation = -1;
-    //     else if (Math.abs(rotation) < Constants.minTurnInput) rotation = 0;
+    //     else if (Math.abs(rotation) < Constants.minInput) rotation = 0;
     //   }
     // }
 
     // Convert to wheel speeds
-    ChassisSpeeds speeds = ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rotation, Rotation2d.fromDegrees(gyro.getAngle()));
+    ChassisSpeeds speeds;
+    if (usingXboxController) {
+      if (driveJoystick.getXButton()) speeds = new ChassisSpeeds(xSpeed, ySpeed, rotation);
+      else speeds = ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rotation, Rotation2d.fromDegrees(gyro.getAngle()));
+    }
+    else {
+      if (driveJoystickMain.getRawButton(1)) speeds = new ChassisSpeeds(xSpeed, ySpeed, rotation);
+      else speeds = ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rotation, Rotation2d.fromDegrees(gyro.getAngle()));
+    }
+
     MecanumDriveWheelSpeeds wheelSpeeds = m_kinematics.toWheelSpeeds(speeds);
     wheelSpeeds.desaturate(Constants.maxSpeed);
 
@@ -166,10 +195,10 @@ public class DriveSubsystem extends SubsystemBase {
     // m_backLeftSpark.getPIDController().setReference(backLeft, ControlType.kSmartVelocity);
     // m_backRightSpark.getPIDController().setReference(backRight, ControlType.kSmartVelocity);
 
-    SmartDashboard.putNumber("frontLeft", m_frontLeftSpark.getEncoder().getPosition());
-    SmartDashboard.putNumber("frontRightt", m_frontRightSpark.getEncoder().getPosition());
-    SmartDashboard.putNumber("rearLeft", m_backLeftSpark.getEncoder().getPosition());
-    SmartDashboard.putNumber("rearRight", m_backRightSpark.getEncoder().getPosition());
+    SmartDashboard.putNumber("frontLeftPos", m_frontLeftSpark.getEncoder().getPosition());
+    SmartDashboard.putNumber("frontRightPos", m_frontRightSpark.getEncoder().getPosition());
+    SmartDashboard.putNumber("rearLeftPos", m_backLeftSpark.getEncoder().getPosition());
+    SmartDashboard.putNumber("rearRightPos", m_backRightSpark.getEncoder().getPosition());
   }
 
   public void setRampRates(double time) {
