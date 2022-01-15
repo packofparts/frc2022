@@ -36,6 +36,7 @@ public class DriveSubsystem extends SubsystemBase {
   MecanumDriveKinematics m_kinematics = new MecanumDriveKinematics(m_frontLeftLocation, m_frontRightLocation, m_backLeftLocation, m_backRightLocation);
 
   AHRS gyro;
+  Double gyroHold = null;
 
   XboxController driveJoystick = new XboxController(0);
   Joystick driveJoystickMain = new Joystick(0);
@@ -91,8 +92,21 @@ public class DriveSubsystem extends SubsystemBase {
       ySpeed = Constants.maxSpeed / ySpeed;
     }
     if (rotation != 0) {
-      rotation = Constants.maxSpeed / rotation;
+      rotation = Constants.maxTurnOutput / rotation;
+      if (gyroHold != null) gyroHold = null;
     }
+    //GYRO HOLD
+    // else {
+    //   if (gyroHold == null) {
+    //     gyroHold = gyro.getAngle();
+    //   }
+    //   else {
+    //     rotation = Constants.pGyro * (gyro.getAngle()-gyroHold);
+    //     if (rotation > 1) rotation = 1;
+    //     else if (rotation < -1) rotation = -1;
+    //     else if (Math.abs(rotation) < Constants.minTurnInput) rotation = 0;
+    //   }
+    // }
 
     // Convert to wheel speeds
     ChassisSpeeds speeds = ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rotation, Rotation2d.fromDegrees(gyro.getAngle()));
