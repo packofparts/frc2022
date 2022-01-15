@@ -53,21 +53,49 @@ public class DriveSubsystem extends SubsystemBase {
       if (!gyro.isConnected()) gyro = null;
     }
 
-    ChassisSpeeds speeds;
+    drive();
+  }
+
+  public void drive() {
+    //controller inputs
+    double xSpeed = 0;
+    double ySpeed = 0;
+    double rotation = 0;
     if (usingXboxController) {
-      speeds = ChassisSpeeds.fromFieldRelativeSpeeds(Constants.maxSpeed/driveJoystick.getLeftX(),
-      Constants.maxSpeed/driveJoystick.getLeftY(),
-      Constants.maxTurn/driveJoystick.getRightX(),
-      Rotation2d.fromDegrees(gyro.getAngle()));
+      xSpeed = driveJoystick.getLeftX();
+      ySpeed = driveJoystick.getLeftY();
+      rotation = driveJoystick.getRightX();
     }
     else {
-      speeds = ChassisSpeeds.fromFieldRelativeSpeeds(Constants.maxSpeed/driveJoystickMain.getX(),
-      Constants.maxSpeed/driveJoystickMain.getY(),
-      Constants.maxTurn/driveJoystickSide.getX(),
-      Rotation2d.fromDegrees(gyro.getAngle()));
+      xSpeed = driveJoystickMain.getX();
+      ySpeed = driveJoystickMain.getY();
+      rotation = driveJoystickSide.getX();
     }
-   
+
+    //deadzone
+    if (Math.abs(xSpeed) < Constants.joystickDeadzone) {
+      xSpeed = 0;
+    }
+    if (Math.abs(ySpeed) < Constants.joystickDeadzone) {
+      ySpeed = 0;
+    }
+    if (Math.abs(rotation) < Constants.joystickDeadzone) {
+      rotation = 0;
+    }
+
+    //normalize
+    if (xSpeed != 0) {
+      xSpeed = Constants.maxSpeed / xSpeed;
+    }
+    if (ySpeed != 0) {
+      ySpeed = Constants.maxSpeed / ySpeed;
+    }
+    if (rotation != 0) {
+      rotation = Constants.maxSpeed / rotation;
+    }
+
     // Convert to wheel speeds
+    ChassisSpeeds speeds = ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rotation, Rotation2d.fromDegrees(gyro.getAngle()));
     MecanumDriveWheelSpeeds wheelSpeeds = m_kinematics.toWheelSpeeds(speeds);
     wheelSpeeds.desaturate(Constants.maxSpeed);
 

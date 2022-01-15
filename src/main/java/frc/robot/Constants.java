@@ -13,12 +13,13 @@ package frc.robot;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
+    public static final double joystickDeadzone = 0.1;
     public static final double maxSpeed = 6;
     public static final double maxTurn = Math.toRadians(5);
     public static final double wheelDisFromCenter = 0.5;
 
-    public static final int frontLeftSparkID = 11;
-    public static final int frontRightSparkID = 12;
-    public static final int backLeftSparkID = 13;
-    public static final int backRightSparkID = 14;
+    public static final int frontLeftSparkID = 1;
+    public static final int frontRightSparkID = 2;
+    public static final int backLeftSparkID = 3;
+    public static final int backRightSparkID = 4;
 }
