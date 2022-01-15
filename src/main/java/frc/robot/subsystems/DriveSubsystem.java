@@ -6,6 +6,9 @@ package frc.robot.subsystems;
 
 import com.kauailabs.navx.frc.AHRS;
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.SparkMaxPIDController;
+import com.revrobotics.CANSparkMax.ControlType;
+import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.Joystick;
@@ -19,6 +22,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj.SPI;
 import frc.robot.Constants;
+import frc.robot.Gains;
 
 public class DriveSubsystem extends SubsystemBase {
   CANSparkMax m_frontLeftSpark = new CANSparkMax(Constants.frontLeftSparkID, MotorType.kBrushless);
@@ -45,6 +49,39 @@ public class DriveSubsystem extends SubsystemBase {
 
   public DriveSubsystem() {
     gyro = new AHRS(SPI.Port.kMXP);
+
+    m_frontLeftSpark.restoreFactoryDefaults(true);
+    m_frontRightSpark.restoreFactoryDefaults(true);
+    m_backLeftSpark.restoreFactoryDefaults(true);
+    m_backRightSpark.restoreFactoryDefaults(true);
+
+    m_frontLeftSpark.getEncoder();
+    m_frontRightSpark.getEncoder();
+    m_backLeftSpark.getEncoder();
+    m_backRightSpark.getEncoder();
+
+    m_frontLeftSpark.setSmartCurrentLimit(60);
+    m_frontRightSpark.setSmartCurrentLimit(60);
+    m_backLeftSpark.setSmartCurrentLimit(60);
+    m_backRightSpark.setSmartCurrentLimit(60);
+
+    setRampRates(0.5);
+    setMode(idleMode.coast);
+
+    setPidControllers(m_frontLeftSpark.getPIDController(), Constants.defaultPID, Constants.defaultPID.kSlot);
+    setPidControllers(m_frontRightSpark.getPIDController(), Constants.defaultPID, Constants.defaultPID.kSlot);
+    setPidControllers(m_backLeftSpark.getPIDController(), Constants.defaultPID, Constants.defaultPID.kSlot);
+    setPidControllers(m_backRightSpark.getPIDController(), Constants.defaultPID, Constants.defaultPID.kSlot);
+
+    m_frontLeftSpark.setInverted(false);
+    m_frontRightSpark.setInverted(false);
+    m_backLeftSpark.setInverted(false);
+    m_backRightSpark.setInverted(false);
+
+    m_frontLeftSpark.getPIDController().setP(0);
+    m_frontRightSpark.getPIDController().setP(0);
+    m_backLeftSpark.getPIDController().setP(0);
+    m_backRightSpark.getPIDController().setP(0);
   }
 
   @Override
@@ -119,14 +156,61 @@ public class DriveSubsystem extends SubsystemBase {
     double backLeft = wheelSpeeds.rearLeftMetersPerSecond;
     double backRight = wheelSpeeds.rearRightMetersPerSecond;
 
-    m_frontLeftSpark.set(Constants.maxSpeed/frontLeft);
-    m_frontRightSpark.set(Constants.maxSpeed/frontRight);
-    m_backLeftSpark.set(Constants.maxSpeed/backLeft);
-    m_backRightSpark.set(Constants.maxSpeed/backRight);
+    m_frontLeftSpark.set(frontLeft/Constants.maxSpeed);
+    m_frontRightSpark.set(frontRight/Constants.maxSpeed);
+    m_backLeftSpark.set(backLeft/Constants.maxSpeed);
+    m_backRightSpark.set(backRight/Constants.maxSpeed);
+    
+    // m_frontLeftSpark.getPIDController().setReference(frontLeft, ControlType.kSmartVelocity);
+    // m_frontRightSpark.getPIDController().setReference(frontRight, ControlType.kSmartVelocity);
+    // m_backLeftSpark.getPIDController().setReference(backLeft, ControlType.kSmartVelocity);
+    // m_backRightSpark.getPIDController().setReference(backRight, ControlType.kSmartVelocity);
 
     SmartDashboard.putNumber("frontLeft", m_frontLeftSpark.getEncoder().getPosition());
     SmartDashboard.putNumber("frontRightt", m_frontRightSpark.getEncoder().getPosition());
     SmartDashboard.putNumber("rearLeft", m_backLeftSpark.getEncoder().getPosition());
     SmartDashboard.putNumber("rearRight", m_backRightSpark.getEncoder().getPosition());
+  }
+
+  public void setRampRates(double time) {
+    m_frontLeftSpark.setOpenLoopRampRate(time);
+    m_frontLeftSpark.setClosedLoopRampRate(time);
+
+    m_frontRightSpark.setOpenLoopRampRate(time);
+    m_frontRightSpark.setClosedLoopRampRate(time);
+
+    m_backLeftSpark.setOpenLoopRampRate(time);
+    m_backLeftSpark.setClosedLoopRampRate(time);
+
+    m_backRightSpark.setOpenLoopRampRate(time);
+    m_backRightSpark.setClosedLoopRampRate(time);
+  }
+
+  private enum idleMode {
+    brake,
+    coast
+  }
+
+  public void setMode(idleMode type) {
+    if (type == idleMode.brake) {
+      m_frontLeftSpark.setIdleMode(IdleMode.kBrake);
+      m_frontRightSpark.setIdleMode(IdleMode.kBrake);
+      m_backLeftSpark.setIdleMode(IdleMode.kBrake);
+      m_backRightSpark.setIdleMode(IdleMode.kBrake);
+    } else if (type == idleMode.coast) {
+      m_frontLeftSpark.setIdleMode(IdleMode.kCoast);
+      m_frontRightSpark.setIdleMode(IdleMode.kCoast);
+      m_backLeftSpark.setIdleMode(IdleMode.kCoast);
+      m_backRightSpark.setIdleMode(IdleMode.kCoast);
+    }
+  }
+
+  private void setPidControllers (SparkMaxPIDController pidController, Gains pidSet, int slot) {
+    pidController.setP(pidSet.kP, slot);
+    pidController.setI(pidSet.kI, slot);
+    pidController.setD(pidSet.kD, slot);
+    pidController.setIZone(pidSet.kIz, slot);
+    pidController.setFF(pidSet.kFF, slot);
+    pidController.setOutputRange(pidSet.kMinOutput, pidSet.kMaxOutput, slot);
   }
 }

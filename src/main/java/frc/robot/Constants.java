@@ -14,11 +14,13 @@ package frc.robot;
  */
 public final class Constants {
     public static final double joystickDeadzone = 0.1;
+
+    public static final double pGyro = 0.01;
+    public static final Gains defaultPID = new Gains(0.05, 0.00001, 0.7, 0.0, 0.0, -0.5, 0.5, 0);
     
     public static final double maxSpeed = 6;
     public static final double maxTurnOutput = Math.toRadians(5);
     public static final double minTurnInput = 0.1;
-    public static final double pGyro = 0.01;
     public static final double wheelDisFromCenter = 0.5;
 
     public static final int frontLeftSparkID = 1;
