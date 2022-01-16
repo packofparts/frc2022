@@ -22,12 +22,12 @@ public final class Constants {
     public static final double gyroDeadzone = 3;
 
     //PID settings
-    public static final Gains defaultPID = new Gains(0.05, 0.00001, 0.7, 0.0, 0.0, -0.5, 0.5, 0);
+    public static final Gains defaultPID = new Gains(0.0002, 0.0000005, 0.0, 0.0, 0.0, -1, 1, 0);
     
     //maximum speed of the robot in m/s
-    public static final double maxSpeed = 6;
+    public static final double maxSpeed = 5000;
     //maximum rotation of the robot in rads/sec
-    public static final double maxTurnOutput = Math.toRadians(5);
+    public static final double maxTurnOutput = Math.toRadians(180);
     //minimum input required for robot to move
     public static final double minInput = 0.1;
     //distance of wheels from center of robot
