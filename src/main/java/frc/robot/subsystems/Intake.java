@@ -1,12 +1,12 @@
-// Copyright (c) FIRST and other WPILib contributors.
-// Open Source Software; you can modify and/or share it under the terms of
-// the WPILib BSD license file in the root directory of this project.
-
+@@ -5,55 +5,31 @@
 package frc.robot.subsystems;
-
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import edu.wpi.first.wpilibj.Compressor;
+import edu.wpi.first.wpilibj.PneumaticsModuleType;
+import edu.wpi.first.wpilibj.Solenoid;
+import edu.wpi.first.wpilibj.DoubleSolenoid.Value.*;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
@@ -19,12 +19,6 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.motorcontrol.Talon;
 
-import edu.wpi.first.wpilibj.Compressor;
-import edu.wpi.first.wpilibj.PneumaticsModuleType;
-import edu.wpi.first.wpilibj.Solenoid;
-import edu.wpi.first.wpilibj.DoubleSolenoid.Value.*;
-
-
 public class intake extends SubsystemBase {
   Solenoid exampleSolenoidPH = new Solenoid(PneumaticsModuleType.REVPH, 1);
   Compressor phCompressor = new Compressor(1, PneumaticsModuleType.REVPH);
@@ -35,6 +29,8 @@ public class intake extends SubsystemBase {
   //PIDSetConfiguration
   double RPM=0.0;
   boolean isXbox = true;
+  phCompressor.enableDigital();
+
 
   exampleSolenoidPH.set(true);
   /** Creates a new Intake. */
@@ -46,6 +42,11 @@ public class intake extends SubsystemBase {
     if (//joystick thing whenever i can download) { //pushes forward
       exampleSolenoidPH.toggle();
     }
+
+    else {
+
+      double stick = _joystick.getRawAxis(2);
+      intakeMotor.set(ControlMode.Velocity, -stick);
     if (//joystick thing whenever i can download) { //pulls back
       exampleSolenoidPH.toggle();
     }
@@ -72,4 +73,5 @@ public class intake extends SubsystemBase {
   public void setRPM(double RPM) {
     intakeMotor.set(ControlMode.Velocity, RPM);
   }
+
 }
