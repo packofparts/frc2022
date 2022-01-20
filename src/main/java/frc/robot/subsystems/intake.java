@@ -4,6 +4,7 @@
 
 package frc.robot.subsystems;
 
+
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
@@ -18,19 +19,36 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.motorcontrol.Talon;
 
+import edu.wpi.first.wpilibj.Compressor;
+import edu.wpi.first.wpilibj.PneumaticsModuleType;
+import edu.wpi.first.wpilibj.Solenoid;
+import edu.wpi.first.wpilibj.DoubleSolenoid.Value.*;
+
+
 public class intake extends SubsystemBase {
-  /** Creates a new intake. */
+  Solenoid exampleSolenoidPH = new Solenoid(PneumaticsModuleType.REVPH, 1);
+  Compressor phCompressor = new Compressor(1, PneumaticsModuleType.REVPH);
+  double current = phCompressor.getPressure(); //no idea what this does, probably an issue
   XboxController joystick = new XboxController(0);
   Joystick _joystick = new Joystick(0);
   TalonFX intakeMotor = new TalonFX(0);
   //PIDSetConfiguration
   double RPM=0.0;
   boolean isXbox = true;
-  public intake() {}
+
+  exampleSolenoidPH.set(true);
+  /** Creates a new Intake. */
+  public intake() {  }
 
   @Override
-  public void periodic() {
+    public void periodic() {
     // This method will be called once per scheduler run
+    if (//joystick thing whenever i can download) { //pushes forward
+      exampleSolenoidPH.toggle();
+    }
+    if (//joystick thing whenever i can download) { //pulls back
+      exampleSolenoidPH.toggle();
+    }
     if(isXbox){
       if (joystick.getPOV() == 0) {
         if (RPM+Constants.increment<=7500) {
@@ -54,6 +72,4 @@ public class intake extends SubsystemBase {
   public void setRPM(double RPM) {
     intakeMotor.set(ControlMode.Velocity, RPM);
   }
-
-  }
-
+}
