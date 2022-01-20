@@ -19,6 +19,8 @@ import edu.wpi.first.wpilibj.XboxController;
 
 
 public class Shooter extends SubsystemBase {
+  final int increment = 0;
+
   /** Creates a new Shooter. */
   XboxController joystick = new XboxController(0);
   Joystick _joystick = new Joystick(0);
