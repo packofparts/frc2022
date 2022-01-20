@@ -22,7 +22,7 @@ public class intake extends SubsystemBase {
   /** Creates a new intake. */
   XboxController joystick = new XboxController(0);
   Joystick _joystick = new Joystick(0);
-  Talon intakeMotor = new Talon(0);
+  TalonFX intakeMotor = new TalonFX(0);
   //PIDSetConfiguration
   double RPM=0.0;
   boolean isXbox = true;
@@ -56,4 +56,4 @@ public class intake extends SubsystemBase {
   }
 
   }
-}
+
