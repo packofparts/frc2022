@@ -1,4 +1,5 @@
 package frc.robot.subsystems;
+
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import edu.wpi.first.wpilibj.Compressor;
@@ -28,8 +29,12 @@ public class intake extends SubsystemBase {
   double RPM=0.0;
   boolean isXbox = true;
 
+
+  exampleSolenoidPH.set(true);
   /** Creates a new Intake. */
-  public intake() {}
+  public intake() {
+
+  }
 
   @Override
     public void periodic() {
