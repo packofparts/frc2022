@@ -4,6 +4,8 @@
 
 package frc.robot.subsystems;
 
+import java.util.stream.DoubleStream;
+
 import com.kauailabs.navx.frc.AHRS;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.SparkMaxPIDController;
@@ -13,6 +15,7 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -23,6 +26,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj.SPI;
 import frc.robot.Constants;
 import frc.robot.Gains;
+import frc.robot.commands.MoveBy;
 
 public class DriveSubsystem extends SubsystemBase {
   CANSparkMax m_frontLeftSpark;
@@ -47,8 +51,12 @@ public class DriveSubsystem extends SubsystemBase {
   Joystick driveJoystickSide = new Joystick(1);
 
   //set booleans
-  final boolean useGyroHold = false;
+  final boolean useGyroHold = true;
   final boolean usingXboxController = false;
+
+  MoveBy moveBy = new MoveBy(this, 5);
+
+  PIDController turnPID = new PIDController(Constants.turnPID[0], Constants.turnPID[1], Constants.turnPID[2]);
 
   public DriveSubsystem() {
     gyro = new AHRS(SPI.Port.kMXP);
@@ -68,13 +76,23 @@ public class DriveSubsystem extends SubsystemBase {
     m_backLeftSpark.getEncoder();
     m_backRightSpark.getEncoder();
 
+    m_frontLeftSpark.getEncoder().setPosition(0);
+    m_frontRightSpark.getEncoder().setPosition(0);
+    m_backLeftSpark.getEncoder().setPosition(0);
+    m_backRightSpark.getEncoder().setPosition(0);
+
+    m_frontLeftSpark.getEncoder().setPositionConversionFactor(Constants.encoderConversion);
+    m_frontRightSpark.getEncoder().setPositionConversionFactor(Constants.encoderConversion);
+    m_backLeftSpark.getEncoder().setPositionConversionFactor(Constants.encoderConversion);
+    m_backRightSpark.getEncoder().setPositionConversionFactor(Constants.encoderConversion);
+
     m_frontLeftSpark.setSmartCurrentLimit(60);
     m_frontRightSpark.setSmartCurrentLimit(60);
     m_backLeftSpark.setSmartCurrentLimit(60);
     m_backRightSpark.setSmartCurrentLimit(60);
 
     setRampRates(0.5);
-    setMode(idleMode.coast);
+    setMode(idleMode.brake);
 
     setPidControllers(m_frontLeftSpark.getPIDController(), Constants.defaultPID, Constants.defaultPID.kSlot);
     setPidControllers(m_frontRightSpark.getPIDController(), Constants.defaultPID, Constants.defaultPID.kSlot);
@@ -99,21 +117,26 @@ public class DriveSubsystem extends SubsystemBase {
     }
 
     if (usingXboxController) {
-      if (driveJoystick.getRawButton(9)) gyro.reset();
+      if (driveJoystick.getRawButton(9)) {
+        gyro.reset();
+        gyroHold = 0.0;
+      }
     }
     else {
-      if (driveJoystickMain.getRawButton(8)) gyro.reset();
+      if (driveJoystickMain.getRawButton(8)) {
+        gyro.reset();
+        gyroHold = 0.0;
+      }
+
+      if (driveJoystickMain.getRawButton(3)) moveBy.schedule();
     }
 
-    m_frontLeftSpark.getPIDController().setReference(-driveJoystickMain.getY() * Constants.maxSpeed, ControlType.kVelocity);
-    SmartDashboard.putNumber("frontLeftSet", -driveJoystickMain.getY() * Constants.maxSpeed);
+    // m_frontLeftSpark.getPIDController().setReference(-driveJoystickMain.getY() * Constants.maxSpeed, ControlType.kVelocity);
+    // SmartDashboard.putNumber("frontLeftSet", -driveJoystickMain.getY() * Constants.maxSpeed);
 
-    SmartDashboard.putNumber("frontLeftVel", m_frontLeftSpark.getEncoder().getVelocity());
-    SmartDashboard.putNumber("frontRightVel", m_frontRightSpark.getEncoder().getVelocity());
-    SmartDashboard.putNumber("rearLeftVel", m_backLeftSpark.getEncoder().getVelocity());
-    SmartDashboard.putNumber("rearRightVel", m_backRightSpark.getEncoder().getVelocity());
+    drive();
 
-    // drive();
+    // drive(0, 0, -turnPID.calculate(gyro.getAngle(), 90));
   }
 
   public void drive() {
@@ -123,16 +146,20 @@ public class DriveSubsystem extends SubsystemBase {
 
     //controller inputs
     if (usingXboxController) {
-      xSpeed = driveJoystick.getLeftX();
-      ySpeed = -driveJoystick.getLeftY();
-      rotation = driveJoystick.getRightX();
+      xSpeed = driveJoystick.getRightX();
+      ySpeed = -driveJoystick.getRightY();
+      rotation = -driveJoystick.getLeftX();
     }
     else {
-      xSpeed = driveJoystickMain.getX();
+      xSpeed = -driveJoystickMain.getX();
       ySpeed = -driveJoystickMain.getY();
-      rotation = driveJoystickSide.getX();
+      rotation = -driveJoystickSide.getX();
     }
 
+    drive(xSpeed, ySpeed, rotation);
+  }
+
+  public void drive(double xSpeed, double ySpeed, double rotation) {
     //deadzone
     if (Math.abs(xSpeed) < Constants.joystickDeadzone) {
       xSpeed = 0;
@@ -162,59 +189,90 @@ public class DriveSubsystem extends SubsystemBase {
     }
     //GYRO HOLD
     else {
-      if (!useGyroHold) gyroHold = null;
+      if (useGyroHold) {
+        if (gyroHold == null && Math.abs(gyro.getRate()) < Constants.gyroDeadzone) {
+          gyroHold = gyro.getAngle();
+        }
 
-      if (gyroHold == null && gyro.getRate() < Constants.gyroDeadzone) {
-        gyroHold = gyro.getAngle();
-      }
-      else {
-        rotation = Constants.pGyro * (gyro.getAngle()-gyroHold);
-        if (rotation > 1) rotation = 1;
-        else if (rotation < -1) rotation = -1;
-        else if (Math.abs(rotation) < Constants.minInput) rotation = 0;
+        if (gyroHold != null) {
+          //rotation = Constants.pGyro * (gyro.getAngle()-gyroHold);
+          rotation = -turnPID.calculate(gyro.getAngle(), gyroHold)*Constants.maxTurnOutput;
+
+          // if (rotation > 1) rotation = 1;
+          // else if (rotation < -1) rotation = -1;
+          // else if (Math.abs(rotation) < Constants.minInput) rotation = 0;
+        }
       }
     }
+
+    double gyroHoldTemp = 0.0;
+    if (gyroHold != null)  gyroHoldTemp = gyroHold;
+    SmartDashboard.putNumber("gyroHold", gyroHoldTemp);
+    SmartDashboard.putNumber("rotation", rotation);
 
     // Convert to wheel speeds
     ChassisSpeeds speeds;
     if (usingXboxController) {
-      if (driveJoystick.getXButton()) speeds = new ChassisSpeeds(ySpeed, xSpeed, rotation);
-      else speeds = ChassisSpeeds.fromFieldRelativeSpeeds(ySpeed, xSpeed, rotation, Rotation2d.fromDegrees(gyro.getAngle()));
+      if (driveJoystick.getRawButton(10)) speeds = new ChassisSpeeds(ySpeed, xSpeed, rotation);
+      else speeds = ChassisSpeeds.fromFieldRelativeSpeeds(ySpeed, xSpeed, rotation, Rotation2d.fromDegrees(-gyro.getAngle()));
     }
     else {
       if (driveJoystickMain.getRawButton(1)) speeds = new ChassisSpeeds(ySpeed, xSpeed, rotation);
-      else speeds = ChassisSpeeds.fromFieldRelativeSpeeds(ySpeed, xSpeed, rotation, Rotation2d.fromDegrees(gyro.getAngle()));
+      else speeds = ChassisSpeeds.fromFieldRelativeSpeeds(ySpeed, xSpeed, rotation, Rotation2d.fromDegrees(-gyro.getAngle()));
     }
 
     MecanumDriveWheelSpeeds wheelSpeeds = m_kinematics.toWheelSpeeds(speeds);
-    wheelSpeeds.desaturate(Constants.maxSpeed);
+    double[] wheelSpeedDouble = new double[] {wheelSpeeds.frontLeftMetersPerSecond,
+      wheelSpeeds.frontRightMetersPerSecond,
+      wheelSpeeds.rearLeftMetersPerSecond,
+      wheelSpeeds.rearRightMetersPerSecond};
+    desaturate(Constants.maxSpeed, wheelSpeedDouble);
 
     // Get the individual wheel speeds
-    double frontLeft = wheelSpeeds.frontLeftMetersPerSecond;
-    double frontRight = wheelSpeeds.frontRightMetersPerSecond;
-    double backLeft = wheelSpeeds.rearLeftMetersPerSecond;
-    double backRight = wheelSpeeds.rearRightMetersPerSecond;
+    double frontLeft = wheelSpeedDouble[0];
+    double frontRight = wheelSpeedDouble[1];
+    double backLeft = wheelSpeedDouble[2];
+    double backRight = wheelSpeedDouble[3];
 
     //set motor speeds
-    m_frontLeftSpark.set(frontLeft/Constants.maxSpeed);
-    m_frontRightSpark.set(frontRight/Constants.maxSpeed);
-    m_backLeftSpark.set(backLeft/Constants.maxSpeed);
-    m_backRightSpark.set(backRight/Constants.maxSpeed);
+    // m_frontLeftSpark.set(frontLeft/Constants.maxSpeed);
+    // m_frontRightSpark.set(frontRight/Constants.maxSpeed);
+    // m_backLeftSpark.set(backLeft/Constants.maxSpeed);
+    // m_backRightSpark.set(backRight/Constants.maxSpeed);
 
-    // m_frontLeftSpark.getPIDController().setReference(frontLeft, ControlType.kSmartVelocity);
-    // m_frontRightSpark.getPIDController().setReference(frontRight, ControlType.kSmartVelocity);
-    // m_backLeftSpark.getPIDController().setReference(backLeft, ControlType.kSmartVelocity);
-    // m_backRightSpark.getPIDController().setReference(backRight, ControlType.kSmartVelocity);
+    m_frontLeftSpark.getPIDController().setReference(frontLeft, ControlType.kVelocity);
+    m_frontRightSpark.getPIDController().setReference(frontRight, ControlType.kVelocity);
+    m_backLeftSpark.getPIDController().setReference(backLeft, ControlType.kVelocity);
+    m_backRightSpark.getPIDController().setReference(backRight, ControlType.kVelocity);
 
-    SmartDashboard.putNumber("frontLeftSet", m_frontLeftSpark.get());
-    SmartDashboard.putNumber("frontRightSet", m_frontRightSpark.get());
-    SmartDashboard.putNumber("rearLeftSet", m_backLeftSpark.get());
-    SmartDashboard.putNumber("rearRightSet", m_backRightSpark.get());
+    SmartDashboard.putNumber("frontLeftSet", frontLeft);
+    SmartDashboard.putNumber("frontRightSet", frontRight);
+    SmartDashboard.putNumber("rearLeftSet", backLeft);
+    SmartDashboard.putNumber("rearRightSet", backRight);
 
     SmartDashboard.putNumber("frontLeftPos", m_frontLeftSpark.getEncoder().getPosition());
     SmartDashboard.putNumber("frontRightPos", m_frontRightSpark.getEncoder().getPosition());
     SmartDashboard.putNumber("rearLeftPos", m_backLeftSpark.getEncoder().getPosition());
     SmartDashboard.putNumber("rearRightPos", m_backRightSpark.getEncoder().getPosition());
+    
+    SmartDashboard.putNumber("frontLeftVel", m_frontLeftSpark.getEncoder().getVelocity());
+    SmartDashboard.putNumber("frontRightVel", m_frontRightSpark.getEncoder().getVelocity());
+    SmartDashboard.putNumber("rearLeftVel", m_backLeftSpark.getEncoder().getVelocity());
+    SmartDashboard.putNumber("rearRightVel", m_backRightSpark.getEncoder().getVelocity());
+  }
+
+  public void desaturate(double attainableMaxSpeedMetersPerSecond, double[] speeds) {
+    double realMaxSpeed = DoubleStream.of(speeds).max().getAsDouble();
+    if (Math.abs(DoubleStream.of(speeds).min().getAsDouble()) > Math.abs(realMaxSpeed)) {
+      realMaxSpeed = DoubleStream.of(speeds).min().getAsDouble();
+    }
+
+    if (Math.abs(realMaxSpeed) > attainableMaxSpeedMetersPerSecond) {
+      speeds[0] = speeds[0] / Math.abs(realMaxSpeed) * attainableMaxSpeedMetersPerSecond;
+      speeds[1] = speeds[1] / Math.abs(realMaxSpeed) * attainableMaxSpeedMetersPerSecond;
+      speeds[2] = speeds[2] / Math.abs(realMaxSpeed) * attainableMaxSpeedMetersPerSecond;
+      speeds[3] = speeds[3] / Math.abs(realMaxSpeed) * attainableMaxSpeedMetersPerSecond;
+    }
   }
 
   public void setRampRates(double time) {
@@ -257,5 +315,38 @@ public class DriveSubsystem extends SubsystemBase {
     pidController.setIZone(pidSet.kIz, slot);
     pidController.setFF(pidSet.kFF, slot);
     pidController.setOutputRange(pidSet.kMinOutput, pidSet.kMaxOutput, slot);
+  }
+
+  public void setFrontLeftPosition(double pos) {
+    m_frontLeftSpark.getPIDController().setReference(pos, ControlType.kPosition);
+  }
+  public void setBackLeftPosition(double pos) {
+    m_backLeftSpark.getPIDController().setReference(pos, ControlType.kPosition);
+  }
+  public void setFrontRightPosition(double pos) {
+    m_frontRightSpark.getPIDController().setReference(pos, ControlType.kPosition);
+  }
+  public void setBackRightPosition(double pos) {
+    m_backRightSpark.getPIDController().setReference(pos, ControlType.kPosition);
+  }
+
+  public void stop() {
+    m_frontLeftSpark.set(0);
+    m_frontRightSpark.set(0);
+    m_backLeftSpark.set(0);
+    m_backRightSpark.set(0);
+  }
+
+  public double getFrontLeftPos() {
+    return m_frontLeftSpark.getEncoder().getPosition();
+  }
+  public double getFrontRightPos() {
+    return m_frontRightSpark.getEncoder().getPosition();
+  }
+  public double getRearLeftPos() {
+    return m_backLeftSpark.getEncoder().getPosition();
+  }
+  public double getRearRightPos() {
+    return m_backRightSpark.getEncoder().getPosition();
   }
 }
