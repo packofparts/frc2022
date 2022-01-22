@@ -1,32 +1,29 @@
-// Copyright (c) FIRST and other WPILib contributors.
-// Open Source Software; you can modify and/or share it under the terms of
-// the WPILib BSD license file in the root directory of this project.
-
 package frc.robot.subsystems;
 
-import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj.Counter;
 
-public class Lidar extends CommandBase {
-  /** Creates a new Lidar. */
-  public Lidar() {
-    // Use addRequirements() here to declare subsystem dependencies.
+public class Lidar extends SubsystemBase {
+  private Counter counter;
+  private static final double offset = 0.0;
+  //this value will be determined with testing
+  private static final double factor = 100000; 
+  // this is for centimeters inches will be 39400 but lots of testing is required
+
+  
+  public Lidar() { 
+    counter = new Counter(0);
+    counter.setMaxPeriod(1.0);
+    counter.setSemiPeriodMode(true);
+    counter.reset();
   }
-
-  // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
-
-  // Called every time the scheduler runs while the command is scheduled.
-  @Override
-  public void execute() {}
-
-  // Called once the command ends or is interrupted.
-  @Override
-  public void end(boolean interrupted) {}
-
-  // Returns true when the command should end.
-  @Override
-  public boolean isFinished() {
-    return false;
+  public void periodic() {
   }
+  public double getDistance() {
+    if (counter.get() < 1) {
+        return 0.0;
+    }
+    return (counter.getPeriod() * factor + offset); // Use lin reg to obtain values
+}
 }

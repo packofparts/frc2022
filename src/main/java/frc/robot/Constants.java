@@ -41,6 +41,11 @@ public final class Constants {
     public static final int frontRightSparkID = 2;
     public static final int backLeftSparkID = 3;
     public static final int backRightSparkID = 4;
+    public static final double kpLime = -0.1;
+    public static final double kiLime = 0;
+    public static final double kdLime = 0;
+    public static final int autoAlignButton = 0;
+    public static final int joystickPort = 0;
 
 
 
