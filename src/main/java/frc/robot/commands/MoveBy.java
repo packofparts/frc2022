@@ -38,6 +38,10 @@ public class MoveBy extends CommandBase {
     this.move = move;
   }
 
+  public void setMove(double move) {
+    this.move = move;
+  }
+
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
@@ -54,14 +58,13 @@ public class MoveBy extends CommandBase {
     drive.setFrontRightPosition(currentPos[1]+move);
     drive.setBackLeftPosition(currentPos[2]+move);
     drive.setBackRightPosition(currentPos[3]+move);
-
-    System.out.println("here");
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
     drive.stop();
+    drive.setShouldDrive(true);
   }
 
   // Returns true when the command should end.

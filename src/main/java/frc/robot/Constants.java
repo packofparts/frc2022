@@ -29,9 +29,10 @@ public final class Constants {
     public static final double encoderDeadzone = 0.5;
 
     //PID settings
-    public static final Gains defaultPID = new Gains(0.0002, 0.0000005, 0.0, 0.0, 0.0, -1, 1, 0);
-    public static final double[] turnPID = new double[] {0.007, 0.0, 0};
-    
+    public static final Gains velocityPID = new Gains(0.0002, 0.0000005, 0.0, 0.0, 0.0, -1, 1, 0);
+    public static Gains defaultPID = new Gains(0.2, 0.0, 0.0, 0.0, 0.0, -1, 1, 1);
+    public static final double[] turnPID = new double[] {0.009, 0.0, 0.002};
+    public static final double[] ratePID = new double[] {0.15, 0.008, 0.0};
     //maximum speed of the robot in m/s
     public static final double maxSpeed = 5000;
     //maximum rotation of the robot in rads/sec
