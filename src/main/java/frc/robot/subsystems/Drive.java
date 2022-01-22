@@ -27,7 +27,6 @@ import frc.robot.Gains;
 
 public class Drive extends SubsystemBase {
   final double wheelDisFromCenter = 0.0;
-  final double disFromBallErrorMargin = 1.0;
   
   CANSparkMax m_frontLeftSpark;
   CANSparkMax m_frontRightSpark;
@@ -135,11 +134,6 @@ public class Drive extends SubsystemBase {
     m_frontRightSpark.set(frontRight/Constants.maxSpeed);
     m_backLeftSpark.set(backLeft/Constants.maxSpeed);
     m_backRightSpark.set(backRight/Constants.maxSpeed);
-    
-    // m_frontLeftSpark.getPIDController().setReference(frontLeft, ControlType.kSmartVelocity);
-    // m_frontRightSpark.getPIDController().setReference(frontRight, ControlType.kSmartVelocity);
-    // m_backLeftSpark.getPIDController().setReference(backLeft, ControlType.kSmartVelocity);
-    // m_backRightSpark.getPIDController().setReference(backRight, ControlType.kSmartVelocity);
 
     SmartDashboard.putNumber("frontLeftPos", m_frontLeftSpark.getEncoder().getPosition());
     SmartDashboard.putNumber("frontRightPos", m_frontRightSpark.getEncoder().getPosition());
