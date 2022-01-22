@@ -4,6 +4,11 @@
 
 package frc.robot;
 
+import com.revrobotics.ColorSensorV3;
+
+import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.motorcontrol.Spark;
+
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
  * constants. This class should not be used for any other purpose. All constants should be declared
@@ -12,12 +17,10 @@ package frc.robot;
  * <p>It is advised to statically import this class (or one of its inner classes) wherever the
  * constants are needed, to reduce verbosity.
  */
-public final class Constants {
-
-    public static final int kShooterPort = 0;
-    public static final double increment = 0.2;
-
-
-
+public final class Constants { //Need to use the correct motor ports
+    public static XboxController xController = new XboxController(0);
+    public static Spark intakeMotor1 = new Spark(0);
+    public static Spark intakeMoror2 = new Spark(1);
+    public static ColorSensorV3 intakeColorSensor = new ColorSensorV3(null);
 
 }
