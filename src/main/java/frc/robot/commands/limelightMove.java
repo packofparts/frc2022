@@ -4,12 +4,26 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.Constants;
+import frc.robot.subsystems.Drive;
+import edu.wpi.first.math.controller.PIDController;
 
-public class LidarMove extends CommandBase {
+public class limelightMove extends CommandBase {
   /** Creates a new LidarMove. */
-  public LidarMove() {
+  Drive driveBase = new Drive();
+  PIDController pid = new PIDController(Constants.LimelightKP, Constants.LimelightKI, Constants.LimelightKD);
+  //Creates network table
+  NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight");
+  
+  public limelightMove(Drive dt) {
     // Use addRequirements() here to declare subsystem dependencies.
+    addRequirements(driveBase);
+    driveBase = dt;
   }
 
   // Called when the command is initially scheduled.
@@ -18,7 +32,21 @@ public class LidarMove extends CommandBase {
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {}
+  public void execute() {
+    NetworkTableEntry currentHorizontal = table.getEntry("thor");
+    NetworkTableEntry currentVertical = table.getEntry("tvert");
+    //Gets actual value from spot on network table
+    double thor = currentHorizontal.getDouble(0);
+    double tvert = currentVertical.getDouble(0);
+    // Pid- first value is current, second value is set point
+    double speed = pid.calculate(thor*tvert, Constants.thor * Constants.tvert);
+    driveBase.m_backLeftSpark.set(-speed);
+    driveBase.m_frontLeftSpark.set(-speed);
+    driveBase.m_backRightSpark.set(speed);
+    driveBase.m_frontRightSpark.set(speed);
+    // Gets spot on network table
+
+  }
 
   // Called once the command ends or is interrupted.
   @Override
