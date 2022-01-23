@@ -21,6 +21,8 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.MecanumDriveKinematics;
 import edu.wpi.first.math.kinematics.MecanumDriveWheelSpeeds;
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj.SPI;
@@ -61,8 +63,10 @@ public class DriveSubsystem extends SubsystemBase {
   PIDController turnPID = new PIDController(Constants.turnPID[0], Constants.turnPID[1], Constants.turnPID[2]);
   PIDController ratePID = new PIDController(Constants.ratePID[0], Constants.ratePID[1], Constants.ratePID[2]);
 
+  NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight");
+  
   public DriveSubsystem() {
-    gyro = new AHRS(SPI.Port.kMXP);
+    gyro = new AHRS(SPI.Port.kMXP); 
 
     m_frontLeftSpark = new CANSparkMax(Constants.frontLeftSparkID, MotorType.kBrushless);
     m_frontRightSpark = new CANSparkMax(Constants.frontRightSparkID, MotorType.kBrushless);
