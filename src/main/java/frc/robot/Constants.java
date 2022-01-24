@@ -39,6 +39,26 @@ public final class Constants {
     public static final int frontRightSparkID = 2;
     public static final int backLeftSparkID = 3;
     public static final int backRightSparkID = 4;
+    public static final double kpLime = 0.1; //TBD
+    public static final double kiLime = 0; //TBD
+    public static final double kdLime = 0.5; // TBD
+    public static final int autoAlignButton = 4;
+    public static final int xboxPort = 0;
+    public static final int joystickPort = 0;
+    public static final int flyWheelPort = 0;
+    public static final int indexPort = 0;
+    public static double increment=0.1;
+    public static double PIDTurnDegrees=10.0;
+    public static double indexSpeed;
+    public static final double motorPower = 0.2;
+    public static final double spinTime = 2.0;//tbd
+    public static final double tvert = 105.0; //experimental
+    public static final double thor = 156.0; //experimental
 
-    public static double increment;
+    public static final double LimelightKP = 0;
+
+    public static final double LimelightKI = 0;
+
+    public static final double LimelightKD = 0;
+    
 }
