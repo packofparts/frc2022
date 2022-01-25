@@ -28,10 +28,10 @@ import frc.robot.Gains;
 public class Drive extends SubsystemBase {
   final double wheelDisFromCenter = 0.0;
   
-  CANSparkMax m_frontLeftSpark;
-  CANSparkMax m_frontRightSpark;
-  CANSparkMax m_backLeftSpark;
-  CANSparkMax m_backRightSpark;
+  public CANSparkMax m_frontLeftSpark;
+  public CANSparkMax m_frontRightSpark;
+  public CANSparkMax m_backLeftSpark;
+  public CANSparkMax m_backRightSpark;
 
   // Locations of the wheels relative to the robot center.
   Translation2d m_frontLeftLocation = new Translation2d(Constants.wheelDisFromCenter, Constants.wheelDisFromCenter);
