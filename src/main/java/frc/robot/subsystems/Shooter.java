@@ -24,22 +24,37 @@ public class Shooter extends SubsystemBase {
       if (xbox.getPOV() == 0) {
         if (RPM+Constants.increment<=7500) {
           setRPM(RPM+Constants.increment);
-          setRPMNoFLy(RPM+Constants.increment);
+          
         }
       }
       if (xbox.getPOV() == 180) {
         if (RPM-Constants.increment>=0) {
           setRPM(RPM-Constants.increment);
+          
+        }
+      }
+      if (xbox.getPOV() == 90) {
+        if (RPM+Constants.increment<=7500) {
+       
+          setRPMNoFLy(RPM+Constants.increment);
+        }
+      }
+      if (xbox.getPOV() == 270) {
+        if (RPM-Constants.increment>=0) {
           setRPMNoFLy(RPM-Constants.increment);
         }
       }
+
     }
 
     else {
-
+      
       double stick = _joystick.getRawAxis(2);
       shootMotor.set(ControlMode.Velocity, -stick);
-      nonFlyWheel.set(ControlMode.Velocity,-stick);
+
+      double stick2 = _joystick.getRawAxis(3);
+      nonFlyWheel.set(ControlMode.Velocity, -stick2);
+
     }
   }
 
