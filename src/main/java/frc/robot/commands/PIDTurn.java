@@ -4,6 +4,8 @@
 
 package frc.robot.commands;
 
+import com.revrobotics.CANSparkMax.ControlType;
+
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Drive;
@@ -21,18 +23,18 @@ public class PIDTurn extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
- // class varibale that initializes gyro
+    Constants.originalYaw = driveBase.getAngle();
 
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double speed = pid.calculate(driveBase.yaw(), Constants.PIDTurnDegrees);
-    driveBase.m_backLeftSpark.set(-speed);
-    driveBase.m_frontLeftSpark.set(-speed);
-    driveBase.m_backRightSpark.set(speed);
-    driveBase.m_frontRightSpark.set(speed);
+    double speed = pid.calculate(driveBase.getAngle(), Constants.originalYaw + Constants.PIDTurnDegrees);
+    driveBase.setBackLeft(-speed, ControlType.kVelocity);
+    driveBase.setFrontLeft(-speed, ControlType.kVelocity);
+    driveBase.setBackRight(speed, ControlType.kVelocity);
+    driveBase.setFrontRight(speed, ControlType.kVelocity);
   }
 
   // Called once the command ends or is interrupted.
