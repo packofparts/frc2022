@@ -66,7 +66,7 @@ public class DriveSubsystem extends SubsystemBase {
   NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight");
   
   public DriveSubsystem() {
-    gyro = new AHRS(SPI.Port.kMXP); 
+    gyro = new AHRS(SPI.Port.kMXP);
 
     m_frontLeftSpark = new CANSparkMax(Constants.frontLeftSparkID, MotorType.kBrushless);
     m_frontRightSpark = new CANSparkMax(Constants.frontRightSparkID, MotorType.kBrushless);
@@ -141,48 +141,44 @@ sHAKUANDO WAS HERE
         m_backLeftSpark.getEncoder().setPosition(0);
         m_backRightSpark.getEncoder().setPosition(0);
       }
-      // if (driveJoystickSide.getRawButtonReleased(6)) Constants.defaultPID.kP += .0005;
-      // if (driveJoystickSide.getRawButtonReleased(7)) Constants.defaultPID.kP -= .0005;
-      // if (driveJoystickSide.getRawButtonReleased(8)) Constants.defaultPID.kI += .0005;
-      // if (driveJoystickSide.getRawButtonReleased(9)) Constants.defaultPID.kI -= .0005;
-      // if (driveJoystickSide.getRawButtonReleased(11)) Constants.defaultPID.kD += .0005;
-      // if (driveJoystickSide.getRawButtonReleased(10)) Constants.defaultPID.kD -= .0005;
-
-      // if (driveJoystickSide.getRawButtonReleased(6) || driveJoystickSide.getRawButtonReleased(7) ||
-      // driveJoystickSide.getRawButtonReleased(8) || driveJoystickSide.getRawButtonReleased(9) ||
-      // driveJoystickSide.getRawButtonReleased(11) || driveJoystickSide.getRawButtonReleased(10)) {
-      //   setAllPIDControllers(Constants.defaultPID);
-      // }
+      if (driveJoystickSide.getRawButtonReleased(6)) ratePID.setP(ratePID.getP() + 0.005);;
+      if (driveJoystickSide.getRawButtonReleased(7))  ratePID.setP(ratePID.getP() - 0.005);
+      if (driveJoystickSide.getRawButtonReleased(8))  ratePID.setI(ratePID.getI() + 0.0005);
+      if (driveJoystickSide.getRawButtonReleased(9))  ratePID.setI(ratePID.getI() - 0.0005);
+      if (driveJoystickSide.getRawButtonReleased(11)) ratePID.setD(ratePID.getD() + 0.0005);
+      if (driveJoystickSide.getRawButtonReleased(10)) ratePID.setD(ratePID.getD() - 0.0005);
       
-      if (driveJoystickMain.getRawButtonPressed(3)) {
-        moveBy.setMove(10);
-        if (!moveBy.isScheduled()) moveBy.schedule();
-        else moveBy.cancel();
+      // if (driveJoystickMain.getRawButtonPressed(3)) {
+      //   moveBy.setMove(10);
+      //   if (!moveBy.isScheduled()) moveBy.schedule();
+      //   else moveBy.cancel();
 
-        shouldDrive = true;
-      }
-      if (driveJoystickMain.getRawButtonPressed(2)) {
-        moveBy.setMove(-10);
-        if (!moveBy.isScheduled()) moveBy.schedule();
-        else moveBy.cancel();
+      //   shouldDrive = true;
+      // }
+      // if (driveJoystickMain.getRawButtonPressed(2)) {
+      //   moveBy.setMove(-10);
+      //   if (!moveBy.isScheduled()) moveBy.schedule();
+      //   else moveBy.cancel();
 
-        shouldDrive = true;
-      }
+      //   shouldDrive = true;
+      // }
     }
 
-    // SmartDashboard.putNumber("P: ", m_frontRightSpark.getPIDController().getP(1));
-    // SmartDashboard.putNumber("I: ", m_frontRightSpark.getPIDController().getI(1));
-    // SmartDashboard.putNumber("D: ", m_frontRightSpark.getPIDController().getD(1));
+    SmartDashboard.putNumber("P: ", ratePID.getP());
+    SmartDashboard.putNumber("I: ", ratePID.getI());
+    SmartDashboard.putNumber("D: ", ratePID.getD());
 
     drive();
 
     // if (driveJoystickSide.getRawButton(4)) {
-    //   drive(0, 0, -ratePID.calculate(gyro.getRate(), 0.5), false);
-    //   System.out.println("slow");
+    //   double pidOutput = -ratePID.calculate(gyro.getRate(), 1);
+    //   drive(0, 0, -ratePID.calculate(gyro.getRate(), 1), false);
+    //   SmartDashboard.putNumber("pid output", pidOutput);
     // }
     // else if (driveJoystickSide.getRawButton(5)) {
-    //   drive(0, 0, -ratePID.calculate(gyro.getRate(), 1), false);
-    //   System.out.println("fast");
+    //   double pidOutput = -ratePID.calculate(gyro.getRate(), -2);
+    //   drive(0, 0, -ratePID.calculate(gyro.getRate(), -2), false);
+    //   SmartDashboard.putNumber("pid output", pidOutput);
     // }
     // else {
     //   drive(0, 0, 0, false);
@@ -262,6 +258,7 @@ sHAKUANDO WAS HERE
     }
     if (rotation != 0) {
       rotation = Constants.maxTurnOutput * rotation;
+      
       if (gyroHold != null) gyroHold = null;
     }
     //GYRO HOLD
