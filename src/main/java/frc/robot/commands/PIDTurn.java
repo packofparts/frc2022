@@ -8,13 +8,13 @@ import com.revrobotics.CANSparkMax.ControlType;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.Drive;
+import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.Constants;
 public class PIDTurn extends CommandBase {
   
-  Drive driveBase = new Drive();
+  DriveSubsystem driveBase = new DriveSubsystem();
   PIDController pid = new PIDController(0, 0, 0);
-  public PIDTurn(Drive dt, double Degrees) {
+  public PIDTurn(DriveSubsystem dt, double Degrees) {
     addRequirements(driveBase);
     driveBase = dt;
     Constants.PIDTurnDegrees = Degrees;
@@ -31,10 +31,10 @@ public class PIDTurn extends CommandBase {
   @Override
   public void execute() {
     double speed = pid.calculate(driveBase.getAngle(), Constants.originalYaw + Constants.PIDTurnDegrees);
-    driveBase.setBackLeft(-speed, ControlType.kVelocity);
-    driveBase.setFrontLeft(-speed, ControlType.kVelocity);
-    driveBase.setBackRight(speed, ControlType.kVelocity);
-    driveBase.setFrontRight(speed, ControlType.kVelocity);
+    driveBase.setBackLeftVelocity(-speed);
+    driveBase.setFrontLeftVelocity(-speed);
+    driveBase.setBackRightVelocity(speed);
+    driveBase.setFrontRightVelocity(speed);
   }
 
   // Called once the command ends or is interrupted.

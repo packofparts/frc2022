@@ -31,10 +31,10 @@ import frc.robot.Gains;
 import frc.robot.commands.MoveBy;
 
 public class DriveSubsystem extends SubsystemBase {
-  CANSparkMax m_frontLeftSpark;
-  CANSparkMax m_frontRightSpark;
-  CANSparkMax m_backLeftSpark;
-  CANSparkMax m_backRightSpark;
+  public CANSparkMax m_frontLeftSpark;
+  public CANSparkMax m_frontRightSpark;
+  public CANSparkMax m_backLeftSpark;
+  public CANSparkMax m_backRightSpark;
 
   // Locations of the wheels relative to the robot center.
   Translation2d m_frontLeftLocation = new Translation2d(Constants.wheelDisFromCenter, Constants.wheelDisFromCenter);
@@ -420,6 +420,19 @@ sHAKUANDO WAS HERE
   public void setBackRightPosition(double pos) {
     m_backRightSpark.getPIDController().setReference(pos, ControlType.kPosition, Constants.defaultPID.kSlot);
   }
+  
+  public void setFrontLeftVelocity(double vel) {
+    m_frontLeftSpark.getPIDController().setReference(vel, ControlType.kVelocity, Constants.velocityPID.kSlot);
+  }
+  public void setBackLeftVelocity(double vel) {
+    m_backLeftSpark.getPIDController().setReference(vel, ControlType.kVelocity, Constants.velocityPID.kSlot);
+  }
+  public void setFrontRightVelocity(double vel) {
+    m_frontRightSpark.getPIDController().setReference(vel, ControlType.kVelocity, Constants.velocityPID.kSlot);
+  }
+  public void setBackRightVelocity(double vel) {
+    m_backRightSpark.getPIDController().setReference(vel, ControlType.kVelocity, Constants.velocityPID.kSlot);
+  }
 
   public void stop() {
     m_frontLeftSpark.set(0);
@@ -439,5 +452,9 @@ sHAKUANDO WAS HERE
   }
   public double getRearRightPos() {
     return m_backRightSpark.getEncoder().getPosition();
+  }
+
+  public double getAngle() {
+    return gyro.getAngle();
   }
 }

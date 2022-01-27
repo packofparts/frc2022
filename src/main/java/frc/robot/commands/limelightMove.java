@@ -10,17 +10,17 @@ import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
-import frc.robot.subsystems.Drive;
+import frc.robot.subsystems.DriveSubsystem;
 import edu.wpi.first.math.controller.PIDController;
 
 public class limelightMove extends CommandBase {
   /** Creates a new LidarMove. */
-  Drive driveBase = new Drive();
+  DriveSubsystem driveBase = new DriveSubsystem();
   PIDController pid = new PIDController(Constants.LimelightKP, Constants.LimelightKI, Constants.LimelightKD);
   //Creates network table
   NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight");
   
-  public limelightMove(Drive dt) {
+  public limelightMove(DriveSubsystem dt) {
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(driveBase);
     driveBase = dt;
