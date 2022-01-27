@@ -4,18 +4,36 @@
 
 package frc.robot.commands;
 
-import com.revrobotics.CANSparkMax.ControlType;
-
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.Constants;
-import frc.robot.subsystems.Drive;
+import java.util.stream.DoubleStream;
 
+import com.kauailabs.navx.frc.AHRS;
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.SparkMaxPIDController;
+import com.revrobotics.CANSparkMax.ControlType;
+import com.revrobotics.CANSparkMax.IdleMode;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+
+import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.kinematics.MecanumDriveKinematics;
+import edu.wpi.first.math.kinematics.MecanumDriveWheelSpeeds;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj.SPI;
+import frc.robot.Constants;
+import frc.robot.Gains;
+import frc.robot.subsystems.DriveSubsystem;
 public class MoveBy extends CommandBase {
-  Drive drive;
+  /** Creates a new MoveBy. */
+  DriveSubsystem drive;
   double[] currentPos = new double[4];
   double move = 0;
 
-  public MoveBy(Drive drive, double move) {
+  public MoveBy(DriveSubsystem drive, double move) {
     this.drive = drive;
     this.move = move;
   }
@@ -27,20 +45,19 @@ public class MoveBy extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    currentPos[0] = drive.getFrontLeftEncoder().getPosition();
-    currentPos[1] = drive.getFrontRightEncoder().getPosition();
-    currentPos[2] = drive.getRearLeftEncoder().getPosition();
-    currentPos[3] = drive.getRearRightEncoder().getPosition();
-    drive.setShouldDrive(false);
+    currentPos[0] = drive.getFrontLeftPos();
+    currentPos[1] = drive.getFrontRightPos();
+    currentPos[2] = drive.getRearLeftPos();
+    currentPos[3] = drive.getRearRightPos();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    drive.setFrontLeft(currentPos[0]+move, ControlType.kPosition);
-    drive.setFrontRight(currentPos[1]+move, ControlType.kPosition);
-    drive.setBackLeft(currentPos[2]+move, ControlType.kPosition);
-    drive.setBackRight(currentPos[3]+move, ControlType.kPosition);
+    drive.setFrontLeftPosition(currentPos[0]+move);
+    drive.setFrontRightPosition(currentPos[1]+move);
+    drive.setBackLeftPosition(currentPos[2]+move);
+    drive.setBackRightPosition(currentPos[3]+move);
   }
 
   // Called once the command ends or is interrupted.
@@ -53,10 +70,10 @@ public class MoveBy extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if (Math.abs((currentPos[0]+move)-drive.getFrontLeftEncoder().getPosition()) < Constants.encoderDeadzone &&
-    Math.abs((currentPos[1]+move)-drive.getFrontRightEncoder().getPosition()) < Constants.encoderDeadzone &&
-    Math.abs((currentPos[2]+move)-drive.getRearLeftEncoder().getPosition()) < Constants.encoderDeadzone &&
-    Math.abs((currentPos[3]+move)-drive.getRearRightEncoder().getPosition()) < Constants.encoderDeadzone) {
+    if (Math.abs((currentPos[0]+move)-drive.getFrontLeftPos()) < Constants.encoderDeadzone &&
+    Math.abs((currentPos[1]+move)-drive.getFrontRightPos()) < Constants.encoderDeadzone &&
+    Math.abs((currentPos[2]+move)-drive.getRearLeftPos()) < Constants.encoderDeadzone &&
+    Math.abs((currentPos[3]+move)-drive.getRearRightPos()) < Constants.encoderDeadzone) {
       return true;
     }
 
