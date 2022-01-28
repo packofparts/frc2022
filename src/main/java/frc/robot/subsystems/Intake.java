@@ -34,7 +34,7 @@ public class intake extends SubsystemBase {
   public static Talon intakeMotor1 = new Talon(Constants.intakeMotor1Port);
   public static Talon intakeMoror2 = new Talon(Constants.intakeMotor2Port);
   public static ColorSensorV3 intakeColorSensor = new ColorSensorV3(Constants.intakeColorSensorPort); 
-  public static Ultrasonic intakeUltrasonic = new Ultrasonic(0, 1);
+  public static Ultrasonic intakeUltrasonic = new Ultrasonic(Constants.intakeUltrasonicPingPort, Constants.intakeUltrasonicEchoPort);
 
 
   
