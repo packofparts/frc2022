@@ -5,6 +5,7 @@ import frc.robot.Constants;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Solenoid;
+import edu.wpi.first.wpilibj.Ultrasonic;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value.*;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
@@ -78,6 +79,7 @@ public class intake extends SubsystemBase {
     SmartDashboard.putString("Color Sensor", Constants.intakeColorSensor.getColor().toString());
     SmartDashboard.putNumber("Joystick POV", joystick.getPOV());
     SmartDashboard.putNumber("Joystick Axis", _joystick.getRawAxis(2));
+    SmartDashboard.putNumber("Ultrasonic Sensor", Constants.ultrasonic.getRangeInches());
 
   }
 

@@ -7,6 +7,7 @@ package frc.robot;
 import com.revrobotics.ColorSensorV3;
 
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.Ultrasonic;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.motorcontrol.Spark;
 import edu.wpi.first.wpilibj.motorcontrol.Talon;
@@ -24,6 +25,7 @@ public final class Constants { //Need to use the correct motor ports/ channels
     public static Talon intakeMotor1 = new Talon(0);
     public static Talon intakeMoror2 = new Talon(1);
     public static ColorSensorV3 intakeColorSensor = new ColorSensorV3(null);
+    public static Ultrasonic ultrasonic = new Ultrasonic(0, 1);
     public static final int kShooterPort = 0;
     public static final double increment = 0.2;
 }
