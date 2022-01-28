@@ -2,6 +2,7 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.Robot;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Solenoid;
@@ -55,6 +56,9 @@ public class intake extends SubsystemBase {
     } else if (joystick.getRawButton(2)) {
         intakeMotor1.set(-1);
         intakeMoror2.set(1);
+    } else if (!Robot.m_robotContainer.m_index.hasBall()) {
+        intakeMotor1.set(1);
+        intakeMoror2.set(-1);
     } else {
         intakeMotor1.stopMotor();
         intakeMoror2.stopMotor();
@@ -81,11 +85,17 @@ public class intake extends SubsystemBase {
       intakeMotor.set(-stick);
     }
 
+    
+
     SmartDashboard.putString("Color Sensor", intakeColorSensor.getColor().toString());
     SmartDashboard.putNumber("Joystick POV", joystick.getPOV());
     SmartDashboard.putNumber("Joystick Axis", _joystick.getRawAxis(2));
     SmartDashboard.putNumber("Ultrasonic Sensor", intakeUltrasonic.getRangeInches());
 
+  }
+
+  public double getUltrasonicInches() {
+    return intakeUltrasonic.getRangeInches();
   }
 
   public void setRPM(double RPM) {

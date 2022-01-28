@@ -33,4 +33,6 @@ public final class Constants { //Need to use the correct motor ports/ channels
     public static final int intakeUltrasonicPingPort = 1;
     public static final int intakeUltrasonicEchoPort = 2;
 
+    public static final int indexMotor = 0;
+
 }
