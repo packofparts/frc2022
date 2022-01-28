@@ -39,13 +39,13 @@ public class intake extends SubsystemBase {
   @Override
     public void periodic() {
     // This method will be called once per scheduler run
-    if (Constants.intakeColorSensor.getColor() == edu.wpi.first.wpilibj.util.Color.kBlue && Constants.xController.getAButton()){
+    if (Constants.intakeColorSensor.getColor() == edu.wpi.first.wpilibj.util.Color.kBlue && Constants.joystick.getRawButton(1)){
       Constants.intakeMotor1.set(-1);
       Constants.intakeMoror2.set(1);
-    } else if (Constants.xController.getAButton()){
+    } else if (Constants.joystick.getRawButton(1)){
         Constants.intakeMotor1.set(1);
         Constants.intakeMoror2.set(-1);
-    } else if (Constants.xController.getBButton()) {
+    } else if (Constants.joystick.getRawButton(2)) {
         Constants.intakeMotor1.set(-1);
         Constants.intakeMoror2.set(1);
     } else {

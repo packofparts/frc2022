@@ -6,8 +6,10 @@ package frc.robot;
 
 import com.revrobotics.ColorSensorV3;
 
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.motorcontrol.Spark;
+import edu.wpi.first.wpilibj.motorcontrol.Talon;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
@@ -17,10 +19,10 @@ import edu.wpi.first.wpilibj.motorcontrol.Spark;
  * <p>It is advised to statically import this class (or one of its inner classes) wherever the
  * constants are needed, to reduce verbosity.
  */
-public final class Constants { //Need to use the correct motor ports
-    public static XboxController xController = new XboxController(0);
-    public static Spark intakeMotor1 = new Spark(0);
-    public static Spark intakeMoror2 = new Spark(1);
+public final class Constants { //Need to use the correct motor ports/ channels
+    public static Joystick joystick = new Joystick(0);
+    public static Talon intakeMotor1 = new Talon(0);
+    public static Talon intakeMoror2 = new Talon(1);
     public static ColorSensorV3 intakeColorSensor = new ColorSensorV3(null);
     public static final int kShooterPort = 0;
     public static final double increment = 0.2;
