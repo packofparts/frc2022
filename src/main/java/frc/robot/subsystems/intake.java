@@ -30,15 +30,29 @@ public class intake extends SubsystemBase {
   boolean isXbox = true;
 
 
-  exampleSolenoidPH.set(true);
+  
   /** Creates a new Intake. */
   public intake() {
-
+    exampleSolenoidPH.set(true);
   }
 
   @Override
     public void periodic() {
     // This method will be called once per scheduler run
+    if (Constants.intakeColorSensor.getColor() == edu.wpi.first.wpilibj.util.Color.kBlue && Constants.xController.getAButton()){
+      Constants.intakeMotor1.set(-1);
+      Constants.intakeMoror2.set(1);
+    } else if (Constants.xController.getAButton()){
+        Constants.intakeMotor1.set(1);
+        Constants.intakeMoror2.set(-1);
+    } else if (Constants.xController.getBButton()) {
+        Constants.intakeMotor1.set(-1);
+        Constants.intakeMoror2.set(1);
+    } else {
+        Constants.intakeMotor1.stopMotor();
+        Constants.intakeMoror2.stopMotor();
+    }
+
 
     if(isXbox){
       if (joystick.getPOV() == 0) {
@@ -57,12 +71,12 @@ public class intake extends SubsystemBase {
 
     else {
       double stick = _joystick.getRawAxis(2);
-      intakeMotor.set(ControlMode.Velocity, -stick);
+      intakeMotor.set(-stick);
     }
   }
 
   public void setRPM(double RPM) {
-    intakeMotor.set(ControlMode.Velocity, RPM);
+    intakeMotor.set(RPM);
   }
 
 }

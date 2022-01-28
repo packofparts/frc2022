@@ -22,5 +22,6 @@ public final class Constants { //Need to use the correct motor ports
     public static Spark intakeMotor1 = new Spark(0);
     public static Spark intakeMoror2 = new Spark(1);
     public static ColorSensorV3 intakeColorSensor = new ColorSensorV3(null);
-
+    public static final int kShooterPort = 0;
+    public static final double increment = 0.2;
 }
