@@ -47,22 +47,26 @@ public class intake extends SubsystemBase {
   @Override
     public void periodic() {
     // This method will be called once per scheduler run
-    if (intakeColorSensor.getColor() == edu.wpi.first.wpilibj.util.Color.kBlue && joystick.getRawButton(1)){
-      intakeMotor1.set(-1);
-      intakeMoror2.set(1);
-    } else if (joystick.getRawButton(1)){
+    // if (intakeColorSensor.getColor() == edu.wpi.first.wpilibj.util.Color.kBlue && joystick.getRawButton(1)){
+    //   intakeMotor1.set(-1);
+    //   intakeMoror2.set(1);
+    // }
+    //intake
+    if (joystick.getRawButton(1)){
         intakeMotor1.set(1);
         intakeMoror2.set(-1);
-    } else if (joystick.getRawButton(2)) {
+        //TODO
+    } else if (joystick.getRawButton(2)) { //outtake
         intakeMotor1.set(-1);
-        intakeMoror2.set(1);
-    } else if (!Robot.m_robotContainer.m_index.hasBall()) {
-        intakeMotor1.set(1);
-        intakeMoror2.set(-1);
-    } else {
-        intakeMotor1.stopMotor();
-        intakeMoror2.stopMotor();
+       intakeMoror2.set(1);
     }
+    // } else if (!Robot.m_robotContainer.m_index.hasBall()) {
+    //     intakeMotor1.set(1);
+    //     intakeMoror2.set(-1);
+    // } else {
+    //     intakeMotor1.stopMotor();
+    //     intakeMoror2.stopMotor();
+    // }
 
 
     if(isXbox){
@@ -87,7 +91,8 @@ public class intake extends SubsystemBase {
 
     
 
-    SmartDashboard.putString("Color Sensor", intakeColorSensor.getColor().toString());
+    SmartDashboard.putString("Color Sensor Color", intakeColorSensor.getColor().toString());
+    SmartDashboard.putNumber("Color Sensor Distance", intakeColorSensor.getProximity());
     SmartDashboard.putNumber("Joystick POV", joystick.getPOV());
     SmartDashboard.putNumber("Joystick Axis", _joystick.getRawAxis(2));
     SmartDashboard.putNumber("Ultrasonic Sensor", intakeUltrasonic.getRangeInches());

@@ -6,6 +6,8 @@ package frc.robot;
 
 import com.revrobotics.ColorSensorV3;
 
+import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.DigitalOutput;
 import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Ultrasonic;
@@ -34,5 +36,15 @@ public final class Constants { //Need to use the correct motor ports/ channels
     public static final int intakeUltrasonicEchoPort = 2;
 
     public static final int indexMotor = 0;
+
+    public static final int ultrasonicThreshold = 5;
+
+    public static final int indexUltrasonic1PingPort = 4;
+
+    public static final int indexUltrasonic2PingPort = 5;
+
+    public static final int indexUltrasonic1EchoPort = 6;
+
+    public static final int indexUltrasonic2EchoPort = 7;
 
 }
