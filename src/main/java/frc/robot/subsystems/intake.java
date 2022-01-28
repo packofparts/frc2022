@@ -17,6 +17,7 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.motorcontrol.Talon;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class intake extends SubsystemBase {
   Solenoid exampleSolenoidPH = new Solenoid(PneumaticsModuleType.REVPH, 1);
@@ -73,10 +74,17 @@ public class intake extends SubsystemBase {
       double stick = _joystick.getRawAxis(2);
       intakeMotor.set(-stick);
     }
+
+    SmartDashboard.putString("Color Sensor", Constants.intakeColorSensor.getColor().toString());
+    SmartDashboard.putNumber("Joystick POV", joystick.getPOV());
+    SmartDashboard.putNumber("Joystick Axis", _joystick.getRawAxis(2));
+
   }
 
   public void setRPM(double RPM) {
     intakeMotor.set(RPM);
   }
+
+
 
 }
