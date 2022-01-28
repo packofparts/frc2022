@@ -12,6 +12,7 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.ctre.phoenix.motorcontrol.can.TalonFXPIDSetConfiguration;
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.ColorSensorV3;
 import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
@@ -30,6 +31,10 @@ public class intake extends SubsystemBase {
   //PIDSetConfiguration
   double RPM=0.0;
   boolean isXbox = true;
+  public static Talon intakeMotor1 = new Talon(Constants.intakeMotor1Port);
+  public static Talon intakeMoror2 = new Talon(Constants.intakeMotor2Port);
+  public static ColorSensorV3 intakeColorSensor = new ColorSensorV3(Constants.intakeColorSensorPort); 
+  public static Ultrasonic intakeUltrasonic = new Ultrasonic(Constants.intakeUltrasonicPingPort, Constants.intakeUltrasonicEchoPort);
 
 
   
@@ -41,18 +46,18 @@ public class intake extends SubsystemBase {
   @Override
     public void periodic() {
     // This method will be called once per scheduler run
-    if (Constants.intakeColorSensor.getColor() == edu.wpi.first.wpilibj.util.Color.kBlue && Constants.joystick.getRawButton(1)){
-      Constants.intakeMotor1.set(-1);
-      Constants.intakeMoror2.set(1);
-    } else if (Constants.joystick.getRawButton(1)){
-        Constants.intakeMotor1.set(1);
-        Constants.intakeMoror2.set(-1);
-    } else if (Constants.joystick.getRawButton(2)) {
-        Constants.intakeMotor1.set(-1);
-        Constants.intakeMoror2.set(1);
+    if (intakeColorSensor.getColor() == edu.wpi.first.wpilibj.util.Color.kBlue && joystick.getRawButton(1)){
+      intakeMotor1.set(-1);
+      intakeMoror2.set(1);
+    } else if (joystick.getRawButton(1)){
+        intakeMotor1.set(1);
+        intakeMoror2.set(-1);
+    } else if (joystick.getRawButton(2)) {
+        intakeMotor1.set(-1);
+        intakeMoror2.set(1);
     } else {
-        Constants.intakeMotor1.stopMotor();
-        Constants.intakeMoror2.stopMotor();
+        intakeMotor1.stopMotor();
+        intakeMoror2.stopMotor();
     }
 
 
@@ -76,10 +81,10 @@ public class intake extends SubsystemBase {
       intakeMotor.set(-stick);
     }
 
-    SmartDashboard.putString("Color Sensor", Constants.intakeColorSensor.getColor().toString());
+    SmartDashboard.putString("Color Sensor", intakeColorSensor.getColor().toString());
     SmartDashboard.putNumber("Joystick POV", joystick.getPOV());
     SmartDashboard.putNumber("Joystick Axis", _joystick.getRawAxis(2));
-    SmartDashboard.putNumber("Ultrasonic Sensor", Constants.ultrasonic.getRangeInches());
+    SmartDashboard.putNumber("Ultrasonic Sensor", intakeUltrasonic.getRangeInches());
 
   }
 
