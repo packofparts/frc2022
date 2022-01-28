@@ -9,7 +9,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Subsystem;
-import frc.robot.subsystems.Shooter;
+// import frc.robot.subsystems.Shooter;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -47,7 +47,8 @@ public class Robot extends TimedRobot {
     // and running subsystem periodic() methods.  This must be called from the robot's periodic
     // block in order for anything in the Command-based framework to work.
     CommandScheduler.getInstance().run();
-    SmartDashboard.putNumber("funny number", Math.random());
+    // SmartDashboard.putNumber("funny number", Math.random());
+    // System.out.println("robo");
   }
 
   /** This function is called once each time the robot enters Disabled mode. */
@@ -72,7 +73,13 @@ public class Robot extends TimedRobot {
 
   /** This function is called periodically during autonomous. */
   @Override
-  public void autonomousPeriodic() {}
+  public void autonomousPeriodic() {
+    System.out.println("debug");
+
+    if (!m_robotContainer.getAutonomousCommand().isScheduled()) {
+      m_robotContainer.getAutonomousCommand().schedule();
+    }
+  }
 
   @Override
   public void teleopInit() {

@@ -225,10 +225,18 @@ sHAKUANDO WAS HERE
     // ySpeed = Math.pow(ySpeed, 2) * getSign(ySpeed);
     // rotation = Math.pow(rotation, 2) * getSign(rotation);
 
-    drive(xSpeed, ySpeed, rotation, true);
+    boolean fieldOrientated = true;
+    if (usingXboxController) {
+      if (driveJoystick.getRawButton(10)) fieldOrientated = false;
+    }
+    else {
+      if (driveJoystickMain.getRawButton(1)) fieldOrientated = false;
+    }
+
+    drive(xSpeed, ySpeed, rotation, true, fieldOrientated);
   }
 
-  public void drive(double xSpeed, double ySpeed, double rotation, boolean deadZone) {
+  public void drive(double xSpeed, double ySpeed, double rotation, boolean deadZone, boolean fieldOriented) {
     if (!shouldDrive) return;
 
     //deadzone
@@ -286,14 +294,8 @@ sHAKUANDO WAS HERE
 
     // Convert to wheel speeds
     ChassisSpeeds speeds;
-    if (usingXboxController) {
-      if (driveJoystick.getRawButton(10)) speeds = new ChassisSpeeds(ySpeed, xSpeed, rotation);
-      else speeds = ChassisSpeeds.fromFieldRelativeSpeeds(ySpeed, xSpeed, rotation, Rotation2d.fromDegrees(-gyro.getAngle()));
-    }
-    else {
-      if (driveJoystickMain.getRawButton(1)) speeds = new ChassisSpeeds(ySpeed, xSpeed, rotation);
-      else speeds = ChassisSpeeds.fromFieldRelativeSpeeds(ySpeed, xSpeed, rotation, Rotation2d.fromDegrees(-gyro.getAngle()));
-    }
+    if (!fieldOriented) speeds = new ChassisSpeeds(ySpeed, xSpeed, rotation);
+    else speeds = ChassisSpeeds.fromFieldRelativeSpeeds(ySpeed, xSpeed, rotation, Rotation2d.fromDegrees(-gyro.getAngle()));
 
     MecanumDriveWheelSpeeds wheelSpeeds = m_kinematics.toWheelSpeeds(speeds);
     double[] wheelSpeedDouble = new double[] {wheelSpeeds.frontLeftMetersPerSecond,

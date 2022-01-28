@@ -13,7 +13,7 @@ import edu.wpi.first.wpilibj.Timer;
 public class transferIndex extends CommandBase {
   /** Creates a new transferIndex. */
 
-  Index index = new Index();
+  Index index;
   Timer timer;
   private boolean finish = false;
   public transferIndex(double indexSpeed, Index in) {
