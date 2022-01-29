@@ -13,7 +13,6 @@ package frc.robot;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
-
     public static final int kShooterPort = 0;
     public static final double increment = 750;
     public static final double joystickDeadzone = 0.1;
@@ -46,8 +45,4 @@ public final class Constants {
     public static final double kdLime = 0;
     public static final int autoAlignButton = 0;
     public static final int joystickPort = 0;
-
-
-
-
 }
