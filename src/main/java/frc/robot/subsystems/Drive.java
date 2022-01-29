@@ -21,7 +21,7 @@ import edu.wpi.first.wpilibj.SPI;
 import frc.robot.Constants;
 import frc.robot.Gains;
 
-public class DriveSubsystem extends SubsystemBase {
+public class Drive extends SubsystemBase {
   CANSparkMax m_frontLeftSpark;
   CANSparkMax m_frontRightSpark;
   CANSparkMax m_backLeftSpark;
@@ -47,7 +47,7 @@ public class DriveSubsystem extends SubsystemBase {
   final boolean useGyroHold = false;
   final boolean usingXboxController = false;
 
-  public DriveSubsystem() {
+  public Drive() {
     gyro = new AHRS(SPI.Port.kMXP);
 
     m_frontLeftSpark = new CANSparkMax(Constants.frontLeftSparkID, MotorType.kBrushless);

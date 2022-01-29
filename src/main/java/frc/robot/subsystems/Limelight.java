@@ -14,8 +14,8 @@ public class Limelight extends SubsystemBase {
   PIDController pidController;
   NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight");
   NetworkTableEntry targetx = table.getEntry("tx");
-  double tx = targetx.getDouble(0);
-  DriveSubsystem driveBase = new DriveSubsystem();
+  public double tx = targetx.getDouble(0);
+  Drive driveBase = new Drive();
   XboxController joystick = new XboxController(0);
   public Limelight() {
     this.pidController = new PIDController(Constants.kpLime, Constants.kiLime, Constants.kdLime);
