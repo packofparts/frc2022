@@ -11,12 +11,11 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.Constants;
 public class PIDTurn extends CommandBase {
-  
-  DriveSubsystem driveBase = new DriveSubsystem();
+  DriveSubsystem driveBase;
   PIDController pid = new PIDController(0, 0, 0);
   public PIDTurn(DriveSubsystem dt, double Degrees) {
-    addRequirements(driveBase);
     driveBase = dt;
+    addRequirements(driveBase);
     Constants.PIDTurnDegrees = Degrees;
   }
 

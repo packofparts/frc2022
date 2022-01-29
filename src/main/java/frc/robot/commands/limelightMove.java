@@ -15,15 +15,18 @@ import edu.wpi.first.math.controller.PIDController;
 
 public class limelightMove extends CommandBase {
   /** Creates a new LidarMove. */
-  DriveSubsystem driveBase = new DriveSubsystem();
+  DriveSubsystem driveBase;
   PIDController pid = new PIDController(Constants.LimelightKP, Constants.LimelightKI, Constants.LimelightKD);
+  PIDController turnPID = new PIDController(Constants.turnPID[0], Constants.turnPID[1], Constants.turnPID[2]);
+
   //Creates network table
   NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight");
   
   public limelightMove(DriveSubsystem dt) {
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(driveBase);
     driveBase = dt;
+    addRequirements(driveBase);
+    System.out.println("HERE");
   }
 
   // Called when the command is initially scheduled.
@@ -33,19 +36,22 @@ public class limelightMove extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    NetworkTableEntry currentHorizontal = table.getEntry("thor");
-    NetworkTableEntry currentVertical = table.getEntry("tvert");
-    //Gets actual value from spot on network table
-    double thor = currentHorizontal.getDouble(0);
-    double tvert = currentVertical.getDouble(0);
-    // Pid- first value is current, second value is set point
-    double speed = pid.calculate(thor*tvert, Constants.thor * Constants.tvert);
-    driveBase.m_backLeftSpark.set(-speed);
-    driveBase.m_frontLeftSpark.set(-speed);
-    driveBase.m_backRightSpark.set(speed);
-    driveBase.m_frontRightSpark.set(speed);
-    // Gets spot on network table
-
+    if (table.getEntry("tv").getDouble(0) == 1) {
+      NetworkTableEntry currentHorizontal = table.getEntry("thor");
+      NetworkTableEntry currentVertical = table.getEntry("tvert");
+      //Gets actual value from spot on network table
+      double thor = currentHorizontal.getDouble(0);
+      double tvert = currentVertical.getDouble(0);
+      // Pid- first value is current, second value is set point
+      double speed = pid.calculate(thor*tvert, Constants.thor * Constants.tvert);
+      if (Math.abs(speed) > 0.5) speed /= 2;
+      System.out.println(speed);
+      driveBase.m_backLeftSpark.set(speed);
+      driveBase.m_frontLeftSpark.set(speed);
+      driveBase.m_backRightSpark.set(speed);
+      driveBase.m_frontRightSpark.set(speed);
+      driveBase.drive(0, speed, -turnPID.calculate(table.getEntry("tx").getDouble(0), 0), false, false);
+    }
   }
 
   // Called once the command ends or is interrupted.

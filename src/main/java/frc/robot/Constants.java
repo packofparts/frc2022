@@ -29,13 +29,11 @@ public final class Constants {
     public static double indexSpeed;
     public static final double motorPower = 0.2;
     public static final double spinTime = 2.0;//tbd
-    public static final double tvert = 105.0; //experimental
-    public static final double thor = 156.0; //experimental
+    public static final double tvert = 62.0; //experimental
+    public static final double thor = 72.0; //experimental
 
-    public static final double LimelightKP = 0;
-
+    public static final double LimelightKP = 0.2;
     public static final double LimelightKI = 0;
-
     public static final double LimelightKD = 0;
 
     //deadzone for the joysticks before input is used
