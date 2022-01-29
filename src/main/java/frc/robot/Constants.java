@@ -6,6 +6,8 @@ package frc.robot;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.wpilibj.I2C;
+import edu.wpi.first.wpilibj.I2C.Port;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
@@ -25,15 +27,17 @@ public final class Constants {
     public static final int flyWheelPort = 0;
     public static final int indexPort = 0;
     public static double increment=0.1;
-    public static double PIDTurnDegrees=10.0;
+    public static double PIDTurnDegrees=180.0;
     public static double indexSpeed;
     public static final double motorPower = 0.2;
     public static final double spinTime = 2.0;//tbd
-    public static final double tvert = 62.0; //experimental
-    public static final double thor = 72.0; //experimental
+    public static final double tvert = 105.0; //experimental
+    public static final double thor = 156.0; //experimental
 
-    public static final double LimelightKP = 0.2;
+    public static final double LimelightKP = 0;
+
     public static final double LimelightKI = 0;
+
     public static final double LimelightKD = 0;
 
     //deadzone for the joysticks before input is used
@@ -72,4 +76,24 @@ public final class Constants {
     public static final int frontRightSparkID = 2;
     public static final int backLeftSparkID = 3;
     public static final int backRightSparkID = 4;
+
+    public static final int intakeMotor1Port = 0;
+    public static final int intakeMotor2Port = 1;
+    public static final Port intakeColorSensorPort = I2C.Port.kOnboard;
+    public static final int intakeUltrasonicPingPort = 1;
+    public static final int intakeUltrasonicEchoPort = 2;
+
+    public static final int indexMotor = 0;
+
+    public static final int ultrasonicThreshold = 5;
+
+    public static final int indexUltrasonic1PingPort = 4;
+
+    public static final int indexUltrasonic2PingPort = 5;
+
+    public static final int indexUltrasonic1EchoPort = 6;
+
+    public static final int indexUltrasonic2EchoPort = 7;
+    public static final double spinTimeIntake = 0;
+    public static final double spinTimeOuttake = 0;
 }
