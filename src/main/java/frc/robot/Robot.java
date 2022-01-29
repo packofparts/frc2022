@@ -4,12 +4,18 @@
 
 package frc.robot;
 
+import com.ctre.phoenix.motorcontrol.can.TalonFX;
+import com.ctre.phoenix.music.Orchestra;
+
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.ScheduleCommand;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 // import frc.robot.subsystems.Shooter;
+import frc.robot.commands.PlayMusic;
+import frc.robot.subsystems.DriveSubsystem;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -19,6 +25,8 @@ import edu.wpi.first.wpilibj2.command.Subsystem;
  */
 public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
+
+  Orchestra musikPlayer;
 
   private RobotContainer m_robotContainer;
 
@@ -31,6 +39,9 @@ public class Robot extends TimedRobot {
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
+    musikPlayer = new Orchestra();
+    musikPlayer.addInstrument(new TalonFX(5));
+    musikPlayer.loadMusic("starwars.chrp");
   }
 
   /**
@@ -58,6 +69,7 @@ public class Robot extends TimedRobot {
   @Override
   public void disabledPeriodic() {
     m_robotContainer.drive.stop();
+    musikPlayer.stop();
   }
 
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
@@ -91,12 +103,21 @@ public class Robot extends TimedRobot {
       m_autonomousCommand.cancel();
     }
 
-
+    // PlayMusic yay = new PlayMusic();
+    // yay.schedule();
   }
 
   /** This function is called periodically during operator control. */
   @Override
-  public void teleopPeriodic() {}
+  public void teleopPeriodic() {
+    /*
+    if(m_robotContainer.drive.driveJoystickMain.getRawButtonPressed(10)) {
+      musikPlayer.play();
+    }
+    if(m_robotContainer.drive.driveJoystickMain.getRawButtonPressed(11)) {
+      musikPlayer.stop();
+    }*/
+  }
 
   @Override
   public void testInit() {

@@ -4,6 +4,8 @@
 
 package frc.robot.subsystems;
 
+import java.io.Console;
+import java.nio.file.ClosedWatchServiceException;
 import java.util.stream.DoubleStream;
 
 import com.kauailabs.navx.frc.AHRS;
@@ -44,13 +46,13 @@ public class DriveSubsystem extends SubsystemBase {
 
   // Creating my kinematics object using the wheel locations.
   MecanumDriveKinematics m_kinematics = new MecanumDriveKinematics(m_frontLeftLocation, m_frontRightLocation, m_backLeftLocation, m_backRightLocation);
-
+  String bruh = "Ask me who Joe is";
   AHRS gyro;
   Double gyroHold = null;
 
-  //XboxController driveJoystick = new XboxController(0);
+  //PlaystationController driveJoystick = new XboxController(0);
   XboxController driveJoystick = null;
-  Joystick driveJoystickMain = new Joystick(0);
+  public Joystick driveJoystickMain = new Joystick(0);
   Joystick driveJoystickSide = new Joystick(1);
 
   //set booleans
@@ -64,17 +66,16 @@ public class DriveSubsystem extends SubsystemBase {
   PIDController ratePID = new PIDController(Constants.ratePID[0], Constants.ratePID[1], Constants.ratePID[2]);
 
   NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight");
-  
   public DriveSubsystem() {
+    /*
+sHAKUANDO WAS HERE
+    */
     gyro = new AHRS(SPI.Port.kMXP);
 
     m_frontLeftSpark = new CANSparkMax(Constants.frontLeftSparkID, MotorType.kBrushless);
     m_frontRightSpark = new CANSparkMax(Constants.frontRightSparkID, MotorType.kBrushless);
     m_backLeftSpark = new CANSparkMax(Constants.backLeftSparkID, MotorType.kBrushless);
     m_backRightSpark = new CANSparkMax(Constants.backRightSparkID, MotorType.kBrushless);
-/*
-sHAKUANDO WAS HERE
-    */
     m_frontLeftSpark.restoreFactoryDefaults(true);
     m_frontRightSpark.restoreFactoryDefaults(true);
     m_backLeftSpark.restoreFactoryDefaults(true);
