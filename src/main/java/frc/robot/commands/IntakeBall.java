@@ -6,20 +6,34 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
+import frc.robot.subsystems.IntakeSubsystem;
+
 public class IntakeBall extends CommandBase {
   /** Creates a new IntakeBall. */
-  public IntakeBall() {
+  IntakeSubsystem intake = new IntakeSubsystem();
+  public IntakeBall(IntakeSubsystem intk) {
+    addRequirements(intake);
+    intake = intk;
+    
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+    intake.setSolenoidPH(true);
+    intake.toggleMatics();
+    intake.IntakeBall();
+    intake.setSolenoidPH(false);
+    intake.toggleMatics();
+
+
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-
+    
     
   }
 
