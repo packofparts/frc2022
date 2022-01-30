@@ -6,6 +6,17 @@ package frc.robot;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Translation2d;
+import com.revrobotics.ColorSensorV3;
+
+import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.DigitalOutput;
+import edu.wpi.first.wpilibj.I2C;
+import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.Ultrasonic;
+import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.I2C.Port;
+import edu.wpi.first.wpilibj.motorcontrol.Spark;
+import edu.wpi.first.wpilibj.motorcontrol.Talon;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
@@ -84,6 +95,28 @@ public final class Constants {
     public static final int backRightSparkID = 4;
 
     public static final int climbTalonID = 5;
+
+    public static Joystick joystick = new Joystick(0);
+
+    public static final int kShooterPort = 0;
+    public static final double increment = 0.2;
+    public static final int intakeMotor1Port = 0;
+    public static final int intakeMotor2Port = 1;
+    public static final Port intakeColorSensorPort = I2C.Port.kOnboard;
+    public static final int intakeUltrasonicPingPort = 1;
+    public static final int intakeUltrasonicEchoPort = 2;
+
+    public static final int indexMotor = 0;
+
+    public static final int ultrasonicThreshold = 5;
+
+    public static final int indexUltrasonic1PingPort = 4;
+
+    public static final int indexUltrasonic2PingPort = 5;
+
+    public static final int indexUltrasonic1EchoPort = 6;
+
+    public static final int indexUltrasonic2EchoPort = 7;
 
     public static final int shooterTalonID = 6;
 }
