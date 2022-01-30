@@ -27,9 +27,6 @@ import edu.wpi.first.wpilibj.motorcontrol.Talon;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
-    public static final double increment = 750;
-    //deadzone for the joysticks before input is used
-    public static final double joystickDeadzone = 0.2;
 
     public static final int kShooterPort = 0;
     public static final double increment = 750;
