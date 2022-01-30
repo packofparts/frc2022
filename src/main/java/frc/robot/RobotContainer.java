@@ -29,7 +29,6 @@ public class RobotContainer {
   private DriveSubsystem drive = new DriveSubsystem();
   private Shooter shootSubsystem = new Shooter(operatorController);
   private ClimbSubsystem climb = new ClimbSubsystem(operatorController);
-  private Shooter shootSubsystem = new Shooter();
   private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
   public intake m_intake = new intake();
   public Index m_index = new Index();
