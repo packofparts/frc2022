@@ -39,9 +39,11 @@ public class limelightMove extends CommandBase {
     if (table.getEntry("tv").getDouble(0) == 1) {
       NetworkTableEntry currentHorizontal = table.getEntry("thor");
       NetworkTableEntry currentVertical = table.getEntry("tvert");
+      // double currentArea = table.getEntry("targetArea").getDouble(0);
       //Gets actual value from spot on network table
       double thor = currentHorizontal.getDouble(0);
       double tvert = currentVertical.getDouble(0);
+      
       // Pid- first value is current, second value is set point
       double speed = pid.calculate(thor*tvert, Constants.thor * Constants.tvert);
       if (Math.abs(speed) > 0.5) speed /= 2;
@@ -50,7 +52,7 @@ public class limelightMove extends CommandBase {
       // driveBase.m_frontLeftSpark.set(speed);
       // driveBase.m_backRightSpark.set(speed);
       // driveBase.m_frontRightSpark.set(speed);
-      driveBase.drive(0, speed, turnPID.calculate(table.getEntry("tx").getDouble(0), 0), false, false);
+      driveBase.drive(0, speed, -turnPID.calculate(table.getEntry("tx").getDouble(0), 0), false, false);
     }
   }
 

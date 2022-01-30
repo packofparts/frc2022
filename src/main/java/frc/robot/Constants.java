@@ -18,7 +18,7 @@ import edu.wpi.first.wpilibj.I2C.Port;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
-    public static final double kpLime = 0.1; //TBD
+    public static final double kpLime = 0.2; //TBD
     public static final double kiLime = 0; //TBD
     public static final double kdLime = 0.5; // TBD
     public static final int autoAlignButton = 4;
@@ -33,8 +33,9 @@ public final class Constants {
     public static final double spinTime = 2.0;//tbd
     public static final double tvert = 105.0; //experimental
     public static final double thor = 156.0; //experimental
+    public static final double tarea=16.5;
 
-    public static final double LimelightKP = 0;
+    public static final double LimelightKP = 0.2;
 
     public static final double LimelightKI = 0;
 
