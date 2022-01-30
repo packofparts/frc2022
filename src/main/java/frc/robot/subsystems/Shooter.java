@@ -26,10 +26,6 @@ public class Shooter extends SubsystemBase {
     this.joystick = joystick;
   }
 
-  public void setRPM(double RPM) {
-    shootMotor.set(ControlMode.Velocity, RPM);
-  }
-
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
@@ -76,7 +72,5 @@ public class Shooter extends SubsystemBase {
   public void setRPMNoFLy(double RPM) {
     nonFlyWheel.set(ControlMode.Velocity, RPM);
   }
-  @Override
-  public void periodic() {   
-  }
+  
 }

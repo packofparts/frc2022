@@ -42,9 +42,6 @@ public final class Constants {
     public static final double encoderDeadzone = 0.5;
     //encoder conversion for Climb motor
     public static final double climbFactor = 1;
-
-    //PID settings
-    public static final Gains defaultPID = new Gains(0.05, 0.00001, 0.7, 0.0, 0.0, -0.5, 0.5, 0);
     
     //maximum speed of the robot in m/s
     public static final double maxSpeed = 6;
@@ -57,10 +54,6 @@ public final class Constants {
     public static final double wheelDisFromCenter = 0.5715;
 
     //IDs of CAN objects
-    public static final int frontLeftSparkID = 1;
-    public static final int frontRightSparkID = 2;
-    public static final int backLeftSparkID = 3;
-    public static final int backRightSparkID = 4;
     public static final double kpLime = -0.1;
     public static final double kiLime = 0;
     public static final double kdLime = 0;
@@ -72,18 +65,6 @@ public final class Constants {
     public static Gains defaultPID = new Gains(0.2, 0.0, 0.0, 0.0, 0.0, -1, 1, 1);
     public static final double[] turnPID = new double[] {0.009, 0.0, 0.002};
     public static final double[] ratePID = new double[] {0.125, 0.0, 0.0};
-    //maximum speed of the robot in m/s
-    public static final double maxSpeed = 5000;
-    //maximum rotation of the robot in rads/sec
-    public static final double maxRate = 3;
-    //maximum rotation of the robot in rads/sec
-    public static final double maxTurnOutput = Math.toRadians(180)*1000;
-    //minimum input required for robot to move
-    public static final double minInput = 0.1;
-    //distance of wheels from center of robot
-    public static final double wheelDisFromCenter = 0.5715;
-    //distance of cg from robot center
-    public static final Translation2d cgDistance = new Translation2d(0, 0.5);
 
     //IDs of CAN objects
     public static final int frontLeftSparkID = 1;
@@ -93,10 +74,6 @@ public final class Constants {
 
     public static final int climbTalonID = 5;
 
-    public static Joystick joystick = new Joystick(0);
-
-    public static final int kShooterPort = 0;
-    public static final double increment = 0.2;
     public static final int intakeMotor1Port = 0;
     public static final int intakeMotor2Port = 1;
     public static final Port intakeColorSensorPort = I2C.Port.kOnboard;

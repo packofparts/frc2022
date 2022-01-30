@@ -26,7 +26,7 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private XboxController operatorController = new XboxController(2);
 
-  private DriveSubsystem drive = new DriveSubsystem();
+  public DriveSubsystem drive = new DriveSubsystem();
   private Shooter shootSubsystem = new Shooter(operatorController);
   private ClimbSubsystem climb = new ClimbSubsystem(operatorController);
   private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
