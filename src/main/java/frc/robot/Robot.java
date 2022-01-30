@@ -41,7 +41,7 @@ public class Robot extends TimedRobot {
     m_robotContainer = new RobotContainer();
     musikPlayer = new Orchestra();
     musikPlayer.addInstrument(new TalonFX(5));
-    musikPlayer.loadMusic("starwars.chrp");
+    musikPlayer.loadMusic("scale.chrp");
   }
 
   /**
@@ -111,13 +111,13 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
-    /*
+    
     if(m_robotContainer.drive.driveJoystickMain.getRawButtonPressed(10)) {
       musikPlayer.play();
     }
     if(m_robotContainer.drive.driveJoystickMain.getRawButtonPressed(11)) {
       musikPlayer.stop();
-    }*/
+    }
   }
 
   @Override
