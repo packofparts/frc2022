@@ -20,6 +20,10 @@ public final class Constants {
     //deadzone for the joysticks before input is used
     public static final double joystickDeadzone = 0.2;
 
+    public static final int kShooterPort = 0;
+    public static final double increment = 750;
+    public static final double joystickDeadzone = 0.1;
+
     //Proportional adjustment for gyro pid
     public static final double pGyro = 0.01;
     //Gyro rotation rate deadzone before snap is enabled
@@ -30,6 +34,30 @@ public final class Constants {
     public static final double encoderDeadzone = 0.5;
     //encoder conversion for Climb motor
     public static final double climbFactor = 1;
+
+    //PID settings
+    public static final Gains defaultPID = new Gains(0.05, 0.00001, 0.7, 0.0, 0.0, -0.5, 0.5, 0);
+    
+    //maximum speed of the robot in m/s
+    public static final double maxSpeed = 6;
+    //maximum rotation of the robot in rads/sec
+    public static final double maxTurnOutput = Math.toRadians(5);
+    public static final double minTurnInput = 0.1;
+    //minimum input required for robot to move
+    public static final double minInput = 0.1;
+    //distance of wheels from center of robot
+    public static final double wheelDisFromCenter = 0.5715;
+
+    //IDs of CAN objects
+    public static final int frontLeftSparkID = 1;
+    public static final int frontRightSparkID = 2;
+    public static final int backLeftSparkID = 3;
+    public static final int backRightSparkID = 4;
+    public static final double kpLime = -0.1;
+    public static final double kiLime = 0;
+    public static final double kdLime = 0;
+    public static final int autoAlignButton = 0;
+    public static final int joystickPort = 0;
 
     //PID settings
     public static final Gains velocityPID = new Gains(0.0002, 0.0000005, 0.0, 0.0, 0.0, -1, 1, 0);
