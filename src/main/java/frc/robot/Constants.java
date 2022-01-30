@@ -52,6 +52,8 @@ public final class Constants {
     public static final double encoderConversion = 0.14771805182393566186414699677227;
     //encoder position deadzone
     public static final double encoderDeadzone = 0.5;
+    //climb encoder conversion
+    public static final double climbFactor = 1;
 
     //PID settings
     public static final Gains velocityPID = new Gains(0.0002, 0.0000005, 0.0, 0.0, 0.0, -1, 1, 0);
@@ -77,6 +79,7 @@ public final class Constants {
     public static final int frontRightSparkID = 2;
     public static final int backLeftSparkID = 3;
     public static final int backRightSparkID = 4;
+    public static final int climbTalonID = 5;
 
     public static final int intakeMotor1Port = 0;
     public static final int intakeMotor2Port = 1;
