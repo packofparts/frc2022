@@ -8,28 +8,31 @@ import com.revrobotics.CANSparkMax.ControlType;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.constants.Constants;
 import frc.robot.subsystems.DriveSubsystem;
-import frc.robot.Constants;
+
 public class PIDTurn extends CommandBase {
   DriveSubsystem driveBase;
   PIDController pid = new PIDController(0, 0, 0);
-  public PIDTurn(DriveSubsystem dt, double Degrees) {
+  double PIDTurnDegrees;
+  double originalYaw = 0;
+
+  public PIDTurn(DriveSubsystem dt, double degrees) {
     driveBase = dt;
     addRequirements(driveBase);
-    Constants.PIDTurnDegrees = Degrees;
+    this.PIDTurnDegrees = degrees;
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    Constants.originalYaw = driveBase.getAngle();
-
+    originalYaw = driveBase.getAngle();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double speed = pid.calculate(driveBase.getAngle(), Constants.originalYaw + Constants.PIDTurnDegrees);
+    double speed = pid.calculate(driveBase.getAngle(), originalYaw + PIDTurnDegrees);
     driveBase.setBackLeftVelocity(-speed);
     driveBase.setFrontLeftVelocity(-speed);
     driveBase.setBackRightVelocity(speed);

@@ -5,44 +5,39 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants;
+import frc.robot.constants.IDs;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
-import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.Joystick;
-
-
-
 
 public class Index extends SubsystemBase {
   /** Creates a new Index. */
 
-  XboxController xbox = new XboxController(Constants.xboxPort);
-  Joystick _joystick = new Joystick(Constants.joystickPort);
-  public TalonFX indexMotor = new TalonFX(Constants.indexPort);
+  TalonFX indexMotor = new TalonFX(IDs.indexMotorID);
   boolean isXbox = false;
+  Joysticks joysticks;
 
-  public Index() {
-    if(isXbox){
-      if (xbox.getPOV() == 0) {
-        if (Constants.motorPower+Constants.increment<=7500) {
-          indexMotor.set(ControlMode.Velocity, Constants.motorPower+Constants.increment);
-         
-        }
-      }
-      if (xbox.getPOV() == 180) {
-        if (Constants.motorPower-Constants.increment>=0) {
-          indexMotor.set(ControlMode.Velocity, Constants.motorPower-Constants.increment);
-          
-        }
-      }
-    }
-
+  public Index(Joysticks joysticks) {
+    this.joysticks = joysticks;
   }
 
   @Override
   public void periodic() {
-    // This method will be called once per scheduler run
+    // if (operatorController.getPOV() == 0) {
+    //   if (Constants.motorPower+Constants.increment<=7500) {
+    //     indexMotor.set(ControlMode.Velocity, Constants.motorPower+Constants.increment);
+    //   }
+    // }
+    // if (operatorController.getPOV() == 180) {
+    //   if (Constants.motorPower-Constants.increment>=0) {
+    //     indexMotor.set(ControlMode.Velocity, Constants.motorPower-Constants.increment);
+    //   }
+    // }
+    
+    if (joysticks.getIndexToggle()) setIndex(1);
+  }
+
+  public void setIndex(double speed) {
+    indexMotor.set(ControlMode.PercentOutput, speed);
   }
 }

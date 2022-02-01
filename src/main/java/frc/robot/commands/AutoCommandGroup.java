@@ -4,23 +4,17 @@
 
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj2.command.CommandGroupBase;
-import edu.wpi.first.wpilibj2.command.PIDCommand;
-import edu.wpi.first.wpilibj2.command.PIDSubsystem;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
-import frc.robot.Constants;
 import frc.robot.subsystems.*;
+
 public class AutoCommandGroup extends ParallelCommandGroup {
   /** Add your docs here. */
 
   // IntakeSubsystem intake = new IntakeSubsystem();
-  DriveSubsystem drive = new DriveSubsystem();
-  IntakeSubsystem intake = new IntakeSubsystem();
-  Index index = new Index();
   //Shooter shooter = new Shooter();
 
 
-  public AutoCommandGroup() {
+  public AutoCommandGroup(DriveSubsystem drive, Intake intake, Index index) {
     //Step 1- Turn 180
     parallel(new PIDTurn(drive, 180));
 
@@ -37,26 +31,9 @@ public class AutoCommandGroup extends ParallelCommandGroup {
     //parallel(new ShootBall());
 
     //Step 6- Transfer Index to Shooter
-    parallel(new transferIndex(Constants.indexSpeed, index));
+    parallel(new transferIndex(index, 0.3));
 
     //Step 7- Fire Ball 2- Cannot Complete without shooter
     //parallel(new ShootBall());
-
-    // Add Commands here:
-    // e.g. addSequential(new Command1());
-    // addSequential(new Command2());
-    // these will run in order.
-
-    // To run multiple commands at the same time,
-    // use addParallel()
-    // e.g. addParallel(new Command1());
-    // addSequential(new Command2());
-    // Command1 and Command2 will run in parallel.
-
-    // A command group will require all of the subsystems that each member
-    // would require.
-    // e.g. if Command1 requires chassis, and Command2 requires arm,
-    // a CommandGroup containing them would require both the chassis and the
-    // arm.
   }
 }

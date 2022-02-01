@@ -9,14 +9,14 @@ import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.Constants;
+import frc.robot.constants.Constants;
 import frc.robot.subsystems.DriveSubsystem;
 import edu.wpi.first.math.controller.PIDController;
 
 public class limelightMove extends CommandBase {
   /** Creates a new LidarMove. */
   DriveSubsystem driveBase;
-  PIDController pid = new PIDController(Constants.LimelightKP, Constants.LimelightKI, Constants.LimelightKD);
+  PIDController pid = new PIDController(Constants.movePID.kP, Constants.movePID.kP, Constants.movePID.kP);
   PIDController turnPID = new PIDController(Constants.turnPID[0], Constants.turnPID[1], Constants.turnPID[2]);
 
   //Creates network table

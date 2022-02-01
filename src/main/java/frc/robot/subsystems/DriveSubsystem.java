@@ -3,9 +3,6 @@
 // the WPILib BSD license file in the root directory of this project.
 
 package frc.robot.subsystems;
-
-import java.io.Console;
-import java.nio.file.ClosedWatchServiceException;
 import java.util.stream.DoubleStream;
 
 import com.kauailabs.navx.frc.AHRS;
@@ -15,8 +12,6 @@ import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
-import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -28,9 +23,10 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj.SPI;
-import frc.robot.Constants;
 import frc.robot.Gains;
 import frc.robot.commands.MoveBy;
+import frc.robot.constants.Constants;
+import frc.robot.constants.IDs;
 
 public class DriveSubsystem extends SubsystemBase {
   public CANSparkMax m_frontLeftSpark;
@@ -50,14 +46,9 @@ public class DriveSubsystem extends SubsystemBase {
   AHRS gyro;
   Double gyroHold = null;
 
-  //PlaystationController driveJoystick = new XboxController(0);
-  XboxController driveJoystick = null;
-  public Joystick driveJoystickMain = new Joystick(0);
-  Joystick driveJoystickSide = new Joystick(1);
-
   //set booleans
   final boolean useGyroHold = true;
-  final boolean usingXboxController = driveJoystick != null;
+  final boolean usingXboxController = false;//Joysticks.driveXboxController != null;
 
   MoveBy moveBy = new MoveBy(this, 5);
   boolean shouldDrive = true;
@@ -66,16 +57,20 @@ public class DriveSubsystem extends SubsystemBase {
   PIDController ratePID = new PIDController(Constants.ratePID[0], Constants.ratePID[1], Constants.ratePID[2]);
 
   NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight");
-  public DriveSubsystem() {
+  
+  Joysticks joysticks;
+
+  public DriveSubsystem(Joysticks joysticks) {
     /*
 sHAKUANDO WAS HERE
     */
+    this.joysticks = joysticks;
     gyro = new AHRS(SPI.Port.kMXP);
 
-    m_frontLeftSpark = new CANSparkMax(Constants.frontLeftSparkID, MotorType.kBrushless);
-    m_frontRightSpark = new CANSparkMax(Constants.frontRightSparkID, MotorType.kBrushless);
-    m_backLeftSpark = new CANSparkMax(Constants.backLeftSparkID, MotorType.kBrushless);
-    m_backRightSpark = new CANSparkMax(Constants.backRightSparkID, MotorType.kBrushless);
+    m_frontLeftSpark = new CANSparkMax(IDs.frontLeftSparkID, MotorType.kBrushless);
+    m_frontRightSpark = new CANSparkMax(IDs.frontRightSparkID, MotorType.kBrushless);
+    m_backLeftSpark = new CANSparkMax(IDs.backLeftSparkID, MotorType.kBrushless);
+    m_backRightSpark = new CANSparkMax(IDs.backRightSparkID, MotorType.kBrushless);
     m_frontLeftSpark.restoreFactoryDefaults(true);
     m_frontRightSpark.restoreFactoryDefaults(true);
     m_backLeftSpark.restoreFactoryDefaults(true);
@@ -125,49 +120,26 @@ sHAKUANDO WAS HERE
       SmartDashboard.putNumber("Gyro Rate", gyro.getRate());
     }
     
-    if (usingXboxController) {
-      if (driveJoystick.getRawButton(9)) {
-        gyro.reset();
-        gyroHold = 0.0;
-      }
+    if (joysticks.getGyroResetButton()) {
+      gyro.reset();
+      gyroHold = 0.0;
     }
-    else {
-      if (driveJoystickMain.getRawButton(8)) {
-        gyro.reset();
-        gyroHold = 0.0;
-      }
-      if (driveJoystickMain.getRawButton(9)) {
-        m_frontLeftSpark.getEncoder().setPosition(0);
-        m_frontRightSpark.getEncoder().setPosition(0);
-        m_backLeftSpark.getEncoder().setPosition(0);
-        m_backRightSpark.getEncoder().setPosition(0);
-      }
-      if (driveJoystickSide.getRawButtonReleased(6)) ratePID.setP(ratePID.getP() + 0.005);;
-      if (driveJoystickSide.getRawButtonReleased(7))  ratePID.setP(ratePID.getP() - 0.005);
-      if (driveJoystickSide.getRawButtonReleased(8))  ratePID.setI(ratePID.getI() + 0.0005);
-      if (driveJoystickSide.getRawButtonReleased(9))  ratePID.setI(ratePID.getI() - 0.0005);
-      if (driveJoystickSide.getRawButtonReleased(11)) ratePID.setD(ratePID.getD() + 0.0005);
-      if (driveJoystickSide.getRawButtonReleased(10)) ratePID.setD(ratePID.getD() - 0.0005);
-      
-      // if (driveJoystickMain.getRawButtonPressed(3)) {
-      //   moveBy.setMove(10);
-      //   if (!moveBy.isScheduled()) moveBy.schedule();
-      //   else moveBy.cancel();
-
-      //   shouldDrive = true;
-      // }
-      // if (driveJoystickMain.getRawButtonPressed(2)) {
-      //   moveBy.setMove(-10);
-      //   if (!moveBy.isScheduled()) moveBy.schedule();
-      //   else moveBy.cancel();
-
-      //   shouldDrive = true;
-      // }
+    if (joysticks.getEncoderResetButton()) {
+      m_frontLeftSpark.getEncoder().setPosition(0);
+      m_frontRightSpark.getEncoder().setPosition(0);
+      m_backLeftSpark.getEncoder().setPosition(0);
+      m_backRightSpark.getEncoder().setPosition(0);
     }
+    // if (driveJoystickSide.getRawButtonReleased(6)) ratePID.setP(ratePID.getP() + 0.005);;
+    // if (driveJoystickSide.getRawButtonReleased(7))  ratePID.setP(ratePID.getP() - 0.005);
+    // if (driveJoystickSide.getRawButtonReleased(8))  ratePID.setI(ratePID.getI() + 0.0005);
+    // if (driveJoystickSide.getRawButtonReleased(9))  ratePID.setI(ratePID.getI() - 0.0005);
+    // if (driveJoystickSide.getRawButtonReleased(11)) ratePID.setD(ratePID.getD() + 0.0005);
+    // if (driveJoystickSide.getRawButtonReleased(10)) ratePID.setD(ratePID.getD() - 0.0005);
 
-    SmartDashboard.putNumber("P: ", ratePID.getP());
-    SmartDashboard.putNumber("I: ", ratePID.getI());
-    SmartDashboard.putNumber("D: ", ratePID.getD());
+    // SmartDashboard.putNumber("P: ", ratePID.getP());
+    // SmartDashboard.putNumber("I: ", ratePID.getI());
+    // SmartDashboard.putNumber("D: ", ratePID.getD());
 
     drive();
 
@@ -185,21 +157,6 @@ sHAKUANDO WAS HERE
     //   drive(0, 0, 0, false);
     // }
 
-    // if (driveJoystickSide.getRawButton(4)) {
-    //   drive(0, 0, -turnPID.calculate(gyro.getAngle(), -90), false);
-    // }
-    // else if (driveJoystickSide.getRawButton(5)) {
-    //   drive(0, 0, -turnPID.calculate(gyro.getAngle(), 90), false);
-    // }
-    // else if (driveJoystickSide.getRawButton(2)) {
-    //   drive(0, 0, -turnPID.calculate(gyro.getAngle(), 10), false);
-    // }
-    // else if (driveJoystickSide.getRawButton(3)) {
-    //   drive(0, 0, -turnPID.calculate(gyro.getAngle(), 0), false);
-    // }
-    // else {
-    //   drive(0, 0, 0, false);
-    // }
     SmartDashboard.putBoolean("moveby", moveBy.isScheduled());
   }
 
@@ -211,28 +168,16 @@ sHAKUANDO WAS HERE
     double rotation = 0;
 
     //controller inputs
-    if (usingXboxController) {
-      xSpeed = driveJoystick.getRightX();
-      ySpeed = -driveJoystick.getRightY();
-      rotation = -driveJoystick.getLeftX();
-    }
-    else {
-      xSpeed = -driveJoystickMain.getX();
-      ySpeed = -driveJoystickMain.getY();
-      rotation = -driveJoystickSide.getX();
-    }
+    xSpeed = -joysticks.getDriveSideways();
+    ySpeed = -joysticks.getDriveForward();
+    rotation = -joysticks.getDriveRotation();
 
     // xSpeed = Math.pow(xSpeed, 2) * getSign(xSpeed);
     // ySpeed = Math.pow(ySpeed, 2) * getSign(ySpeed);
     // rotation = Math.pow(rotation, 2) * getSign(rotation);
 
     boolean fieldOrientated = true;
-    if (usingXboxController) {
-      if (driveJoystick.getRawButton(10)) fieldOrientated = false;
-    }
-    else {
-      if (driveJoystickMain.getRawButton(1)) fieldOrientated = false;
-    }
+    if (joysticks.getRobotOrientedToggle()) fieldOrientated = false;
 
     drive(xSpeed, ySpeed, rotation, true, fieldOrientated);
   }

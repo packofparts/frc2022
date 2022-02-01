@@ -24,8 +24,8 @@ import edu.wpi.first.math.kinematics.MecanumDriveWheelSpeeds;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj.SPI;
-import frc.robot.Constants;
 import frc.robot.Gains;
+import frc.robot.constants.Constants;
 import frc.robot.subsystems.DriveSubsystem;
 public class MoveBy extends CommandBase {
   /** Creates a new MoveBy. */

@@ -4,10 +4,8 @@
 
 package frc.robot.commands;
 
-import com.ctre.phoenix.motorcontrol.ControlMode;
-
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.Constants;
+import frc.robot.constants.Constants;
 import frc.robot.subsystems.Index;
 import edu.wpi.first.wpilibj.Timer;
 public class transferIndex extends CommandBase {
@@ -15,12 +13,15 @@ public class transferIndex extends CommandBase {
 
   Index index;
   Timer timer;
-  private boolean finish = false;
-  public transferIndex(double indexSpeed, Index in) {
-    index = in;
+  boolean finish = false;
+  double indexSpeed;
+
+  public transferIndex(Index in, double indexSpeed) {
+    this.index = in;
+    this.indexSpeed = indexSpeed;
+
     timer = new Timer();
     addRequirements(index);
-    Constants.indexSpeed = indexSpeed;
   }
 
   // Called when the command is initially scheduled.
@@ -28,23 +29,24 @@ public class transferIndex extends CommandBase {
   public void initialize() {
     timer.reset();
     timer.start();
-    while (timer.get() < Constants.spinTime) {
-      index.indexMotor.set(ControlMode.Velocity, Constants.indexSpeed);
-    }
-    System.out.println("index complete");
-    finish = true;
-
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-
+    if (timer.get() < Constants.spinTime) {
+      index.setIndex(indexSpeed);
+    }
+    else {
+      finish = true;
+    }
   }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+    System.out.println("index complete");
+  }
 
   // Returns true when the command should end.
   @Override

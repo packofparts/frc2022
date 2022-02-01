@@ -5,12 +5,7 @@
 package frc.robot.commands;
 import frc.robot.subsystems.*;
 
-import edu.wpi.first.networktables.NetworkTable;
-import edu.wpi.first.networktables.NetworkTableEntry;
-import edu.wpi.first.networktables.NetworkTableInstance;
-
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import edu.wpi.first.math.controller.PIDController;
 
 public class AutoAlign extends CommandBase {
   /** Creates a new Lidar. */
@@ -18,9 +13,10 @@ public class AutoAlign extends CommandBase {
   Limelight limelight;
   boolean isFinished;
 
-  public AutoAlign() {
-    // Use addRequirements() here to declare subsystem dependencies.
-    limelight = new Limelight();
+  public AutoAlign(Limelight limelight) {
+    addRequirements(limelight);
+    this.limelight = limelight;
+
     isFinished = false;
   }
 
@@ -28,7 +24,7 @@ public class AutoAlign extends CommandBase {
   @Override
   public void initialize() {
     //find current angle
-    currentAngle = limelight.tx;
+    currentAngle = limelight.getTx();
   }
 
   // Called every time the scheduler runs while the command is scheduled.

@@ -7,24 +7,24 @@ package frc.robot.subsystems;
 import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 
-import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants;
+import frc.robot.constants.Constants;
+import frc.robot.constants.IDs;
 
 public class ClimbSubsystem extends SubsystemBase {
   /** Creates a new ClimbSubsystem. */
-  TalonFX climbFalcon = new TalonFX(Constants.climbTalonID);
-  XboxController operatorController;
+  TalonFX climbFalcon = new TalonFX(IDs.climbTalonID);
+  Joysticks joysticks;
 
-  public ClimbSubsystem(XboxController operatorController) {
-    this.operatorController = operatorController;
+  public ClimbSubsystem(Joysticks joysticks) {
+    this.joysticks = joysticks;
   }
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    climbFalcon.set(TalonFXControlMode.PercentOutput, operatorController.getLeftY());
+    climbFalcon.set(TalonFXControlMode.PercentOutput, joysticks.getClimbAxis());
     SmartDashboard.putNumber("Climb Pos", climbFalcon.getSelectedSensorPosition());
   }
 
