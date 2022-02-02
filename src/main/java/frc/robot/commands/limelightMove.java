@@ -11,7 +11,6 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.constants.Constants;
 import frc.robot.subsystems.DriveSubsystem;
-import edu.wpi.first.math.controller.PIDController;
 
 public class limelightMove extends CommandBase {
   /** Creates a new LidarMove. */
@@ -52,7 +51,7 @@ public class limelightMove extends CommandBase {
       // driveBase.m_frontLeftSpark.set(speed);
       // driveBase.m_backRightSpark.set(speed);
       // driveBase.m_frontRightSpark.set(speed);
-      driveBase.drive(0, speed, -turnPID.calculate(table.getEntry("tx").getDouble(0), 0), false, false);
+      driveBase.drive(0, speed, -turnPID.calculate(table.getEntry("tx").getDouble(0), 0), false);
     }
   }
 

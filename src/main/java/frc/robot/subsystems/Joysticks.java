@@ -18,6 +18,7 @@ public class Joysticks extends SubsystemBase {
   public double getDriveSideways() {return driveJoystickMain.getX();}
 
   public boolean getRobotOrientedToggle() {return driveJoystickMain.getRawButton(1);}
+  public boolean getPrecisionRotationToggle() {return driveJoystickMain.getRawButton(3);}
   public boolean getGyroResetButton() {return driveJoystickMain.getRawButton(8);}
   public boolean getEncoderResetButton() {return driveJoystickMain.getRawButton(9);}
 
@@ -25,6 +26,15 @@ public class Joysticks extends SubsystemBase {
   //side drive joysticks
   private final Joystick driveJoystickSide = new Joystick(1);
   public double getDriveRotation() {return driveJoystickSide.getX();}
+
+  public boolean getPIncrease() {return driveJoystickSide.getRawButtonReleased(6);}
+  public boolean getPDecrease() {return driveJoystickSide.getRawButtonReleased(7);}
+  public boolean getIIncrease() {return driveJoystickSide.getRawButtonReleased(8);}
+  public boolean getIDecrease() {return driveJoystickSide.getRawButtonReleased(9);}
+  public boolean getDIncrease() {return driveJoystickSide.getRawButtonReleased(11);}
+  public boolean getDDecrease() {return driveJoystickSide.getRawButtonReleased(10);}
+  public boolean getPIDSlow() {return driveJoystickSide.getRawButtonReleased(4);}
+  public boolean getPIDFast() {return driveJoystickSide.getRawButtonReleased(5);}
 
 
   //operator controls

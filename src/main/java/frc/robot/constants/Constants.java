@@ -27,8 +27,6 @@ public final class Constants {
     public static final double maxRate = 3;
     //maximum rotation of the robot in rads/sec
     public static final double maxTurnOutput = Math.toRadians(180)*1000;
-    //minimum input required for robot to move
-    public static final double minInput = 0.1;
     //distance of wheels from center of robot
     public static final double wheelDisFromCenter = 0.5715;
     //distance of cg from robot center
@@ -38,6 +36,16 @@ public final class Constants {
     //Gyro rotation rate deadzone before snap is enabled
     public static final double gyroDeadzone = 3;
 
+    //precision factor for precision turning
+    public static final double precisionFactor = 0.4;
+    //input exponent factor
+    public static final double exponentFactor = 4/3;
+    //input exponent factor for turning
+    public static final double turnExponentFactor = 5/3;
+    //min forward/side power input for movement
+    public static final double minPower = 0.1;
+    //min rotation input for turning
+    public static final double minTurn = 0.05;
 
     /*
     Shooter Constants

@@ -45,20 +45,18 @@ public class DriveSubsystem extends SubsystemBase {
   String bruh = "Ask me who Joe is";
   AHRS gyro;
   Double gyroHold = null;
-
-  //set booleans
-  final boolean useGyroHold = true;
-  final boolean usingXboxController = false;//Joysticks.driveXboxController != null;
-
-  MoveBy moveBy = new MoveBy(this, 5);
   boolean shouldDrive = true;
 
   PIDController turnPID = new PIDController(Constants.turnPID[0], Constants.turnPID[1], Constants.turnPID[2]);
   PIDController ratePID = new PIDController(Constants.ratePID[0], Constants.ratePID[1], Constants.ratePID[2]);
 
   NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight");
-  
   Joysticks joysticks;
+  
+  //set booleans
+  final boolean useGyroHold = true;
+  final boolean usingXboxController = false;//Joysticks.driveXboxController != null;
+  final boolean tuningPID = false;
 
   public DriveSubsystem(Joysticks joysticks) {
     /*
@@ -99,7 +97,7 @@ sHAKUANDO WAS HERE
     setRampRates(0.5);
     setMode(idleMode.brake);
 
-    setAllPIDControllers(Constants.defaultPID);
+    setAllPIDControllers(Constants.movePID);
     setAllPIDControllers(Constants.velocityPID);
 
     m_frontLeftSpark.setInverted(false);
@@ -130,36 +128,34 @@ sHAKUANDO WAS HERE
       m_backLeftSpark.getEncoder().setPosition(0);
       m_backRightSpark.getEncoder().setPosition(0);
     }
-    // if (driveJoystickSide.getRawButtonReleased(6)) ratePID.setP(ratePID.getP() + 0.005);;
-    // if (driveJoystickSide.getRawButtonReleased(7))  ratePID.setP(ratePID.getP() - 0.005);
-    // if (driveJoystickSide.getRawButtonReleased(8))  ratePID.setI(ratePID.getI() + 0.0005);
-    // if (driveJoystickSide.getRawButtonReleased(9))  ratePID.setI(ratePID.getI() - 0.0005);
-    // if (driveJoystickSide.getRawButtonReleased(11)) ratePID.setD(ratePID.getD() + 0.0005);
-    // if (driveJoystickSide.getRawButtonReleased(10)) ratePID.setD(ratePID.getD() - 0.0005);
+    if (tuningPID) {
+      //modify PID w/ joysticks
+      if (joysticks.getPIncrease()) ratePID.setP(ratePID.getP() + 0.005);;
+      if (joysticks.getPDecrease())  ratePID.setP(ratePID.getP() - 0.005);
+      if (joysticks.getIIncrease())  ratePID.setI(ratePID.getI() + 0.0005);
+      if (joysticks.getIDecrease())  ratePID.setI(ratePID.getI() - 0.0005);
+      if (joysticks.getDIncrease()) ratePID.setD(ratePID.getD() + 0.0005);
+      if (joysticks.getDDecrease()) ratePID.setD(ratePID.getD() - 0.0005);
 
-    // SmartDashboard.putNumber("P: ", ratePID.getP());
-    // SmartDashboard.putNumber("I: ", ratePID.getI());
-    // SmartDashboard.putNumber("D: ", ratePID.getD());
+      //display PID values
+      SmartDashboard.putNumber("P: ", ratePID.getP());
+      SmartDashboard.putNumber("I: ", ratePID.getI());
+      SmartDashboard.putNumber("D: ", ratePID.getD());
 
-    drive();
+      //calculate PID on button input
+      Double pidOutput = null;
+      if (joysticks.getPIDSlow()) pidOutput = -ratePID.calculate(gyro.getRate(), 1);
+      else if (joysticks.getPIDFast()) pidOutput = -ratePID.calculate(gyro.getRate(), -2);
 
-    // if (driveJoystickSide.getRawButton(4)) {
-    //   double pidOutput = -ratePID.calculate(gyro.getRate(), 1);
-    //   drive(0, 0, -ratePID.calculate(gyro.getRate(), 1), false);
-    //   SmartDashboard.putNumber("pid output", pidOutput);
-    // }
-    // else if (driveJoystickSide.getRawButton(5)) {
-    //   double pidOutput = -ratePID.calculate(gyro.getRate(), -2);
-    //   drive(0, 0, -ratePID.calculate(gyro.getRate(), -2), false);
-    //   SmartDashboard.putNumber("pid output", pidOutput);
-    // }
-    // else {
-    //   drive(0, 0, 0, false);
-    // }
-
-    SmartDashboard.putBoolean("moveby", moveBy.isScheduled());
+      //apply PID on button input
+      if (pidOutput != null) drive(0, 0, pidOutput, true);
+      else drive(0, 0, 0, true);
+      SmartDashboard.putNumber("pid output", pidOutput);
+    }
+    else drive();
   }
 
+  //drive with joystick inputs
   public void drive() {
     if (!shouldDrive) return;
 
@@ -171,45 +167,34 @@ sHAKUANDO WAS HERE
     xSpeed = -joysticks.getDriveSideways();
     ySpeed = -joysticks.getDriveForward();
     rotation = -joysticks.getDriveRotation();
+    
+    //deadzone
+    if (Math.abs(xSpeed) < Constants.joystickDeadzone) xSpeed = 0;
+    if (Math.abs(ySpeed) < Constants.joystickDeadzone) ySpeed = 0;
+    if (Math.abs(rotation) < Constants.joystickDeadzone) rotation = 0;
 
-    // xSpeed = Math.pow(xSpeed, 2) * getSign(xSpeed);
-    // ySpeed = Math.pow(ySpeed, 2) * getSign(ySpeed);
-    // rotation = Math.pow(rotation, 2) * getSign(rotation);
+    //apply input scaling
+    xSpeed = ((1-Constants.minPower) * (Math.pow(((Math.abs(xSpeed)-Constants.joystickDeadzone) * (1/(1-Constants.joystickDeadzone))), Constants.exponentFactor)) + Constants.minPower) * getSign(xSpeed);
+    ySpeed = ((1-Constants.minPower) * (Math.pow(((Math.abs(ySpeed)-Constants.joystickDeadzone) * (1/(1-Constants.joystickDeadzone))), Constants.exponentFactor)) + Constants.minPower) * getSign(ySpeed);
+    rotation = ((1-Constants.minTurn) * (Math.pow(((Math.abs(rotation)-Constants.joystickDeadzone) * (1/(1-Constants.joystickDeadzone))), Constants.turnExponentFactor)) + Constants.minTurn) * getSign(rotation);
 
+    //precision toggle
+    if (joysticks.getPrecisionRotationToggle()) rotation *= Constants.precisionFactor;
+
+    //field-oriented toggle
     boolean fieldOrientated = true;
     if (joysticks.getRobotOrientedToggle()) fieldOrientated = false;
 
-    drive(xSpeed, ySpeed, rotation, true, fieldOrientated);
+    drive(xSpeed, ySpeed, rotation, fieldOrientated);
   }
 
-  public void drive(double xSpeed, double ySpeed, double rotation, boolean deadZone, boolean fieldOriented) {
-    if (!shouldDrive) return;
-
-    //deadzone
-    if (deadZone) {
-      if (Math.abs(xSpeed) < Constants.joystickDeadzone) {
-        xSpeed = 0;
-      }
-      if (Math.abs(ySpeed) < Constants.joystickDeadzone) {
-        ySpeed = 0;
-      }
-      if (Math.abs(rotation) < Constants.joystickDeadzone) {
-        rotation = 0;
-      }
-    }
-
-    // double turnFactor = (1-fastestTurn) * Math.pow(1-Math.pow(fastestTurn, 8/3), 6) + minTurn;
-    // xSpeed = ((1-minPower) * Math.abs(Math.pow(xSpeed, 8/3)) + minPower) * getSign(xSpeed);
-    // ySpeed = ((1-minPower) * Math.abs(Math.pow(ySpeed, 8/3)) + minPower) * getSign(ySpeed);
-    // rotation = ((1-minTurn) * Math.abs(Math.pow(turn, 8/3)) + minTurn) * getSign(turn) * turnFactor;
+  //raw drive method used for external commands
+  public void drive(double xSpeed, double ySpeed, double rotation, boolean fieldOriented) {
+    // if (!shouldDrive) return;
 
     //normalize
-    if (xSpeed != 0) {
-      xSpeed = Constants.maxSpeed * xSpeed;
-    }
-    if (ySpeed != 0) {
-      ySpeed = Constants.maxSpeed * ySpeed;
-    }
+    if (xSpeed != 0) xSpeed = Constants.maxSpeed * xSpeed;
+    if (ySpeed != 0) ySpeed = Constants.maxSpeed * ySpeed;
     if (rotation != 0) {
       rotation = Constants.maxTurnOutput * rotation;
       
@@ -257,11 +242,6 @@ sHAKUANDO WAS HERE
     double backRight = wheelSpeedDouble[3];
 
     //set motor speeds
-    // m_frontLeftSpark.set(frontLeft/Constants.maxSpeed);
-    // m_frontRightSpark.set(frontRight/Constants.maxSpeed);
-    // m_backLeftSpark.set(backLeft/Constants.maxSpeed);
-    // m_backRightSpark.set(backRight/Constants.maxSpeed);
-
     m_frontLeftSpark.getPIDController().setReference(frontLeft, ControlType.kVelocity);
     m_frontRightSpark.getPIDController().setReference(frontRight, ControlType.kVelocity);
     m_backLeftSpark.getPIDController().setReference(backLeft, ControlType.kVelocity);
@@ -357,16 +337,16 @@ sHAKUANDO WAS HERE
   }
 
   public void setFrontLeftPosition(double pos) {
-    m_frontLeftSpark.getPIDController().setReference(pos, ControlType.kPosition, Constants.defaultPID.kSlot);
+    m_frontLeftSpark.getPIDController().setReference(pos, ControlType.kPosition, Constants.movePID.kSlot);
   }
   public void setBackLeftPosition(double pos) {
-    m_backLeftSpark.getPIDController().setReference(pos, ControlType.kPosition, Constants.defaultPID.kSlot);
+    m_backLeftSpark.getPIDController().setReference(pos, ControlType.kPosition, Constants.movePID.kSlot);
   }
   public void setFrontRightPosition(double pos) {
-    m_frontRightSpark.getPIDController().setReference(pos, ControlType.kPosition, Constants.defaultPID.kSlot);
+    m_frontRightSpark.getPIDController().setReference(pos, ControlType.kPosition, Constants.movePID.kSlot);
   }
   public void setBackRightPosition(double pos) {
-    m_backRightSpark.getPIDController().setReference(pos, ControlType.kPosition, Constants.defaultPID.kSlot);
+    m_backRightSpark.getPIDController().setReference(pos, ControlType.kPosition, Constants.movePID.kSlot);
   }
   
   public void setFrontLeftVelocity(double vel) {

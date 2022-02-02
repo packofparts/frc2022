@@ -69,6 +69,9 @@ public class Robot extends TimedRobot {
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
   @Override
   public void autonomousInit() {
+    //dont take joystick inputs in auto
+    // m_robotContainer.drive.setShouldDrive(false);
+    
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
 
     // schedule the autonomous command (example)
@@ -90,6 +93,9 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
+    //enable joystick inputs in teleop
+    // m_robotContainer.drive.setShouldDrive(true);
+
     // This makes sure that the autonomous stops running when
     // teleop starts running. If you want the autonomous to
     // continue until interrupted by another command, remove
