@@ -23,7 +23,7 @@ public class RobotContainer {
   public final Joysticks joysticks = new Joysticks();
 
   public final DriveSubsystem drive = new DriveSubsystem(joysticks);
-  public final ClimbSubsystem climb = new ClimbSubsystem(joysticks);
+  // public final ClimbSubsystem climb = new ClimbSubsystem(joysticks);
   public final limelightMove auto = new limelightMove(drive);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */

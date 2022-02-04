@@ -58,12 +58,13 @@ public class Robot extends TimedRobot {
 
   /** This function is called once each time the robot enters Disabled mode. */
   @Override
-  public void disabledInit() {}
+  public void disabledInit() {
+    m_robotContainer.drive.stop();
+    musikPlayer.stop();
+  }
 
   @Override
   public void disabledPeriodic() {
-    m_robotContainer.drive.stop();
-    musikPlayer.stop();
   }
 
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
@@ -72,6 +73,7 @@ public class Robot extends TimedRobot {
     //dont take joystick inputs in auto
     // m_robotContainer.drive.setShouldDrive(false);
     
+    m_robotContainer.drive.setShouldDrive(false);
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
 
     // schedule the autonomous command (example)
@@ -100,6 +102,7 @@ public class Robot extends TimedRobot {
     // teleop starts running. If you want the autonomous to
     // continue until interrupted by another command, remove
     // this line or comment it out.
+    m_robotContainer.drive.setShouldDrive(true);
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }

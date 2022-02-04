@@ -15,8 +15,8 @@ import frc.robot.subsystems.DriveSubsystem;
 public class limelightMove extends CommandBase {
   /** Creates a new LidarMove. */
   DriveSubsystem driveBase;
-  PIDController pid = new PIDController(Constants.movePID.kP, Constants.movePID.kP, Constants.movePID.kP);
-  PIDController turnPID = new PIDController(Constants.turnPID[0], Constants.turnPID[1], Constants.turnPID[2]);
+  PIDController pid = new PIDController(Constants.limelightPID[0], Constants.limelightPID[1], Constants.limelightPID[2]);
+  PIDController turnPID = new PIDController(Constants.limelightTurnPID[0], Constants.limelightTurnPID[1], Constants.limelightTurnPID[2]);
 
   //Creates network table
   NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight");
@@ -30,7 +30,9 @@ public class limelightMove extends CommandBase {
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+    turnPID.setTolerance(Constants.turnPIDTolerance);
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
@@ -45,13 +47,17 @@ public class limelightMove extends CommandBase {
       
       // Pid- first value is current, second value is set point
       double speed = pid.calculate(thor*tvert, Constants.thor * Constants.tvert);
-      if (Math.abs(speed) > 0.5) speed /= 2;
-      System.out.println(speed);
-      // driveBase.m_backLeftSpark.set(speed);
-      // driveBase.m_frontLeftSpark.set(speed);
-      // driveBase.m_backRightSpark.set(speed);
-      // driveBase.m_frontRightSpark.set(speed);
-      driveBase.drive(0, speed, -turnPID.calculate(table.getEntry("tx").getDouble(0), 0), false);
+      if (speed > 0.3) speed = 0.3;
+      else if (speed < -0.3) speed = -0.3;
+
+      double tx = table.getEntry("tx").getDouble(0);
+      double turn = -turnPID.calculate(driveBase.getAngle(), driveBase.getAngle()+tx);
+      System.out.println(turn);
+
+      driveBase.drive(0, speed, turn, false);
+    }
+    else {
+      driveBase.stop();
     }
   }
 

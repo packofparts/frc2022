@@ -56,8 +56,8 @@ public final class Constants {
     /*
     Vision Constants
     */
-    public static final double tvert = 105.0;
-    public static final double thor = 156.0;
+    public static final double tvert = 80.0;
+    public static final double thor = 140.0;
     public static final double tarea = 16.5;
 
 
@@ -79,8 +79,12 @@ public final class Constants {
     public static final Gains velocityPID = new Gains(0.0002, 0.0000005, 0.0, 0.0, 0.0, -1, 1, 0);
     //drive position movement PID
     public static final Gains movePID = new Gains(0.2, 0.0, 0.0, 0.0, 0.0, -1, 1, 1);
+    //drive limelight move PID
+    public static final double[] limelightPID = new double[] {0.00001, 0.0, 0.0};
+    public static final double[] limelightTurnPID = new double[] {0.017, 0.0, 0.002};
     //drive gyro turn PID
     public static final double[] turnPID = new double[] {0.009, 0.0, 0.002};
+    public static final double turnPIDTolerance = 0.5;
     //drive gyro rate PID
     public static final double[] ratePID = new double[] {0.125, 0.0, 0.0};
 
