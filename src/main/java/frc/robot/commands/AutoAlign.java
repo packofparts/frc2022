@@ -24,7 +24,7 @@ public class AutoAlign extends CommandBase {
   @Override
   public void initialize() {
     //find current angle
-    currentAngle = limelight.getTx();
+    currentAngle = limelight.getTX();
   }
 
   // Called every time the scheduler runs while the command is scheduled.

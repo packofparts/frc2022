@@ -8,8 +8,11 @@ import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.ctre.phoenix.music.Orchestra;
 
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.subsystems.Limelight.Pipeline;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -19,10 +22,9 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
  */
 public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
-
-  Orchestra musikPlayer;
-
   private RobotContainer m_robotContainer;
+  private Orchestra musikPlayer;
+  private SendableChooser<Pipeline> ballColor = new SendableChooser<>();
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -36,6 +38,10 @@ public class Robot extends TimedRobot {
     musikPlayer = new Orchestra();
     musikPlayer.addInstrument(new TalonFX(5));
     musikPlayer.loadMusic("scale.chrp");
+
+    ballColor.setDefaultOption("blue", Pipeline.blue);
+    ballColor.addOption("red", Pipeline.red);
+    SmartDashboard.putData(ballColor);
   }
 
   /**
@@ -52,8 +58,6 @@ public class Robot extends TimedRobot {
     // and running subsystem periodic() methods.  This must be called from the robot's periodic
     // block in order for anything in the Command-based framework to work.
     CommandScheduler.getInstance().run();
-    // SmartDashboard.putNumber("funny number", Math.random());
-    // System.out.println("robo");
   }
 
   /** This function is called once each time the robot enters Disabled mode. */
@@ -71,9 +75,8 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousInit() {
     //dont take joystick inputs in auto
-    // m_robotContainer.drive.setShouldDrive(false);
-    
     m_robotContainer.drive.setShouldDrive(false);
+    m_robotContainer.auto.setPipeline(ballColor.getSelected());
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
 
     // schedule the autonomous command (example)
@@ -85,9 +88,6 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during autonomous. */
   @Override
   public void autonomousPeriodic() {
-    //System.out.println("debug");
-    
-
     if (!m_robotContainer.getAutonomousCommand().isScheduled()) {
       m_robotContainer.getAutonomousCommand().schedule();
     }
@@ -96,13 +96,13 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopInit() {
     //enable joystick inputs in teleop
-    // m_robotContainer.drive.setShouldDrive(true);
+    m_robotContainer.drive.setShouldDrive(true);
+    m_robotContainer.limelight.setPipeline(Pipeline.drive);
 
     // This makes sure that the autonomous stops running when
     // teleop starts running. If you want the autonomous to
     // continue until interrupted by another command, remove
     // this line or comment it out.
-    m_robotContainer.drive.setShouldDrive(true);
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }

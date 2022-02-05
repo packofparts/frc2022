@@ -7,9 +7,11 @@ package frc.robot;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.commands.limelightMove;
-import frc.robot.subsystems.ClimbSubsystem;
+import frc.robot.constants.Constants;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.Joysticks;
+import frc.robot.subsystems.Limelight;
+import frc.robot.subsystems.Limelight.Pipeline;
 import edu.wpi.first.wpilibj2.command.Command;
 
 /**
@@ -24,7 +26,9 @@ public class RobotContainer {
 
   public final DriveSubsystem drive = new DriveSubsystem(joysticks);
   // public final ClimbSubsystem climb = new ClimbSubsystem(joysticks);
-  public final limelightMove auto = new limelightMove(drive);
+  public final Limelight limelight = new Limelight();
+
+  public final limelightMove auto = new limelightMove(drive, limelight, Pipeline.blue, Constants.thor * Constants.tvert);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
