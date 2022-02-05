@@ -42,6 +42,9 @@ public class Robot extends TimedRobot {
     ballColor.setDefaultOption("blue", Pipeline.blue);
     ballColor.addOption("red", Pipeline.red);
     SmartDashboard.putData(ballColor);
+    
+    m_robotContainer.drive.resetGyro();
+    m_robotContainer.drive.resetEncoders();
   }
 
   /**
@@ -76,6 +79,8 @@ public class Robot extends TimedRobot {
   public void autonomousInit() {
     //dont take joystick inputs in auto
     m_robotContainer.drive.setShouldDrive(false);
+    m_robotContainer.drive.resetGyro();
+    m_robotContainer.drive.resetEncoders();
     m_robotContainer.auto.setPipeline(ballColor.getSelected());
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
 

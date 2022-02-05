@@ -119,14 +119,10 @@ sHAKUANDO WAS HERE
     }
     
     if (joysticks.getGyroResetButton()) {
-      gyro.reset();
-      gyroHold = 0.0;
+      resetGyro();
     }
     if (joysticks.getEncoderResetButton()) {
-      m_frontLeftSpark.getEncoder().setPosition(0);
-      m_frontRightSpark.getEncoder().setPosition(0);
-      m_backLeftSpark.getEncoder().setPosition(0);
-      m_backRightSpark.getEncoder().setPosition(0);
+      resetEncoders();
     }
     if (tuningPID) {
       //modify PID w/ joysticks
@@ -261,6 +257,20 @@ sHAKUANDO WAS HERE
     SmartDashboard.putNumber("frontRightVel", m_frontRightSpark.getEncoder().getVelocity());
     SmartDashboard.putNumber("rearLeftVel", m_backLeftSpark.getEncoder().getVelocity());
     SmartDashboard.putNumber("rearRightVel", m_backRightSpark.getEncoder().getVelocity());
+  }
+
+  public void resetEncoders() {
+    m_frontLeftSpark.getEncoder().setPosition(0);
+    m_frontRightSpark.getEncoder().setPosition(0);
+    m_backLeftSpark.getEncoder().setPosition(0);
+    m_backRightSpark.getEncoder().setPosition(0);
+  }
+
+  public void resetGyro() {
+    if (gyro != null && gyro.isConnected()) {
+      gyro.reset();
+      this.gyroHold = 0.0;
+    }
   }
 
   public void setShouldDrive(boolean drive) {
