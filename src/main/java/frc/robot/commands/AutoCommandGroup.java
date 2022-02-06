@@ -41,6 +41,44 @@ public class AutoCommandGroup extends ParallelCommandGroup {
 
     //Step 7- Fire Ball 2- Cannot Complete without shooter
     //parallel(new ShootBall());
+    parallel(new limelightMove(drive));
+    if(Constants.AllianceIsRed){
+      if (Constants.tc[0]<=Constants.targetValuesR[0]+10 && Constants.tc[0]>=Constants.targetValuesR[0]-10) {
+        if (Constants.tc[1]<=Constants.targetValuesR[1]+10 && Constants.tc[1]>=Constants.targetValuesR[1]-10) {
+          if (Constants.tc[2]<=Constants.targetValuesR[2]+10 && Constants.tc[2]>=Constants.targetValuesR[2]-10) {
+            parallel(new IntakeBall(intake));
+    }}}}
+
+    
+    if (Constants.AllianceIsRed){
+      if (Constants.tc[0]<=Constants.targetValuesB[0]+10 && Constants.tc[0]>=Constants.targetValuesB[0]-10) {
+        if (Constants.tc[1]<=Constants.targetValuesB[1]+10 && Constants.tc[1]>=Constants.targetValuesB[1]-10) {
+          if (Constants.tc[2]<=Constants.targetValuesB[2]+10 && Constants.tc[2]>=Constants.targetValuesB[2]-10) {
+            parallel(new PIDTurn(drive,90));
+            while(Constants.tv = false){
+              parallel(new PIDTurn(drive,360));
+            }
+            parallel(new limelightMove(drive));
+    }}}}
+
+    if(Constants.AllianceIsRed==false){
+      if (Constants.tc[0]<=Constants.targetValuesB[0]+10 && Constants.tc[0]>=Constants.targetValuesB[0]-10) {
+        if (Constants.tc[1]<=Constants.targetValuesB[1]+10 && Constants.tc[1]>=Constants.targetValuesB[1]-10) {
+          if (Constants.tc[2]<=Constants.targetValuesB[2]+10 && Constants.tc[2]>=Constants.targetValuesB[2]-10) {
+            parallel(new IntakeBall(intake));
+    }}}}
+
+    //detect blue
+    if (Constants.AllianceIsRed==false){
+      if (Constants.tc[0]<=Constants.targetValuesR[0]+10 && Constants.tc[0]>=Constants.targetValuesR[0]-10) {
+        if (Constants.tc[1]<=Constants.targetValuesR[1]+10 && Constants.tc[1]>=Constants.targetValuesR[1]-10) {
+          if (Constants.tc[2]<=Constants.targetValuesR[2]+10 && Constants.tc[2]>=Constants.targetValuesR[2]-10) {
+            parallel(new PIDTurn(drive,90));
+            while(Constants.tv = false){
+              parallel(new PIDTurn(drive,360));
+            }
+            parallel(new limelightMove(drive));
+    }}}}
 
     // Add Commands here:
     // e.g. addSequential(new Command1());
