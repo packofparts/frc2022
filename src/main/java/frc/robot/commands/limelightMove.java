@@ -45,6 +45,7 @@ public class limelightMove extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    System.out.println(pipeline);
     if (limelight.getDetected()) {
       double speed = pid.calculate(limelight.getHorizontal()*limelight.getVertical(), area);
       if (speed > 0.3) speed = 0.3;

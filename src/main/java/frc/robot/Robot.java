@@ -23,7 +23,7 @@ import frc.robot.subsystems.Limelight.Pipeline;
 public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
   private RobotContainer m_robotContainer;
-  private Orchestra musikPlayer;
+  // private Orchestra musikPlayer;
   private SendableChooser<Pipeline> ballColor = new SendableChooser<>();
 
   /**
@@ -35,9 +35,9 @@ public class Robot extends TimedRobot {
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
-    musikPlayer = new Orchestra();
-    musikPlayer.addInstrument(new TalonFX(5));
-    musikPlayer.loadMusic("scale.chrp");
+    // musikPlayer = new Orchestra();
+    // musikPlayer.addInstrument(new TalonFX(5));
+    // musikPlayer.loadMusic("scale.chrp");
 
     ballColor.setDefaultOption("blue", Pipeline.blue);
     ballColor.addOption("red", Pipeline.red);
@@ -67,7 +67,7 @@ public class Robot extends TimedRobot {
   @Override
   public void disabledInit() {
     m_robotContainer.drive.stop();
-    musikPlayer.stop();
+    // musikPlayer.stop();
   }
 
   @Override

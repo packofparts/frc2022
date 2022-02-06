@@ -119,17 +119,19 @@ sHAKUANDO WAS HERE
     }
     
     if (joysticks.getGyroResetButton()) {
+      System.out.println("gyro");
       resetGyro();
     }
     if (joysticks.getEncoderResetButton()) {
+      System.out.println("encoder");
       resetEncoders();
     }
     if (tuningPID) {
       //modify PID w/ joysticks
       if (joysticks.getPIncrease()) ratePID.setP(ratePID.getP() + 0.005);;
-      if (joysticks.getPDecrease())  ratePID.setP(ratePID.getP() - 0.005);
-      if (joysticks.getIIncrease())  ratePID.setI(ratePID.getI() + 0.0005);
-      if (joysticks.getIDecrease())  ratePID.setI(ratePID.getI() - 0.0005);
+      if (joysticks.getPDecrease()) ratePID.setP(ratePID.getP() - 0.005);
+      if (joysticks.getIIncrease()) ratePID.setI(ratePID.getI() + 0.0005);
+      if (joysticks.getIDecrease()) ratePID.setI(ratePID.getI() - 0.0005);
       if (joysticks.getDIncrease()) ratePID.setD(ratePID.getD() + 0.0005);
       if (joysticks.getDDecrease()) ratePID.setD(ratePID.getD() - 0.0005);
 

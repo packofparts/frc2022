@@ -19,8 +19,8 @@ public class Joysticks extends SubsystemBase {
 
   public boolean getRobotOrientedToggle() {return driveJoystickMain.getRawButton(1);}
   public boolean getPrecisionRotationToggle() {return driveJoystickMain.getRawButton(3);}
-  public boolean getGyroResetButton() {return driveJoystickMain.getRawButton(8);}
-  public boolean getEncoderResetButton() {return driveJoystickMain.getRawButton(9);}
+  public boolean getGyroResetButton() {return driveJoystickMain.getRawButtonPressed(8);}
+  public boolean getEncoderResetButton() {return driveJoystickMain.getRawButtonPressed(9);}
 
 
   //side drive joysticks
