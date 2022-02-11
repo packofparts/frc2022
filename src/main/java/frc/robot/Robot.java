@@ -43,8 +43,8 @@ public class Robot extends TimedRobot {
     ballColor.addOption("red", Pipeline.red);
     SmartDashboard.putData(ballColor);
     
-    m_robotContainer.drive.resetGyro();
-    m_robotContainer.drive.resetEncoders();
+    // m_robotContainer.drive.resetGyro();
+    // m_robotContainer.drive.resetEncoders();
   }
 
   /**
@@ -66,7 +66,7 @@ public class Robot extends TimedRobot {
   /** This function is called once each time the robot enters Disabled mode. */
   @Override
   public void disabledInit() {
-    m_robotContainer.drive.stop();
+    // m_robotContainer.drive.stop();
     // musikPlayer.stop();
   }
 
@@ -78,10 +78,10 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousInit() {
     //dont take joystick inputs in auto
-    m_robotContainer.drive.setShouldDrive(false);
-    m_robotContainer.drive.resetGyro();
-    m_robotContainer.drive.resetEncoders();
-    m_robotContainer.auto.setPipeline(ballColor.getSelected());
+    // m_robotContainer.drive.setShouldDrive(false);
+    // m_robotContainer.drive.resetGyro();
+    // m_robotContainer.drive.resetEncoders();
+    // m_robotContainer.auto.setPipeline(ballColor.getSelected());
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
 
     // schedule the autonomous command (example)
@@ -101,8 +101,8 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopInit() {
     //enable joystick inputs in teleop
-    m_robotContainer.drive.setShouldDrive(true);
-    m_robotContainer.limelight.setPipeline(Pipeline.drive);
+    // m_robotContainer.drive.setShouldDrive(true);
+    // m_robotContainer.limelight.setPipeline(Pipeline.drive);
 
     // This makes sure that the autonomous stops running when
     // teleop starts running. If you want the autonomous to

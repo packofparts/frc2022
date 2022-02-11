@@ -21,7 +21,7 @@ public class IDs {
     public static final int rollerID = 7;
 
     public static final int intakeMotor1ID = 8;
-    public static final int intakeMotor2ID = 9;
+    // public static final int intakeMotor2ID = 9;
 
     public static final int indexMotorID = 10;
 
@@ -29,8 +29,9 @@ public class IDs {
     /*
     PNEUMATIC IDS
     */
-    public static final int intakeSolenoidID = 0;
     public static final int compressorID = 1;
+    public static final int intakeSolenoid1ID = 0;
+    public static final int intakeSolenoid2ID = 1;
 
 
     /*

@@ -41,6 +41,7 @@ public class Joysticks extends SubsystemBase {
   private final XboxController operatorController = new XboxController(2);
   public double getClimbAxis() {return operatorController.getLeftY();}
 
+  public boolean getIntakeSolenoidToggle() {return operatorController.getBButton();}
   public boolean getIndexToggle() {return operatorController.getAButton();}
   public boolean getIntakeToggle() {return operatorController.getRightBumper();}
   public boolean getOutakeToggle() {return operatorController.getLeftBumper();}
