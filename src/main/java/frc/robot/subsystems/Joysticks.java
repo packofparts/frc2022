@@ -47,4 +47,8 @@ public class Joysticks extends SubsystemBase {
   public boolean getOutakeToggle() {return operatorController.getLeftBumper();}
   public boolean getIncreaseShooter() {return operatorController.getPOV() == 0;}
   public boolean getDecreaseShooter() {return operatorController.getPOV() == 180;}
+
+  
+  public double getShooterMain() {return operatorController.getLeftY();}
+  public double getShooterRoller() {return operatorController.getRightY();}
 }

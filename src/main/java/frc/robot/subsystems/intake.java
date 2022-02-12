@@ -65,13 +65,13 @@ public class Intake extends SubsystemBase {
     //intake
     if (joysticks.getIntakeToggle()){
       System.out.println("intake");
-      intakeMotor.set(TalonSRXControlMode.PercentOutput, 1);
+      intakeMotor.set(TalonSRXControlMode.PercentOutput, 0.5);
       // intakeMotor2.set(-1);
     } 
     //outtake
     else if (joysticks.getOutakeToggle()) {
       System.out.println("outtake");
-      intakeMotor.set(TalonSRXControlMode.PercentOutput, -1);
+      intakeMotor.set(TalonSRXControlMode.PercentOutput, -0.5);
       // intakeMotor2.set(1);
     }
     else {
