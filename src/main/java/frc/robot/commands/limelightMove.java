@@ -14,6 +14,7 @@ import frc.robot.subsystems.DriveSubsystem;
 import edu.wpi.first.math.controller.PIDController;
 
 public class limelightMove extends CommandBase {
+
   /** Creates a new LidarMove. */
   DriveSubsystem driveBase;
   PIDController pid = new PIDController(Constants.LimelightKP, Constants.LimelightKI, Constants.LimelightKD);
@@ -29,19 +30,31 @@ public class limelightMove extends CommandBase {
     System.out.println("HERE");
   }
 
+  
+
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {}
 
   // Called every time the scheduler runs while the command is scheduled.
+  
+
   @Override
   public void execute() {
     if (table.getEntry("tv").getDouble(0) == 1) {
+      double[] test = {0.0};
       NetworkTableEntry currentHorizontal = table.getEntry("thor");
       NetworkTableEntry currentVertical = table.getEntry("tvert");
+      NetworkTableEntry currentColor = table.getEntry("tc");
+      NetworkTableEntry isBall = table.getEntry("tv");
+
       //Gets actual value from spot on network table
       double thor = currentHorizontal.getDouble(0);
+      Constants.tv = isBall.getBoolean(false);
       double tvert = currentVertical.getDouble(0);
+      Constants.tc = currentColor.getDoubleArray(test);
+
+
       // Pid- first value is current, second value is set point
       double speed = pid.calculate(thor*tvert, Constants.thor * Constants.tvert);
       if (Math.abs(speed) > 0.5) speed /= 2;
@@ -52,8 +65,10 @@ public class limelightMove extends CommandBase {
       // driveBase.m_frontRightSpark.set(speed);
       driveBase.drive(0, speed, turnPID.calculate(table.getEntry("tx").getDouble(0), 0), false, false);
     }
+      //detect red
+      
   }
-
+  
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {}

@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import java.lang.reflect.Array;
+
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.I2C;
@@ -56,6 +58,13 @@ public final class Constants {
     public static final Gains velocityPID = new Gains(0.0002, 0.0000005, 0.0, 0.0, 0.0, -1, 1, 0);
     public static Gains defaultPID = new Gains(0.2, 0.0, 0.0, 0.0, 0.0, -1, 1, 1);
     public static double originalYaw;
+    public static double[] tc = new double[3];
+    //TBD below, have to change vals
+    public static double[] targetValuesR = {0, 0, 0};
+    //TBD below, have to change vals
+    public static double[] targetValuesB = {0, 0, 0};
+    public static boolean tv;
+
     public static final double[] turnPID = new double[] {0.009, 0.0, 0.002};
     public static final double[] ratePID = new double[] {0.125, 0.0, 0.0};
     //maximum speed of the robot in m/s
@@ -96,4 +105,5 @@ public final class Constants {
     public static final int indexUltrasonic2EchoPort = 7;
     public static final double spinTimeIntake = 0;
     public static final double spinTimeOuttake = 0;
+    public static final boolean AllianceIsRed = false;
 }
