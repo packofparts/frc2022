@@ -35,6 +35,8 @@ public class Index extends SubsystemBase {
     // }
     
     if (joysticks.getIndexToggle()) setIndex(1);
+    else if (joysticks.getOutdexToggle()) setIndex(-1);
+    else setIndex(0);
   }
 
   public void setIndex(double speed) {

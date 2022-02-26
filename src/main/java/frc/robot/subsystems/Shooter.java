@@ -18,6 +18,9 @@ public class Shooter extends SubsystemBase {
   TalonFX mainTalon = new TalonFX(IDs.flyWheelID);
   TalonFX rollerTalon = new TalonFX(IDs.rollerID);
   double RPM = 0.0;
+
+  boolean shooterHigh = false;
+  boolean shooterLow = false;
   // boolean isXbox = false;
   
   public Shooter(Joysticks joysticks) {
@@ -30,12 +33,45 @@ public class Shooter extends SubsystemBase {
   public void setRPMRoller(double RPM) {
     rollerTalon.set(ControlMode.Velocity, RPM);
   }
+
+  public void stopShooter() {
+    shooterLow = false;
+    shooterHigh = false;
+  }
+
   @Override
   public void periodic() {   
     SmartDashboard.putNumber("Shooter-main", mainTalon.getSelectedSensorVelocity());
     SmartDashboard.putNumber("Shooter-roller", mainTalon.getSelectedSensorVelocity());
-    mainTalon.set(TalonFXControlMode.PercentOutput, joysticks.getShooterMain());
-    rollerTalon.set(TalonFXControlMode.PercentOutput, joysticks.getShooterRoller());
+
+    // double mainShooter = joysticks.getShooterMain();
+    // double rollerShooter = joysticks.getShooterRoller();
+    // if (mainShooter < Constants.joystickDeadzone) mainShooter = 0;
+    // if (rollerShooter < Constants.joystickDeadzone) rollerShooter = 0;
+    // mainTalon.set(TalonFXControlMode.PercentOutput, mainShooter);
+    // rollerTalon.set(TalonFXControlMode.PercentOutput, rollerShooter);
+
+    if (joysticks.getShooterHigh()) {
+      shooterHigh = !shooterHigh;
+      shooterLow = false;
+    }
+    else if (joysticks.getShooterLow()) {
+      shooterHigh = false;
+      shooterLow = !shooterLow;
+    }
+
+    if (shooterHigh) {
+      mainTalon.set(TalonFXControlMode.PercentOutput, 0.5);
+      rollerTalon.set(TalonFXControlMode.PercentOutput, -0.8);
+    }
+    else if (shooterLow) {
+      mainTalon.set(TalonFXControlMode.PercentOutput, 0.42);
+      rollerTalon.set(TalonFXControlMode.PercentOutput, -0.42);
+    }
+    else {
+      mainTalon.set(TalonFXControlMode.PercentOutput, 0);
+      rollerTalon.set(TalonFXControlMode.PercentOutput, 0);
+    }
     // if (joysticks.getIncreaseShooter()) {
     //   if (RPM+Constants.increment<=7500) {
     //     setRPM(RPM+Constants.increment);

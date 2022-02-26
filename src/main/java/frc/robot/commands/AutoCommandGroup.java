@@ -22,7 +22,7 @@ public class AutoCommandGroup extends ParallelCommandGroup {
     parallel(new MoveBy(drive, 9.735));
 
     //Step 3- Intake Ball
-    parallel(new IntakeBall(intake));
+    // parallel(new IntakeBall(intake));
 
     //Step 4- Turn 180
     parallel(new PIDTurn(drive, 180));

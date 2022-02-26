@@ -68,6 +68,7 @@ public class Robot extends TimedRobot {
   public void disabledInit() {
     // m_robotContainer.drive.stop();
     // musikPlayer.stop();
+    m_robotContainer.shooter.stopShooter();
   }
 
   @Override

@@ -20,11 +20,11 @@ import edu.wpi.first.wpilibj.motorcontrol.Talon;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Intake extends SubsystemBase {
-  Solenoid intakeSolenoid1 = new Solenoid(PneumaticsModuleType.REVPH, IDs.intakeSolenoid1ID);
-  Solenoid intakeSolenoid2 = new Solenoid(PneumaticsModuleType.REVPH, IDs.intakeSolenoid2ID);
-  Compressor phCompressor = new Compressor(IDs.compressorID, PneumaticsModuleType.REVPH);
-  AnalogPotentiometer pressureSensor = new AnalogPotentiometer(0, 250, -13);
-  PneumaticHub hub = new PneumaticHub();
+  // Solenoid intakeSolenoid1 = new Solenoid(PneumaticsModuleType.REVPH, IDs.intakeSolenoid1ID);
+  // Solenoid intakeSolenoid2 = new Solenoid(PneumaticsModuleType.REVPH, IDs.intakeSolenoid2ID);
+  // Compressor phCompressor = new Compressor(IDs.compressorID, PneumaticsModuleType.REVPH);
+  // AnalogPotentiometer pressureSensor = new AnalogPotentiometer(0, 250, -13);
+  // PneumaticHub hub = new PneumaticHub();
 
   //PIDSetConfiguration
   double RPM=0.0;
@@ -41,21 +41,21 @@ public class Intake extends SubsystemBase {
   /** Creates a new Intake. */
   public Intake(Joysticks joysticks) {
     this.joysticks = joysticks;
-    intakeSolenoid1.set(false);
-    intakeSolenoid2.set(false);
+    // intakeSolenoid1.set(false);
+    // intakeSolenoid2.set(false);
   }
 
   @Override
     public void periodic() {
-      if (phCompressor.getPressure() > 62) phCompressor.disable();
-      else if (phCompressor.getPressure() < 60) phCompressor.enableDigital();
+      // if (phCompressor.getPressure() > 62) phCompressor.disable();
+      // else if (phCompressor.getPressure() < 60) phCompressor.enableDigital();
     // This method will be called once per scheduler run
     // if (intakeColorSensor.getColor() == edu.wpi.first.wpilibj.util.Color.kBlue && joystick.getRawButton(1)){
     //   intakeMotor1.set(-1);
     //   intakeMoror2.set(1);
     // }
 
-    SmartDashboard.putNumber("digital pressure", phCompressor.getPressure());
+    // SmartDashboard.putNumber("digital pressure", phCompressor.getPressure());
     // SmartDashboard.putNumber("analog current", phCompressor.getCurrent());
     // SmartDashboard.putNumber("analog voltage", phCompressor.getAnalogVoltage());
     // System.out.println(phCompressor.getPressure());
@@ -79,7 +79,7 @@ public class Intake extends SubsystemBase {
     }
 
     if (joysticks.getIntakeSolenoidToggle()) {
-      toggleMatics();
+      // toggleMatics();
     }
 
     // } else if (!Robot.m_robotContainer.m_index.hasBall()) {
@@ -124,10 +124,10 @@ public class Intake extends SubsystemBase {
     }
   }
 
-  public void setSolenoidPH(boolean val) {
-    intakeSolenoid1.set(val);
-    intakeSolenoid2.set(val);
-  }
+  // public void setSolenoidPH(boolean val) {
+  //   intakeSolenoid1.set(val);
+  //   intakeSolenoid2.set(val);
+  // }
 
   public void outtakeBall() {
     timer.reset();
@@ -138,8 +138,8 @@ public class Intake extends SubsystemBase {
     }
   }
   
-  public void toggleMatics(){
-    intakeSolenoid1.toggle();
-    intakeSolenoid2.toggle();
-  }
+  // public void toggleMatics(){
+  //   intakeSolenoid1.toggle();
+  //   intakeSolenoid2.toggle();
+  // }
 }

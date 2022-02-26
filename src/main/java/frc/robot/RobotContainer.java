@@ -9,9 +9,11 @@ import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.commands.limelightMove;
 import frc.robot.constants.Constants;
 import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.subsystems.Index;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Joysticks;
 import frc.robot.subsystems.Limelight;
+import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Limelight.Pipeline;
 import edu.wpi.first.wpilibj2.command.Command;
 
@@ -25,10 +27,12 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   public final Joysticks joysticks = new Joysticks();
 
-  // public final DriveSubsystem drive = new DriveSubsystem(joysticks);
-  // public final ClimbSubsystem climb = new ClimbSubsystem(joysticks);
+  public final DriveSubsystem drive = new DriveSubsystem(joysticks);
+ // public final ClimbSubsystem climb = new ClimbSubsystem(joysticks);
   // public final Limelight limelight = new Limelight();
   public final Intake intake = new Intake(joysticks);
+  public final Index index = new Index(joysticks);
+  public final Shooter shooter = new Shooter(joysticks);
 
   // public final limelightMove auto = new limelightMove(drive, limelight, Pipeline.blue, Constants.thor * Constants.tvert);
 

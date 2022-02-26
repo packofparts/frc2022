@@ -18,7 +18,6 @@ public class Joysticks extends SubsystemBase {
   public double getDriveSideways() {return driveJoystickMain.getX();}
 
   public boolean getRobotOrientedToggle() {return driveJoystickMain.getRawButton(1);}
-  public boolean getPrecisionRotationToggle() {return driveJoystickMain.getRawButton(3);}
   public boolean getGyroResetButton() {return driveJoystickMain.getRawButtonPressed(8);}
   public boolean getEncoderResetButton() {return driveJoystickMain.getRawButtonPressed(9);}
 
@@ -26,6 +25,7 @@ public class Joysticks extends SubsystemBase {
   //side drive joysticks
   private final Joystick driveJoystickSide = new Joystick(1);
   public double getDriveRotation() {return driveJoystickSide.getX();}
+  public boolean getPrecisionRotationToggle() {return driveJoystickSide.getRawButton(3);}
 
   public boolean getPIncrease() {return driveJoystickSide.getRawButtonReleased(6);}
   public boolean getPDecrease() {return driveJoystickSide.getRawButtonReleased(7);}
@@ -42,7 +42,8 @@ public class Joysticks extends SubsystemBase {
   public double getClimbAxis() {return operatorController.getLeftY();}
 
   public boolean getIntakeSolenoidToggle() {return operatorController.getBButton();}
-  public boolean getIndexToggle() {return operatorController.getAButton();}
+  public boolean getIndexToggle() {return operatorController.getXButton();}
+  public boolean getOutdexToggle() {return operatorController.getBButton();}
   public boolean getIntakeToggle() {return operatorController.getRightBumper();}
   public boolean getOutakeToggle() {return operatorController.getLeftBumper();}
   public boolean getIncreaseShooter() {return operatorController.getPOV() == 0;}
@@ -51,4 +52,6 @@ public class Joysticks extends SubsystemBase {
   
   public double getShooterMain() {return operatorController.getLeftY();}
   public double getShooterRoller() {return operatorController.getRightY();}
+  public boolean getShooterHigh() {return operatorController.getYButtonPressed();}
+  public boolean getShooterLow() {return operatorController.getAButtonPressed();}
 }

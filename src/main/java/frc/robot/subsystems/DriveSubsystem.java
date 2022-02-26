@@ -12,6 +12,7 @@ import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -62,6 +63,9 @@ public class DriveSubsystem extends SubsystemBase {
     /*
 sHAKUANDO WAS HERE
     */
+    CameraServer.getInstance().startAutomaticCapture();
+    CameraServer.getInstance().startAutomaticCapture();
+
     this.joysticks = joysticks;
     gyro = new AHRS(SPI.Port.kMXP);
 
@@ -148,7 +152,7 @@ sHAKUANDO WAS HERE
       //apply PID on button input
       if (pidOutput != null) drive(0, 0, pidOutput, true);
       else drive(0, 0, 0, true);
-      SmartDashboard.putNumber("pid output", pidOutput);
+      SmartDashboard.putString("pid output", pidOutput+"");
     }
     else drive();
   }
