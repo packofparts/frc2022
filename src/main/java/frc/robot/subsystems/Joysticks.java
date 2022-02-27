@@ -33,8 +33,8 @@ public class Joysticks extends SubsystemBase {
   public boolean getIDecrease() {return driveJoystickSide.getRawButtonReleased(9);}
   public boolean getDIncrease() {return driveJoystickSide.getRawButtonReleased(11);}
   public boolean getDDecrease() {return driveJoystickSide.getRawButtonReleased(10);}
-  public boolean getPIDSlow() {return driveJoystickSide.getRawButtonReleased(4);}
-  public boolean getPIDFast() {return driveJoystickSide.getRawButtonReleased(5);}
+  public boolean getPIDSlow() {return driveJoystickSide.getRawButton(4);}
+  public boolean getPIDFast() {return driveJoystickSide.getRawButton(5);}
 
 
   //operator controls
@@ -42,8 +42,8 @@ public class Joysticks extends SubsystemBase {
   public double getClimbAxis() {return operatorController.getLeftY();}
 
   public boolean getIntakeSolenoidToggle() {return operatorController.getBButton();}
-  public boolean getIndexToggle() {return operatorController.getXButton();}
-  public boolean getOutdexToggle() {return operatorController.getBButton();}
+  public boolean getIndexToggle() {return operatorController.getBButton();}
+  public boolean getOutdexToggle() {return operatorController.getXButton();}
   public boolean getIntakeToggle() {return operatorController.getRightBumper();}
   public boolean getOutakeToggle() {return operatorController.getLeftBumper();}
   public boolean getIncreaseShooter() {return operatorController.getPOV() == 0;}

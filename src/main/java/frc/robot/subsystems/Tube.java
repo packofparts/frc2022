@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.Ultrasonic;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.TalonSRXControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.revrobotics.ColorSensorV3;
@@ -19,7 +20,7 @@ import com.revrobotics.CANSparkMax.ControlType;
 import edu.wpi.first.wpilibj.motorcontrol.Talon;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-public class Intake extends SubsystemBase {
+public class Tube extends SubsystemBase {
   // Solenoid intakeSolenoid1 = new Solenoid(PneumaticsModuleType.REVPH, IDs.intakeSolenoid1ID);
   // Solenoid intakeSolenoid2 = new Solenoid(PneumaticsModuleType.REVPH, IDs.intakeSolenoid2ID);
   // Compressor phCompressor = new Compressor(IDs.compressorID, PneumaticsModuleType.REVPH);
@@ -34,12 +35,14 @@ public class Intake extends SubsystemBase {
   // ColorSensorV3 intakeColorSensor = new ColorSensorV3(IDs.intakeColorSensorPort); 
   // Ultrasonic intakeUltrasonic = new Ultrasonic(IDs.intakeUltrasonicPingPort, IDs.intakeUltrasonicEchoPort);
 
+  TalonSRX indexMotor = new TalonSRX(IDs.indexMotorID);
+
   Timer timer = new Timer();
 
   Joysticks joysticks;
   
   /** Creates a new Intake. */
-  public Intake(Joysticks joysticks) {
+  public Tube(Joysticks joysticks) {
     this.joysticks = joysticks;
     // intakeSolenoid1.set(false);
     // intakeSolenoid2.set(false);
@@ -82,6 +85,10 @@ public class Intake extends SubsystemBase {
       // toggleMatics();
     }
 
+    if (joysticks.getIndexToggle()) indexMotor.set(TalonSRXControlMode.PercentOutput, -1);
+    else if (joysticks.getOutdexToggle()) indexMotor.set(TalonSRXControlMode.PercentOutput, 1);
+    else indexMotor.set(TalonSRXControlMode.PercentOutput, 0);
+
     // } else if (!Robot.m_robotContainer.m_index.hasBall()) {
     //     intakeMotor1.set(1);
     //     intakeMoror2.set(-1);
@@ -115,28 +122,28 @@ public class Intake extends SubsystemBase {
   //   return intakeUltrasonic.getRangeInches();
   // }
 
-  public void intakeBall() {
-    timer.reset();
-    timer.start();
-    if (timer.get() < Constants.spinTimeIntake) {
-      // intakeMotor.set(1);
-      // intakeMotor2.set(-1);
-    }
-  }
+  // public void intakeBall() {
+  //   timer.reset();
+  //   timer.start();
+  //   if (timer.get() < Constants.spinTimeIntake) {
+  //     // intakeMotor.set(1);
+  //     // intakeMotor2.set(-1);
+  //   }
+  // }
 
   // public void setSolenoidPH(boolean val) {
   //   intakeSolenoid1.set(val);
   //   intakeSolenoid2.set(val);
   // }
 
-  public void outtakeBall() {
-    timer.reset();
-    timer.start();
-    if (timer.get() < Constants.spinTimeOuttake) {
-      // intakeMotor.set(-1);
-      // intakeMotor2.set(1);
-    }
-  }
+  // public void outtakeBall() {
+  //   timer.reset();
+  //   timer.start();
+  //   if (timer.get() < Constants.spinTimeOuttake) {
+  //     // intakeMotor.set(-1);
+  //     // intakeMotor2.set(1);
+  //   }
+  // }
   
   // public void toggleMatics(){
   //   intakeSolenoid1.toggle();

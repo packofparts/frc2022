@@ -55,9 +55,9 @@ public class DriveSubsystem extends SubsystemBase {
   Joysticks joysticks;
   
   //set booleans
-  final boolean useGyroHold = true;
+  final boolean useGyroHold = false;
   final boolean usingXboxController = false;//Joysticks.driveXboxController != null;
-  final boolean tuningPID = false;
+  final boolean tuningPID = true;
 
   public DriveSubsystem(Joysticks joysticks) {
     /*
@@ -222,8 +222,8 @@ sHAKUANDO WAS HERE
 
     double gyroHoldTemp = 0.0;
     if (gyroHold != null)  gyroHoldTemp = gyroHold;
-    SmartDashboard.putNumber("gyroHold", gyroHoldTemp);
-    SmartDashboard.putNumber("rotation", rotation);
+    // SmartDashboard.putNumber("gyroHold", gyroHoldTemp);
+    // SmartDashboard.putNumber("rotation", rotation);
 
     // Convert to wheel speeds
     ChassisSpeeds speeds;
@@ -249,20 +249,20 @@ sHAKUANDO WAS HERE
     m_backLeftSpark.getPIDController().setReference(backLeft, ControlType.kVelocity);
     m_backRightSpark.getPIDController().setReference(backRight, ControlType.kVelocity);
 
-    SmartDashboard.putNumber("frontLeftSet", frontLeft);
-    SmartDashboard.putNumber("frontRightSet", frontRight);
-    SmartDashboard.putNumber("rearLeftSet", backLeft);
-    SmartDashboard.putNumber("rearRightSet", backRight);
+    // SmartDashboard.putNumber("frontLeftSet", frontLeft);
+    // SmartDashboard.putNumber("frontRightSet", frontRight);
+    // SmartDashboard.putNumber("rearLeftSet", backLeft);
+    // SmartDashboard.putNumber("rearRightSet", backRight);
 
-    SmartDashboard.putNumber("frontLeftPos", m_frontLeftSpark.getEncoder().getPosition());
-    SmartDashboard.putNumber("frontRightPos", m_frontRightSpark.getEncoder().getPosition());
-    SmartDashboard.putNumber("rearLeftPos", m_backLeftSpark.getEncoder().getPosition());
-    SmartDashboard.putNumber("rearRightPos", m_backRightSpark.getEncoder().getPosition());
+    // SmartDashboard.putNumber("frontLeftPos", m_frontLeftSpark.getEncoder().getPosition());
+    // SmartDashboard.putNumber("frontRightPos", m_frontRightSpark.getEncoder().getPosition());
+    // SmartDashboard.putNumber("rearLeftPos", m_backLeftSpark.getEncoder().getPosition());
+    // SmartDashboard.putNumber("rearRightPos", m_backRightSpark.getEncoder().getPosition());
     
-    SmartDashboard.putNumber("frontLeftVel", m_frontLeftSpark.getEncoder().getVelocity());
-    SmartDashboard.putNumber("frontRightVel", m_frontRightSpark.getEncoder().getVelocity());
-    SmartDashboard.putNumber("rearLeftVel", m_backLeftSpark.getEncoder().getVelocity());
-    SmartDashboard.putNumber("rearRightVel", m_backRightSpark.getEncoder().getVelocity());
+    // SmartDashboard.putNumber("frontLeftVel", m_frontLeftSpark.getEncoder().getVelocity());
+    // SmartDashboard.putNumber("frontRightVel", m_frontRightSpark.getEncoder().getVelocity());
+    // SmartDashboard.putNumber("rearLeftVel", m_backLeftSpark.getEncoder().getVelocity());
+    // SmartDashboard.putNumber("rearRightVel", m_backRightSpark.getEncoder().getVelocity());
   }
 
   public void resetEncoders() {

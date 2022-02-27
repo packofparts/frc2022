@@ -14,7 +14,7 @@ public class AutoCommandGroup extends ParallelCommandGroup {
   //Shooter shooter = new Shooter();
 
 
-  public AutoCommandGroup(DriveSubsystem drive, Intake intake, Index index) {
+  public AutoCommandGroup(DriveSubsystem drive, Tube intake) {
     //Step 1- Turn 180
     parallel(new PIDTurn(drive, 180));
 
@@ -31,7 +31,7 @@ public class AutoCommandGroup extends ParallelCommandGroup {
     //parallel(new ShootBall());
 
     //Step 6- Transfer Index to Shooter
-    parallel(new transferIndex(index, 0.3));
+    //parallel(new transferIndex(index, 0.3));
 
     //Step 7- Fire Ball 2- Cannot Complete without shooter
     //parallel(new ShootBall());

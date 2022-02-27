@@ -41,8 +41,8 @@ public class Shooter extends SubsystemBase {
 
   @Override
   public void periodic() {   
-    SmartDashboard.putNumber("Shooter-main", mainTalon.getSelectedSensorVelocity());
-    SmartDashboard.putNumber("Shooter-roller", mainTalon.getSelectedSensorVelocity());
+    // SmartDashboard.putNumber("Shooter-main", mainTalon.getSelectedSensorVelocity());
+    // SmartDashboard.putNumber("Shooter-roller", mainTalon.getSelectedSensorVelocity());
 
     // double mainShooter = joysticks.getShooterMain();
     // double rollerShooter = joysticks.getShooterRoller();
