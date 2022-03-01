@@ -5,10 +5,8 @@
 package frc.robot.subsystems;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.constants.Constants;
 import frc.robot.constants.IDs;
 
-import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 
@@ -17,54 +15,41 @@ public class Shooter extends SubsystemBase {
   Joysticks joysticks;
   TalonFX mainTalon = new TalonFX(IDs.flyWheelID);
   TalonFX rollerTalon = new TalonFX(IDs.rollerID);
-  double RPM = 0.0;
 
-  boolean shooterHigh = false;
-  boolean shooterLow = false;
-  // boolean isXbox = false;
+  ShooterMode shooterMode = ShooterMode.off;
   
   public Shooter(Joysticks joysticks) {
     this.joysticks = joysticks;
   }
 
-  public void setRPM(double RPM) {
-    mainTalon.set(ControlMode.Velocity, RPM);
-  }
-  public void setRPMRoller(double RPM) {
-    rollerTalon.set(ControlMode.Velocity, RPM);
+  public enum ShooterMode {
+    fast, slow, off;
   }
 
   public void stopShooter() {
-    shooterLow = false;
-    shooterHigh = false;
+    this.shooterMode = ShooterMode.off;
+    mainTalon.set(TalonFXControlMode.PercentOutput, 0);
+    rollerTalon.set(TalonFXControlMode.PercentOutput, 0);
   }
 
   @Override
-  public void periodic() {   
-    // SmartDashboard.putNumber("Shooter-main", mainTalon.getSelectedSensorVelocity());
-    // SmartDashboard.putNumber("Shooter-roller", mainTalon.getSelectedSensorVelocity());
-
-    // double mainShooter = joysticks.getShooterMain();
-    // double rollerShooter = joysticks.getShooterRoller();
-    // if (mainShooter < Constants.joystickDeadzone) mainShooter = 0;
-    // if (rollerShooter < Constants.joystickDeadzone) rollerShooter = 0;
-    // mainTalon.set(TalonFXControlMode.PercentOutput, mainShooter);
-    // rollerTalon.set(TalonFXControlMode.PercentOutput, rollerShooter);
-
+  public void periodic() {
+    //shooter toggle
     if (joysticks.getShooterHigh()) {
-      shooterHigh = !shooterHigh;
-      shooterLow = false;
+      if (shooterMode != ShooterMode.off) shooterMode = ShooterMode.off;
+      else shooterMode = ShooterMode.fast;
     }
     else if (joysticks.getShooterLow()) {
-      shooterHigh = false;
-      shooterLow = !shooterLow;
+      if (shooterMode != ShooterMode.off) shooterMode = ShooterMode.off;
+      else shooterMode = ShooterMode.slow;
     }
 
-    if (shooterHigh) {
+    //shooter mode
+    if (shooterMode == ShooterMode.fast) {
       mainTalon.set(TalonFXControlMode.PercentOutput, 0.5);
       rollerTalon.set(TalonFXControlMode.PercentOutput, -0.8);
     }
-    else if (shooterLow) {
+    else if (shooterMode == ShooterMode.slow) {
       mainTalon.set(TalonFXControlMode.PercentOutput, 0.42);
       rollerTalon.set(TalonFXControlMode.PercentOutput, -0.42);
     }
@@ -72,17 +57,9 @@ public class Shooter extends SubsystemBase {
       mainTalon.set(TalonFXControlMode.PercentOutput, 0);
       rollerTalon.set(TalonFXControlMode.PercentOutput, 0);
     }
-    // if (joysticks.getIncreaseShooter()) {
-    //   if (RPM+Constants.increment<=7500) {
-    //     setRPM(RPM+Constants.increment);
-    //     setRPMRoller(RPM+Constants.increment);
-    //   }
-    // }
-    // if (joysticks.getDecreaseShooter()) {
-    //   if (RPM-Constants.increment>=0) {
-    //     setRPM(RPM-Constants.increment);
-    //     setRPMRoller(RPM-Constants.increment);
-    //   }
-    // }
+    
+    SmartDashboard.putBoolean("Shooter Running", mainTalon.getMotorOutputPercent() != 0 || rollerTalon.getMotorOutputPercent() != 0);
+    SmartDashboard.putNumber("Shooter-Main", mainTalon.getSelectedSensorVelocity());
+    SmartDashboard.putNumber("Shooter-Roller", rollerTalon.getSelectedSensorVelocity());
   }
 }

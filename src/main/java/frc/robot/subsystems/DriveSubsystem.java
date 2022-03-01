@@ -25,7 +25,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj.SPI;
 import frc.robot.Gains;
-import frc.robot.commands.MoveBy;
 import frc.robot.constants.Constants;
 import frc.robot.constants.IDs;
 
@@ -130,24 +129,25 @@ sHAKUANDO WAS HERE
       System.out.println("encoder");
       resetEncoders();
     }
+
     if (tuningPID) {
       //modify PID w/ joysticks
-      if (joysticks.getPIncrease()) ratePID.setP(ratePID.getP() + 0.005);;
-      if (joysticks.getPDecrease()) ratePID.setP(ratePID.getP() - 0.005);
-      if (joysticks.getIIncrease()) ratePID.setI(ratePID.getI() + 0.0005);
-      if (joysticks.getIDecrease()) ratePID.setI(ratePID.getI() - 0.0005);
-      if (joysticks.getDIncrease()) ratePID.setD(ratePID.getD() + 0.0005);
-      if (joysticks.getDDecrease()) ratePID.setD(ratePID.getD() - 0.0005);
+      if (joysticks.getPIncrease()) turnPID.setP(turnPID.getP() + 0.0005);;
+      if (joysticks.getPDecrease()) turnPID.setP(turnPID.getP() - 0.0005);
+      if (joysticks.getIIncrease()) turnPID.setI(turnPID.getI() + 0.0005);
+      if (joysticks.getIDecrease()) turnPID.setI(turnPID.getI() - 0.0005);
+      if (joysticks.getDIncrease()) turnPID.setD(turnPID.getD() + 0.0005);
+      if (joysticks.getDDecrease()) turnPID.setD(turnPID.getD() - 0.0005);
 
       //display PID values
-      SmartDashboard.putNumber("P: ", ratePID.getP());
-      SmartDashboard.putNumber("I: ", ratePID.getI());
-      SmartDashboard.putNumber("D: ", ratePID.getD());
+      SmartDashboard.putNumber("P: ", turnPID.getP());
+      SmartDashboard.putNumber("I: ", turnPID.getI());
+      SmartDashboard.putNumber("D: ", turnPID.getD());
 
       //calculate PID on button input
       Double pidOutput = null;
-      if (joysticks.getPIDSlow()) pidOutput = -ratePID.calculate(gyro.getRate(), 1);
-      else if (joysticks.getPIDFast()) pidOutput = -ratePID.calculate(gyro.getRate(), -2);
+      if (joysticks.getPIDSlow()) pidOutput = -turnPID.calculate(gyro.getAngle(), -10);
+      else if (joysticks.getPIDFast()) pidOutput = -turnPID.calculate(gyro.getAngle(), 10);
 
       //apply PID on button input
       if (pidOutput != null) drive(0, 0, pidOutput, true);
@@ -192,38 +192,23 @@ sHAKUANDO WAS HERE
 
   //raw drive method used for external commands
   public void drive(double xSpeed, double ySpeed, double rotation, boolean fieldOriented) {
-    // if (!shouldDrive) return;
-
     //normalize
     if (xSpeed != 0) xSpeed = Constants.maxSpeed * xSpeed;
     if (ySpeed != 0) ySpeed = Constants.maxSpeed * ySpeed;
     if (rotation != 0) {
-      rotation = Constants.maxTurnOutput * rotation;
-      
       if (gyroHold != null) gyroHold = null;
     }
     //GYRO HOLD
     else {
       if (useGyroHold) {
-        if (gyroHold == null && Math.abs(gyro.getRate()) < Constants.gyroDeadzone) {
-          gyroHold = gyro.getAngle();
-        }
-
-        if (gyroHold != null) {
-          //rotation = Constants.pGyro * (gyro.getAngle()-gyroHold);
-          rotation = (-turnPID.calculate(gyro.getAngle(), gyroHold))*Constants.maxTurnOutput;
-
-          // if (rotation > 1) rotation = 1;
-          // else if (rotation < -1) rotation = -1;
-          // else if (Math.abs(rotation) < Constants.minInput) rotation = 0;
-        }
+        //set gyroHold angle
+        if (gyroHold == null) gyroHold = gyro.getAngle();
+        //activate gyroHold PID
+        if (gyroHold != null) rotation = -turnPID.calculate(gyro.getAngle(), gyroHold) * Constants.rateAggresiveness;
       }
     }
-
-    double gyroHoldTemp = 0.0;
-    if (gyroHold != null)  gyroHoldTemp = gyroHold;
-    // SmartDashboard.putNumber("gyroHold", gyroHoldTemp);
-    // SmartDashboard.putNumber("rotation", rotation);
+    //closed loop turning
+    rotation = -ratePID.calculate(gyro.getRate(), Math.abs(rotation)*Constants.maxRate) * getSign(rotation) * Constants.maxTurnOutput;
 
     // Convert to wheel speeds
     ChassisSpeeds speeds;

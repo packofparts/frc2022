@@ -6,9 +6,8 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-public class Joysticks extends SubsystemBase {
+public class Joysticks {
   // private final XboxController driveXboxController = null;//new XboxController(0);
   // public final int robotOrientedToggle = XboxController.Button.kA.value;
 

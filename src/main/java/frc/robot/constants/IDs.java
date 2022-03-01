@@ -39,12 +39,6 @@ public class IDs {
     */
     public static final Port intakeColorSensorPort = I2C.Port.kOnboard;
 
-    public static final int intakeUltrasonicPingPort = 1;
-    public static final int intakeUltrasonicEchoPort = 2;
-
-    public static final int indexUltrasonic1PingPort = 4;
-    public static final int indexUltrasonic1EchoPort = 5;
-
-    public static final int indexUltrasonic2PingPort = 6;
-    public static final int indexUltrasonic2EchoPort = 7;
+    public static final int intakeUltrasonicFront = 1;
+    public static final int intakeUltrasonicBack = 2;
 }

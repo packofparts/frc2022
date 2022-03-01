@@ -4,6 +4,8 @@
 
 package frc.robot.constants;
 
+import com.revrobotics.ColorSensorV3.RawColor;
+
 import edu.wpi.first.math.geometry.Translation2d;
 import frc.robot.Gains;
 
@@ -24,7 +26,9 @@ public final class Constants {
     //maximum speed of the robot in m/s
     public static final double maxSpeed = 5000;
     //maximum rotation of the robot in rads/sec
-    public static final double maxRate = 3;
+    public static final double maxRate = 4;
+    //gyrohold rate correction aggressiveness
+    public static final double rateAggresiveness = 1;
     //maximum rotation of the robot in rads/sec
     public static final double maxTurnOutput = Math.toRadians(180)*1000;
     //distance of wheels from center of robot
@@ -46,6 +50,15 @@ public final class Constants {
     public static final double minPower = 0.1;
     //min rotation input for turning
     public static final double minTurn = 0.05;
+
+    /*
+    Tube Sensor Constants
+    */
+    public static final double minColorSensorDis = 70;
+    public static final RawColor redBallThreshold = new RawColor(0, 0, 0, 0);
+    public static final RawColor blueBallThreshold = new RawColor(0, 0, 0, 0);
+    public static final double indexUltrasonicFrontThreshold = 0;
+    public static final double indexUltrasonicBackThreshold = 0;
 
     /*
     Shooter Constants
@@ -87,15 +100,4 @@ public final class Constants {
     public static final double turnPIDTolerance = 0.5;
     //drive gyro rate PID
     public static final double[] ratePID = new double[] {0.125, 0.0, 0.0};
-
-    
-    /*
-    MISC Constants
-    */
-    public static final double spinTimeIntake = 0;
-    public static final double spinTimeOuttake = 0;
-    public static final int ultrasonicThreshold = 5;
-    
-    public static final double motorPower = 0.2;
-    public static final double spinTime = 2.0;//tbd
 }

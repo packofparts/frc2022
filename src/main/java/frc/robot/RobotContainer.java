@@ -13,7 +13,6 @@ import frc.robot.subsystems.Tube;
 import frc.robot.subsystems.Joysticks;
 import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.Shooter;
-import frc.robot.subsystems.Limelight.Pipeline;
 import edu.wpi.first.wpilibj2.command.Command;
 
 /**

@@ -13,11 +13,13 @@ public class Limelight extends SubsystemBase {
   public void periodic() {}
 
   public enum Pipeline {
-    drive, blue, red;
+    drive, blue, red, unknown, none;
   }
 
   public void setPipeline(Pipeline pipeline) {
     switch(pipeline) {
+      case none:
+      case unknown:
       case drive:
         table.getEntry("pipeline").setNumber(0);
         table.getEntry("camMode").setNumber(1);
