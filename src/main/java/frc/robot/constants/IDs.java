@@ -20,10 +20,10 @@ public class IDs {
     public static final int flyWheelID = 6;
     public static final int rollerID = 7;
 
-    public static final int intakeMotor1ID = 8;
-    // public static final int intakeMotor2ID = 9;
+    public static final int intakeMotorID = 8;
 
     public static final int indexMotorID = 10;
+    public static final int feederMotorID = 9;
 
     
     /*

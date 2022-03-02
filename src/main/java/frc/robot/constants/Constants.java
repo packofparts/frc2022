@@ -35,10 +35,10 @@ public final class Constants {
     public static final double wheelDisFromCenter = 0.5715;
     //distance of cg from robot center
     public static final Translation2d cgDistance = new Translation2d(0, 0.5);
-    //Proportional adjustment for gyro pid
+    //proportional adjustment for gyro pid
     public static final double pGyro = 0.01;
-    //Gyro rotation rate deadzone before snap is enabled
-    public static final double gyroDeadzone = 3;
+    //gyro pid turn margin of error
+    public static final double gyroDeadzone = 1;
 
     //precision factor for precision turning
     public static final double precisionFactor = 0.4;
@@ -63,7 +63,11 @@ public final class Constants {
     /*
     Shooter Constants
     */
-    public static final double increment = 100;
+    public static final double shooterDeadzone = 100;
+    //shooter main RPM PID
+    public static final double[] shooterMainPID = new double[] {0.0, 0.0, 0.0};
+    //shooter roller RPM PID
+    public static final double[] shooterRollerPID = new double[] {0.0, 0.0, 0.0};
 
 
     /*

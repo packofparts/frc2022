@@ -40,9 +40,9 @@ public class Joysticks {
   private final XboxController operatorController = new XboxController(2);
   public double getClimbAxis() {return operatorController.getLeftY();}
 
-  public boolean getIntakeSolenoidToggle() {return operatorController.getBButton();}
+  public boolean getIntakeSolenoidToggle() {return operatorController.getAButton();}
   public boolean getIndexToggle() {return operatorController.getBButton();}
-  public boolean getOutdexToggle() {return operatorController.getXButton();}
+  // public boolean getOutdexToggle() {return operatorController.getXButton();}
   public boolean getIntakeToggle() {return operatorController.getRightBumper();}
   public boolean getOutakeToggle() {return operatorController.getLeftBumper();}
   public boolean getIncreaseShooter() {return operatorController.getPOV() == 0;}

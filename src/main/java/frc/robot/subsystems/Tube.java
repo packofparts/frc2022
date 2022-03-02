@@ -20,8 +20,10 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Tube extends SubsystemBase {
   //base motors
-  TalonSRX intakeMotor = new TalonSRX(IDs.intakeMotor1ID);
+  TalonSRX intakeMotor = new TalonSRX(IDs.intakeMotorID);
   TalonSRX indexMotor = new TalonSRX(IDs.indexMotorID);
+  TalonSRX feederMotor;// = new TalonSRX(IDs.feederMotorID);
+  TubeMode tubeMode = TubeMode.off;
 
   //joysticks
   Joysticks joysticks;
@@ -47,6 +49,7 @@ public class Tube extends SubsystemBase {
   
   public Tube(Joysticks joysticks) {
     this.joysticks = joysticks;
+    indexMotor.setInverted(true);
  
     if (usePneumatics) {
       intakeSolenoid1 = new Solenoid(PneumaticsModuleType.REVPH, IDs.intakeSolenoid1ID);
@@ -62,21 +65,19 @@ public class Tube extends SubsystemBase {
     }
   }
 
+  public enum TubeMode {
+    intake, feed, reverse, off;
+  }
+
   @Override
   public void periodic() {
-    //intake
-    if (joysticks.getIntakeToggle()) intakeMotor.set(TalonSRXControlMode.PercentOutput, 0.5);
-    else if (joysticks.getOutakeToggle()) intakeMotor.set(TalonSRXControlMode.PercentOutput, -0.5);
-    else intakeMotor.set(TalonSRXControlMode.PercentOutput, 0);
-    
-    SmartDashboard.putBoolean("Intake Running", intakeMotor.getMotorOutputPercent() != 0);
+    //set tube mode && run
+    if (joysticks.getIntakeToggle()) setTubeMode(TubeMode.intake);
+    else if (joysticks.getOutakeToggle()) setTubeMode(TubeMode.reverse);
+    else if (joysticks.getIndexToggle()) setTubeMode(TubeMode.feed);
+    else setTubeMode(TubeMode.off);
 
-    //index
-    if (joysticks.getIndexToggle()) indexMotor.set(TalonSRXControlMode.PercentOutput, -1);
-    else if (joysticks.getOutdexToggle()) indexMotor.set(TalonSRXControlMode.PercentOutput, 1);
-    else indexMotor.set(TalonSRXControlMode.PercentOutput, 0);
-
-    SmartDashboard.putBoolean("Index Running", indexMotor.getMotorOutputPercent() != 0);
+    runTube();
 
     //pneumatics
     if (usePneumatics) {
@@ -86,14 +87,8 @@ public class Tube extends SubsystemBase {
 
       //toggle intake solenoids
       if (joysticks.getIntakeSolenoidToggle()) {
-        if (intakeSolenoid1.get()) {
-          intakeSolenoid1.set(false);
-          intakeSolenoid2.set(false);
-        }
-        else {
-          intakeSolenoid1.set(true);
-          intakeSolenoid2.set(true);
-        }
+        if (intakeSolenoid1.get()) setPneumatics(false);
+        else setPneumatics(true);
       }
 
       SmartDashboard.putNumber("digital pressure", phCompressor.getPressure());
@@ -133,5 +128,51 @@ public class Tube extends SubsystemBase {
       SmartDashboard.putBoolean("Index Front", indexFront);
       SmartDashboard.putBoolean("Index Back", indexBack);
     }
+  }
+
+  public void setTubeMode(TubeMode mode) {
+    this.tubeMode = mode;
+  }
+
+  public void stopTube() {
+    tubeMode = TubeMode.off;
+    runTube();
+  }
+
+  public void runTube() {
+    //intake in, index in, feeder out
+    if (tubeMode == TubeMode.intake) {
+      intakeMotor.set(TalonSRXControlMode.PercentOutput, 1);
+      indexMotor.set(TalonSRXControlMode.PercentOutput, 1);
+      if (feederMotor != null) feederMotor.set(TalonSRXControlMode.PercentOutput, -1);
+    }
+    //all in
+    else if (tubeMode == TubeMode.feed) {
+      intakeMotor.set(TalonSRXControlMode.PercentOutput, 1);
+      indexMotor.set(TalonSRXControlMode.PercentOutput, 1);
+      if (feederMotor != null) feederMotor.set(TalonSRXControlMode.PercentOutput, 1);
+    }
+    //all out
+    else if (tubeMode == TubeMode.reverse) {
+      intakeMotor.set(TalonSRXControlMode.PercentOutput, -1);
+      indexMotor.set(TalonSRXControlMode.PercentOutput, -1);
+      if (feederMotor != null) feederMotor.set(TalonSRXControlMode.PercentOutput, -1);
+    }
+    else {
+      intakeMotor.set(TalonSRXControlMode.PercentOutput, 0);
+      indexMotor.set(TalonSRXControlMode.PercentOutput, 0);
+      if (feederMotor != null) feederMotor.set(TalonSRXControlMode.PercentOutput, 0);
+    }
+    
+    SmartDashboard.putBoolean("Intake Running", intakeMotor.getMotorOutputPercent() != 0);
+    SmartDashboard.putBoolean("Index Running", indexMotor.getMotorOutputPercent() != 0);
+    if (feederMotor != null) SmartDashboard.putBoolean("Feeder Running", feederMotor.getMotorOutputPercent() != 0);
+  }
+
+  public void setPneumatics(boolean extend) {
+    if (!usePneumatics) return;
+    
+    intakeSolenoid1.set(extend);
+    intakeSolenoid2.set(extend);
   }
 }

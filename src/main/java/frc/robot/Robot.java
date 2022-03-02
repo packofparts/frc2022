@@ -4,14 +4,12 @@
 
 package frc.robot;
 
-import com.ctre.phoenix.motorcontrol.can.TalonFX;
-import com.ctre.phoenix.music.Orchestra;
-
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.autoPath.TwoBallSimple;
 import frc.robot.subsystems.Limelight.Pipeline;
 
 /**
@@ -23,8 +21,9 @@ import frc.robot.subsystems.Limelight.Pipeline;
 public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
   private RobotContainer m_robotContainer;
-  // private Orchestra musikPlayer;
+  
   private SendableChooser<Pipeline> ballColor = new SendableChooser<>();
+  private SendableChooser<Command> autoCommand = new SendableChooser<>();
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -35,16 +34,12 @@ public class Robot extends TimedRobot {
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
-    // musikPlayer = new Orchestra();
-    // musikPlayer.addInstrument(new TalonFX(5));
-    // musikPlayer.loadMusic("scale.chrp");
 
     ballColor.setDefaultOption("blue", Pipeline.blue);
     ballColor.addOption("red", Pipeline.red);
     SmartDashboard.putData(ballColor);
-    
-    // m_robotContainer.drive.resetGyro();
-    // m_robotContainer.drive.resetEncoders();
+
+    autoCommand.setDefaultOption("Two Ball (Simple)", new TwoBallSimple(m_robotContainer.drive, m_robotContainer.tube, m_robotContainer.shooter));
   }
 
   /**
@@ -66,9 +61,9 @@ public class Robot extends TimedRobot {
   /** This function is called once each time the robot enters Disabled mode. */
   @Override
   public void disabledInit() {
-    // m_robotContainer.drive.stop();
-    // musikPlayer.stop();
+    m_robotContainer.drive.stop();
     m_robotContainer.shooter.stopShooter();
+    m_robotContainer.tube.stopTube();
   }
 
   @Override
@@ -79,11 +74,7 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousInit() {
     //dont take joystick inputs in auto
-    // m_robotContainer.drive.setShouldDrive(false);
-    // m_robotContainer.drive.resetGyro();
-    // m_robotContainer.drive.resetEncoders();
-    // m_robotContainer.auto.setPipeline(ballColor.getSelected());
-    m_autonomousCommand = m_robotContainer.getAutonomousCommand();
+    m_autonomousCommand = autoCommand.getSelected();
 
     // schedule the autonomous command (example)
     if (m_autonomousCommand != null) {
@@ -94,17 +85,13 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during autonomous. */
   @Override
   public void autonomousPeriodic() {
-    if (!m_robotContainer.getAutonomousCommand().isScheduled()) {
-      m_robotContainer.getAutonomousCommand().schedule();
+    if (!m_autonomousCommand.isScheduled()) {
+      m_autonomousCommand.schedule();
     }
   }
 
   @Override
   public void teleopInit() {
-    //enable joystick inputs in teleop
-    // m_robotContainer.drive.setShouldDrive(true);
-    // m_robotContainer.limelight.setPipeline(Pipeline.drive);
-
     // This makes sure that the autonomous stops running when
     // teleop starts running. If you want the autonomous to
     // continue until interrupted by another command, remove
@@ -112,21 +99,11 @@ public class Robot extends TimedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
-
-    // PlayMusic yay = new PlayMusic();
-    // yay.schedule();
   }
 
   /** This function is called periodically during operator control. */
   @Override
-  public void teleopPeriodic() {
-    // if(m_robotContainer.drive.driveJoystickMain.getRawButtonPressed(10)) {
-    //   musikPlayer.play();
-    // }
-    // if(m_robotContainer.drive.driveJoystickMain.getRawButtonPressed(11)) {
-    //   musikPlayer.stop();
-    // }
-  }
+  public void teleopPeriodic() {}
 
   @Override
   public void testInit() {

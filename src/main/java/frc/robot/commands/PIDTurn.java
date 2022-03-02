@@ -6,17 +6,19 @@ package frc.robot.commands;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.constants.Constants;
 import frc.robot.subsystems.DriveSubsystem;
 
 public class PIDTurn extends CommandBase {
   DriveSubsystem driveBase;
-  PIDController pid = new PIDController(0, 0, 0);
+  PIDController pid = new PIDController(Constants.turnPID[0], Constants.turnPID[1], Constants.turnPID[2]);
   double PIDTurnDegrees;
   double originalYaw = 0;
 
   public PIDTurn(DriveSubsystem dt, double degrees) {
     driveBase = dt;
     addRequirements(driveBase);
+
     this.PIDTurnDegrees = degrees;
   }
 
@@ -30,19 +32,18 @@ public class PIDTurn extends CommandBase {
   @Override
   public void execute() {
     double speed = pid.calculate(driveBase.getAngle(), originalYaw + PIDTurnDegrees);
-    driveBase.setBackLeftVelocity(-speed);
-    driveBase.setFrontLeftVelocity(-speed);
-    driveBase.setBackRightVelocity(speed);
-    driveBase.setFrontRightVelocity(speed);
+    driveBase.drive(0, 0, speed, false);
   }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+    driveBase.stop();
+  }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return Math.abs(driveBase.getAngle()-(originalYaw+PIDTurnDegrees)) < Constants.gyroDeadzone;
   }
 }

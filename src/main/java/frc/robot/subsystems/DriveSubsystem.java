@@ -114,21 +114,20 @@ sHAKUANDO WAS HERE
     if (gyro == null) {
       gyro = new AHRS(SPI.Port.kMXP);
       if (!gyro.isConnected()) gyro = null;
-      else gyro.reset();
     }
     else {
-      SmartDashboard.putNumber("Gyro Yaw", gyro.getYaw());
-      SmartDashboard.putNumber("Gyro Rate", gyro.getRate());
+      if (gyro.isCalibrating()) {
+        SmartDashboard.putString("Gyro Yaw", "Calibrating");
+        SmartDashboard.putString("Gyro Rate", "Calibrating");
+      }
+      else {
+        SmartDashboard.putNumber("Gyro Yaw", gyro.getYaw());
+        SmartDashboard.putNumber("Gyro Rate", gyro.getRate());
+      }
     }
     
-    if (joysticks.getGyroResetButton()) {
-      System.out.println("gyro");
-      resetGyro();
-    }
-    if (joysticks.getEncoderResetButton()) {
-      System.out.println("encoder");
-      resetEncoders();
-    }
+    if (joysticks.getGyroResetButton()) resetGyro();
+    if (joysticks.getEncoderResetButton()) resetEncoders();
 
     if (tuningPID) {
       //modify PID w/ joysticks
@@ -258,7 +257,7 @@ sHAKUANDO WAS HERE
   }
 
   public void resetGyro() {
-    if (gyro != null && gyro.isConnected()) {
+    if (gyro != null && gyro.isConnected() && !gyro.isCalibrating()) {
       gyro.reset();
       this.gyroHold = 0.0;
     }
@@ -368,6 +367,10 @@ sHAKUANDO WAS HERE
     m_frontRightSpark.set(0);
     m_backLeftSpark.set(0);
     m_backRightSpark.set(0);
+  }
+
+  public double getAveragePos() {
+    return (getFrontLeftPos()+getFrontRightPos()+getRearLeftPos()+getRearRightPos())/4;
   }
 
   public double getFrontLeftPos() {
