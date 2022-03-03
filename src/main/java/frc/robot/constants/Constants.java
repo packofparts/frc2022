@@ -28,7 +28,8 @@ public final class Constants {
     //maximum rotation of the robot in rads/sec
     public static final double maxRate = 4;
     //gyrohold rate correction aggressiveness
-    public static final double rateAggresiveness = 1;
+    public static final double rateAggresiveness = 2;
+    public static final double rateFactor = -4.0;
     //maximum rotation of the robot in rads/sec
     public static final double maxTurnOutput = Math.toRadians(180)*1000;
     //distance of wheels from center of robot
@@ -50,7 +51,6 @@ public final class Constants {
     public static final double minPower = 0.1;
     //min rotation input for turning
     public static final double minTurn = 0.05;
-
     /*
     Tube Sensor Constants
     */
@@ -100,8 +100,9 @@ public final class Constants {
     public static final double[] limelightPID = new double[] {0.00001, 0.0, 0.0};
     public static final double[] limelightTurnPID = new double[] {0.017, 0.0, 0.002};
     //drive gyro turn PID
-    public static final double[] turnPID = new double[] {0.009, 0.0, 0.002};
+    public static final double[] turnPID = new double[] {0.006, 0.0, 0.0003};
     public static final double turnPIDTolerance = 0.5;
     //drive gyro rate PID
-    public static final double[] ratePID = new double[] {0.125, 0.0, 0.0};
+    public static final double[] ratePID = new double[] {0.080, 0.0, 0.0};
+
 }

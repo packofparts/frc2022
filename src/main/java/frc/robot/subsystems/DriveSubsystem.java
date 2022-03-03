@@ -56,7 +56,7 @@ public class DriveSubsystem extends SubsystemBase {
   //set booleans
   final boolean useGyroHold = false;
   final boolean usingXboxController = false;//Joysticks.driveXboxController != null;
-  final boolean tuningPID = true;
+  final boolean tuningPID = false;
 
   public DriveSubsystem(Joysticks joysticks) {
     /*
@@ -133,10 +133,10 @@ sHAKUANDO WAS HERE
       //modify PID w/ joysticks
       if (joysticks.getPIncrease()) turnPID.setP(turnPID.getP() + 0.0005);;
       if (joysticks.getPDecrease()) turnPID.setP(turnPID.getP() - 0.0005);
-      if (joysticks.getIIncrease()) turnPID.setI(turnPID.getI() + 0.0005);
-      if (joysticks.getIDecrease()) turnPID.setI(turnPID.getI() - 0.0005);
-      if (joysticks.getDIncrease()) turnPID.setD(turnPID.getD() + 0.0005);
-      if (joysticks.getDDecrease()) turnPID.setD(turnPID.getD() - 0.0005);
+      if (joysticks.getIIncrease()) turnPID.setI(turnPID.getI() + 0.0000005);
+      if (joysticks.getIDecrease()) turnPID.setI(turnPID.getI() - 0.0000005);
+      if (joysticks.getDIncrease()) turnPID.setD(turnPID.getD() + 0.00005);
+      if (joysticks.getDDecrease()) turnPID.setD(turnPID.getD() - 0.00005);
 
       //display PID values
       SmartDashboard.putNumber("P: ", turnPID.getP());
@@ -145,8 +145,8 @@ sHAKUANDO WAS HERE
 
       //calculate PID on button input
       Double pidOutput = null;
-      if (joysticks.getPIDSlow()) pidOutput = -turnPID.calculate(gyro.getAngle(), -10);
-      else if (joysticks.getPIDFast()) pidOutput = -turnPID.calculate(gyro.getAngle(), 10);
+      if (joysticks.getPIDLeft()) pidOutput = -turnPID.calculate(gyro.getAngle(), 90);
+      else if (joysticks.getPIDRight()) pidOutput = -turnPID.calculate(gyro.getAngle(), -90);
 
       //apply PID on button input
       if (pidOutput != null) drive(0, 0, pidOutput, true);
@@ -207,7 +207,8 @@ sHAKUANDO WAS HERE
       }
     }
     //closed loop turning
-    rotation = -ratePID.calculate(gyro.getRate(), Math.abs(rotation)*Constants.maxRate) * getSign(rotation) * Constants.maxTurnOutput;
+    rotation = -ratePID.calculate(gyro.getRate(), rotation*Constants.rateFactor*Constants.maxRate) * Constants.maxTurnOutput;
+    // rotation *= Constants.maxTurnOutput;
 
     // Convert to wheel speeds
     ChassisSpeeds speeds;

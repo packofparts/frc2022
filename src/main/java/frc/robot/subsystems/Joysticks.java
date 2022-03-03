@@ -32,8 +32,8 @@ public class Joysticks {
   public boolean getIDecrease() {return driveJoystickSide.getRawButtonReleased(9);}
   public boolean getDIncrease() {return driveJoystickSide.getRawButtonReleased(11);}
   public boolean getDDecrease() {return driveJoystickSide.getRawButtonReleased(10);}
-  public boolean getPIDSlow() {return driveJoystickSide.getRawButton(4);}
-  public boolean getPIDFast() {return driveJoystickSide.getRawButton(5);}
+  public boolean getPIDLeft() {return driveJoystickSide.getRawButton(4);}
+  public boolean getPIDRight() {return driveJoystickSide.getRawButton(5);}
 
 
   //operator controls

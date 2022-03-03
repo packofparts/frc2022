@@ -22,7 +22,7 @@ public class Shooter extends SubsystemBase {
   double setVelocityMain = 0;
   double setVelocityRoller = 0;
 
-  boolean usePID = false;
+  boolean usePID = true;
   
   public Shooter(Joysticks joysticks) {
     this.joysticks = joysticks;
