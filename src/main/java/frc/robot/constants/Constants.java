@@ -22,13 +22,13 @@ public final class Constants {
     Drive Constants
     */
     //deadzone for the joysticks before input is used
-    public static final double joystickDeadzone = 0.2;
+    public static final double joystickDeadzone = 0.25;
     //maximum speed of the robot in m/s
     public static final double maxSpeed = 5000;
     //maximum rotation of the robot in rads/sec
     public static final double maxRate = 4;
     //gyrohold rate correction aggressiveness
-    public static final double rateAggresiveness = 2;
+    public static final double rateAggresiveness = 1;
     public static final double rateFactor = -4.0;
     //maximum rotation of the robot in rads/sec
     public static final double maxTurnOutput = Math.toRadians(180)*1000;
@@ -65,9 +65,9 @@ public final class Constants {
     */
     public static final double shooterDeadzone = 100;
     //shooter main RPM PID
-    public static final double[] shooterMainPID = new double[] {0.0, 0.0, 0.0};
+    public static final double[] shooterMainPID = new double[] {0.2, 0.000135, 0.0};
     //shooter roller RPM PID
-    public static final double[] shooterRollerPID = new double[] {0.0, 0.0, 0.0};
+    public static final double[] shooterRollerPID = new double[] {0.2, 0.000135, 0.0};
 
 
     /*

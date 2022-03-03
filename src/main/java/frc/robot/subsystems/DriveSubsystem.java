@@ -54,7 +54,7 @@ public class DriveSubsystem extends SubsystemBase {
   Joysticks joysticks;
   
   //set booleans
-  final boolean useGyroHold = false;
+  final boolean useGyroHold = true;
   final boolean usingXboxController = false;//Joysticks.driveXboxController != null;
   final boolean tuningPID = false;
 
@@ -209,6 +209,8 @@ sHAKUANDO WAS HERE
     //closed loop turning
     rotation = -ratePID.calculate(gyro.getRate(), rotation*Constants.rateFactor*Constants.maxRate) * Constants.maxTurnOutput;
     // rotation *= Constants.maxTurnOutput;
+    SmartDashboard.putString("gyrohold", gyroHold+"");
+    SmartDashboard.putNumber("rotation", rotation);
 
     // Convert to wheel speeds
     ChassisSpeeds speeds;

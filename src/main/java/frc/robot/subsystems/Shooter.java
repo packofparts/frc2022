@@ -34,22 +34,32 @@ public class Shooter extends SubsystemBase {
     rollerTalon.config_kP(0, Constants.shooterRollerPID[0]);
     rollerTalon.config_kI(0, Constants.shooterRollerPID[1]);
     rollerTalon.config_kD(0, Constants.shooterRollerPID[2]);
+    // SmartDashboard.putNumber("mainRoll", 0);
+    // SmartDashboard.putNumber("secondRoll", 0); 
   }
 
   public enum ShooterMode {
-    fast, slow, auto, off;
+    launchPad, tarmac, auto, off;
   }
 
   @Override
   public void periodic() {
+    // double mainSpeed = SmartDashboard.getNumber("mainRoll", 0);
+    // double secondSpeed = SmartDashboard.getNumber("secondRoll", 0);
+
+    // mainTalon.set(TalonFXControlMode.PercentOutput, mainSpeed);
+    // rollerTalon.set(TalonFXControlMode.PercentOutput, secondSpeed);
+
+    // SmartDashboard.putNumber("Shooter-Main", mainTalon.getSelectedSensorVelocity());
+    // SmartDashboard.putNumber("Shooter-Roller", rollerTalon.getSelectedSensorVelocity());
     //shooter toggle
     if (joysticks.getShooterHigh()) {
       if (shooterMode != ShooterMode.off) setShooterMode(ShooterMode.off);
-      else setShooterMode(ShooterMode.fast);
+      else setShooterMode(ShooterMode.launchPad);
     }
     else if (joysticks.getShooterLow()) {
       if (shooterMode != ShooterMode.off) setShooterMode(ShooterMode.off);
-      else setShooterMode(ShooterMode.slow);
+      else setShooterMode(ShooterMode.tarmac);
     }
 
     //shooter mode
@@ -71,11 +81,11 @@ public class Shooter extends SubsystemBase {
 
   public void runShooter() {
     if (!usePID) {
-      if (shooterMode == ShooterMode.fast) {
-        mainTalon.set(TalonFXControlMode.PercentOutput, 0.5);
-        rollerTalon.set(TalonFXControlMode.PercentOutput, -0.8);
+      if (shooterMode == ShooterMode.launchPad) {
+        mainTalon.set(TalonFXControlMode.PercentOutput, 0.34);
+        rollerTalon.set(TalonFXControlMode.PercentOutput, -0.32);
       }
-      else if (shooterMode == ShooterMode.slow) {
+      else if (shooterMode == ShooterMode.tarmac) {
         mainTalon.set(TalonFXControlMode.PercentOutput, 0.42);
         rollerTalon.set(TalonFXControlMode.PercentOutput, -0.42);
       }
@@ -90,11 +100,11 @@ public class Shooter extends SubsystemBase {
       shooterReady = mainTalon.getMotorOutputPercent() != 0 || rollerTalon.getMotorOutputPercent() != 0;
     }
     else {
-      if (shooterMode == ShooterMode.fast) {
-        setVelocityMain = 2000;
-        setVelocityRoller = -2000;
+      if (shooterMode == ShooterMode.launchPad) {
+        setVelocityMain = 6600;
+        setVelocityRoller = -4500;
       }
-      else if (shooterMode == ShooterMode.slow) {
+      else if (shooterMode == ShooterMode.tarmac) {
         setVelocityMain = 1000;
         setVelocityRoller = -1000;
       }
@@ -107,13 +117,18 @@ public class Shooter extends SubsystemBase {
         setVelocityRoller = 0;
       }
       
-      mainTalon.set(TalonFXControlMode.Velocity, setVelocityMain);
-      rollerTalon.set(TalonFXControlMode.Velocity, setVelocityRoller);
+      if (setVelocityMain == 0) mainTalon.set(TalonFXControlMode.PercentOutput, 0);
+      else mainTalon.set(TalonFXControlMode.Velocity, setVelocityMain);
 
-      shooterReady = Math.abs(mainTalon.getSelectedSensorVelocity()-setVelocityMain) <= Constants.shooterDeadzone &&
-                     Math.abs(rollerTalon.getSelectedSensorVelocity()-setVelocityRoller) <= Constants.shooterDeadzone;
+      if (setVelocityRoller == 0) rollerTalon.set(TalonFXControlMode.PercentOutput, 0);
+      else rollerTalon.set(TalonFXControlMode.Velocity, setVelocityRoller);
+
+      shooterReady = Math.abs(Math.abs(setVelocityMain)-Math.abs(mainTalon.getSelectedSensorVelocity())) <= Constants.shooterDeadzone &&
+      Math.abs(Math.abs(setVelocityRoller)-Math.abs(rollerTalon.getSelectedSensorVelocity())) <= Constants.shooterDeadzone && 
+                     setVelocityMain != 0 && setVelocityRoller != 0;
     }
 
+    SmartDashboard.putBoolean("Shooter Running", mainTalon.getMotorOutputPercent() != 0 || rollerTalon.getMotorOutputPercent() != 0);
     SmartDashboard.putBoolean("Shooter Ready", shooterReady);
     SmartDashboard.putNumber("Shooter-Main", mainTalon.getSelectedSensorVelocity());
     SmartDashboard.putNumber("Shooter-Roller", rollerTalon.getSelectedSensorVelocity());
