@@ -22,7 +22,7 @@ public class Tube extends SubsystemBase {
   //base motors
   TalonSRX intakeMotor = new TalonSRX(IDs.intakeMotorID);
   TalonSRX indexMotor = new TalonSRX(IDs.indexMotorID);
-  TalonSRX feederMotor;// = new TalonSRX(IDs.feederMotorID);
+  TalonSRX feederMotor = new TalonSRX(IDs.feederMotorID);
   TubeMode tubeMode = TubeMode.off;
 
   //joysticks
@@ -82,8 +82,8 @@ public class Tube extends SubsystemBase {
     //pneumatics
     if (usePneumatics) {
       //compressor management
-      if (phCompressor.getPressure() > 62) phCompressor.disable();
-      else if (phCompressor.getPressure() < 60) phCompressor.enableDigital();
+      if (phCompressor.getPressure() > 112) phCompressor.disable();
+      else if (phCompressor.getPressure() < 110) phCompressor.enableDigital();
 
       //toggle intake solenoids
       if (joysticks.getIntakeSolenoidToggle()) {
@@ -92,6 +92,7 @@ public class Tube extends SubsystemBase {
       }
 
       SmartDashboard.putNumber("digital pressure", phCompressor.getPressure());
+      SmartDashboard.putBoolean("intake pneumatics", intakeSolenoid1.get() && intakeSolenoid2.get());
     }
 
     //sensors
@@ -151,6 +152,10 @@ public class Tube extends SubsystemBase {
   }
 
   public void stopTube() {
+    if (usePneumatics) {
+      phCompressor.disable();
+    }
+
     tubeMode = TubeMode.off;
     runTube();
   }
