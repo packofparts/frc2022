@@ -130,6 +130,22 @@ public class Tube extends SubsystemBase {
     }
   }
 
+  public boolean getIntake() {
+    return intakeBall != Pipeline.none;
+  }
+
+  public boolean getIntake(Pipeline pipeline) {
+    return intakeBall == pipeline;
+  }
+
+  public boolean getIndexFront() {
+    return indexFront;
+  }
+
+  public boolean getIndexBack() {
+    return indexBack;
+  }
+
   public void setTubeMode(TubeMode mode) {
     this.tubeMode = mode;
   }

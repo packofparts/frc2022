@@ -6,47 +6,42 @@ package frc.robot.commands;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-
 import frc.robot.constants.Constants;
 import frc.robot.subsystems.DriveSubsystem;
-public class MoveBy extends CommandBase {
-  DriveSubsystem drive;
-  double initialPos;
-  double move = 0;
 
-  PIDController movePID = new PIDController(Constants.movePID.kP, Constants.movePID.kI, Constants.movePID.kD);
+public class TurnTo extends CommandBase {
+  DriveSubsystem driveBase;
+  PIDController pid = new PIDController(Constants.turnPID[0], Constants.turnPID[1], Constants.turnPID[2]);
+  double PIDTurnDegrees;
+  double originalYaw = 0;
 
-  public MoveBy(DriveSubsystem drive, double move) {
-    this.drive = drive;
-    this.move = move;
-  }
+  public TurnTo(DriveSubsystem dt, double degrees) {
+    driveBase = dt;
+    addRequirements(driveBase);
 
-  public void setMove(double move) {
-    this.move = move;
+    this.PIDTurnDegrees = degrees;
   }
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {
-    initialPos = drive.getAveragePos();
-  }
+  public void initialize() {}
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double speed = movePID.calculate(drive.getAveragePos(), initialPos+move);
-    drive.drive(0, speed, 0, false);
+    double speed = pid.calculate(driveBase.getAngle(), PIDTurnDegrees);
+    driveBase.drive(0, 0, speed, false);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    drive.stop();
+    driveBase.stop();
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return (Math.abs(drive.getAveragePos()-initialPos) < Constants.encoderDeadzone);
+    return Math.abs(driveBase.getAngle()-PIDTurnDegrees) < Constants.gyroDeadzone;
   }
 }

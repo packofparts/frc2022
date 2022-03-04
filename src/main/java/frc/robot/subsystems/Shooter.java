@@ -22,7 +22,7 @@ public class Shooter extends SubsystemBase {
   double setVelocityMain = 0;
   double setVelocityRoller = 0;
 
-  boolean usePID = true;
+  boolean tuningRPM = false;
   
   public Shooter(Joysticks joysticks) {
     this.joysticks = joysticks;
@@ -34,8 +34,11 @@ public class Shooter extends SubsystemBase {
     rollerTalon.config_kP(0, Constants.shooterRollerPID[0]);
     rollerTalon.config_kI(0, Constants.shooterRollerPID[1]);
     rollerTalon.config_kD(0, Constants.shooterRollerPID[2]);
-    // SmartDashboard.putNumber("mainRoll", 0);
-    // SmartDashboard.putNumber("secondRoll", 0); 
+
+    if (tuningRPM) {
+      SmartDashboard.putNumber("mainRoll", 0);
+      SmartDashboard.putNumber("secondRoll", 0); 
+    }
   }
 
   public enum ShooterMode {
@@ -44,14 +47,6 @@ public class Shooter extends SubsystemBase {
 
   @Override
   public void periodic() {
-    // double mainSpeed = SmartDashboard.getNumber("mainRoll", 0);
-    // double secondSpeed = SmartDashboard.getNumber("secondRoll", 0);
-
-    // mainTalon.set(TalonFXControlMode.PercentOutput, mainSpeed);
-    // rollerTalon.set(TalonFXControlMode.PercentOutput, secondSpeed);
-
-    // SmartDashboard.putNumber("Shooter-Main", mainTalon.getSelectedSensorVelocity());
-    // SmartDashboard.putNumber("Shooter-Roller", rollerTalon.getSelectedSensorVelocity());
     //shooter toggle
     if (joysticks.getShooterHigh()) {
       if (shooterMode != ShooterMode.off) setShooterMode(ShooterMode.off);
@@ -80,24 +75,9 @@ public class Shooter extends SubsystemBase {
   }
 
   public void runShooter() {
-    if (!usePID) {
-      if (shooterMode == ShooterMode.launchPad) {
-        mainTalon.set(TalonFXControlMode.PercentOutput, 0.34);
-        rollerTalon.set(TalonFXControlMode.PercentOutput, -0.32);
-      }
-      else if (shooterMode == ShooterMode.tarmac) {
-        mainTalon.set(TalonFXControlMode.PercentOutput, 0.42);
-        rollerTalon.set(TalonFXControlMode.PercentOutput, -0.42);
-      }
-      else if (shooterMode == ShooterMode.auto) {
-        mainTalon.set(TalonFXControlMode.PercentOutput, 0.5);
-        rollerTalon.set(TalonFXControlMode.PercentOutput, -0.8);
-      }
-      else {
-        mainTalon.set(TalonFXControlMode.PercentOutput, 0);
-        rollerTalon.set(TalonFXControlMode.PercentOutput, 0);
-      }
-      shooterReady = mainTalon.getMotorOutputPercent() != 0 || rollerTalon.getMotorOutputPercent() != 0;
+    if (tuningRPM) {
+      setVelocityMain = SmartDashboard.getNumber("mainRoll", 0);
+      setVelocityRoller = SmartDashboard.getNumber("secondRoll", 0);
     }
     else {
       if (shooterMode == ShooterMode.launchPad) {
@@ -116,17 +96,17 @@ public class Shooter extends SubsystemBase {
         setVelocityMain = 0;
         setVelocityRoller = 0;
       }
-      
-      if (setVelocityMain == 0) mainTalon.set(TalonFXControlMode.PercentOutput, 0);
-      else mainTalon.set(TalonFXControlMode.Velocity, setVelocityMain);
-
-      if (setVelocityRoller == 0) rollerTalon.set(TalonFXControlMode.PercentOutput, 0);
-      else rollerTalon.set(TalonFXControlMode.Velocity, setVelocityRoller);
-
-      shooterReady = Math.abs(Math.abs(setVelocityMain)-Math.abs(mainTalon.getSelectedSensorVelocity())) <= Constants.shooterDeadzone &&
-      Math.abs(Math.abs(setVelocityRoller)-Math.abs(rollerTalon.getSelectedSensorVelocity())) <= Constants.shooterDeadzone && 
-                     setVelocityMain != 0 && setVelocityRoller != 0;
     }
+    
+    if (setVelocityMain == 0) mainTalon.set(TalonFXControlMode.PercentOutput, 0);
+    else mainTalon.set(TalonFXControlMode.Velocity, setVelocityMain);
+
+    if (setVelocityRoller == 0) rollerTalon.set(TalonFXControlMode.PercentOutput, 0);
+    else rollerTalon.set(TalonFXControlMode.Velocity, setVelocityRoller);
+
+    shooterReady = Math.abs(Math.abs(setVelocityMain)-Math.abs(mainTalon.getSelectedSensorVelocity())) <= Constants.shooterDeadzone &&
+    Math.abs(Math.abs(setVelocityRoller)-Math.abs(rollerTalon.getSelectedSensorVelocity())) <= Constants.shooterDeadzone && 
+                    setVelocityMain != 0 && setVelocityRoller != 0;
 
     SmartDashboard.putBoolean("Shooter Running", mainTalon.getMotorOutputPercent() != 0 || rollerTalon.getMotorOutputPercent() != 0);
     SmartDashboard.putBoolean("Shooter Ready", shooterReady);

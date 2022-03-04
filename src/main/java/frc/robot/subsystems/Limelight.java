@@ -1,19 +1,16 @@
 package frc.robot.subsystems;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 
 
-public class Limelight extends SubsystemBase {
+public class Limelight {
   /** Creates a new limelight. */
   NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight");
 
   public Limelight() {}
-  
-  public void periodic() {}
 
   public enum Pipeline {
-    drive, blue, red, unknown, none;
+    drive, blue, red, hub, unknown, none;
   }
 
   public void setPipeline(Pipeline pipeline) {
@@ -30,6 +27,10 @@ public class Limelight extends SubsystemBase {
         break;
       case red:
         table.getEntry("pipeline").setNumber(2);
+        table.getEntry("camMode").setNumber(0);
+        break;
+      case hub:
+        table.getEntry("pipeline").setNumber(3);
         table.getEntry("camMode").setNumber(0);
         break;
     }

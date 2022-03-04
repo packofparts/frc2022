@@ -9,6 +9,9 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.autoPath.FourBallComplex;
+import frc.robot.autoPath.FourBallSimple;
+import frc.robot.autoPath.TwoBallComplex;
 import frc.robot.autoPath.TwoBallSimple;
 import frc.robot.commands.MoveBy;
 import frc.robot.subsystems.Limelight.Pipeline;
@@ -41,8 +44,15 @@ public class Robot extends TimedRobot {
     SmartDashboard.putData("Ball Color", ballColor);
 
     autoCommand.setDefaultOption("Two Ball (Simple)", new TwoBallSimple(m_robotContainer.drive, m_robotContainer.tube, m_robotContainer.shooter));
+    autoCommand.addOption("Two Ball (Complex)", new TwoBallComplex(this, m_robotContainer.drive, m_robotContainer.tube, m_robotContainer.shooter, m_robotContainer.limelight));
+    autoCommand.addOption("Four Ball (Simple)", new FourBallSimple(m_robotContainer.drive, m_robotContainer.tube, m_robotContainer.shooter));
+    autoCommand.addOption("Four Ball (Complex)", new FourBallComplex(this, m_robotContainer.drive, m_robotContainer.tube, m_robotContainer.shooter, m_robotContainer.limelight));
     autoCommand.addOption("moveBy 5ft", new MoveBy(m_robotContainer.drive, 5));
     SmartDashboard.putData("Auto Command", autoCommand);
+  }
+
+  public Pipeline getBallColor() {
+    return ballColor.getSelected();
   }
 
   /**

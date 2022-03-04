@@ -6,8 +6,10 @@ package frc.robot.autoPath;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.commands.LimelightTurn;
 import frc.robot.commands.MoveBy;
 import frc.robot.commands.TurnBy;
+import frc.robot.commands.TurnTo;
 import frc.robot.commands.TimerCommand;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.Shooter;
@@ -15,7 +17,7 @@ import frc.robot.subsystems.Tube;
 import frc.robot.subsystems.Shooter.ShooterMode;
 import frc.robot.subsystems.Tube.TubeMode;
 
-public class TwoBallSimple extends CommandBase {
+public class FourBallSimple extends CommandBase {
   boolean isFinished = false;
   int step = 0;
 
@@ -25,7 +27,7 @@ public class TwoBallSimple extends CommandBase {
 
   Command currentCommand;
 
-  public TwoBallSimple(DriveSubsystem drive, Tube tube, Shooter shooter) {
+  public FourBallSimple(DriveSubsystem drive, Tube tube, Shooter shooter) {
     this.drive = drive;
     this.tube = tube;
     this.shooter = shooter;
@@ -50,13 +52,36 @@ public class TwoBallSimple extends CommandBase {
       if (step == 0) currentCommand = new MoveBy(drive, 4);
       //rotate 180
       else if (step == 1) currentCommand = new TurnBy(drive, 180);
-      //feedShooter for 5 seconds
+      //feedShooter for 3 seconds
       else if (step == 2) {
-        currentCommand = new TimerCommand(5);
+        currentCommand = new TimerCommand(3);
         tube.setTubeMode(TubeMode.feed);
       }
-      //stop robot
-      else if (step == 3) isFinished = true;
+      //turns robot 180 degrees && stop intaking
+      else if (step == 3) {
+        tube.setTubeMode(TubeMode.off);
+        currentCommand = new TurnBy(drive, 180);
+      }
+      //intake while driving forward 10 ft
+      else if (step == 4) {
+        tube.setTubeMode(TubeMode.intake);
+        currentCommand = new MoveBy(drive, 10.275);
+      }
+      //pause for 3 seconds to let human player feed ball
+      else if (step == 5) currentCommand = new TimerCommand(3);
+      //turn robot to zero degrees
+      else if (step == 6) currentCommand = new TurnTo(drive, 0);
+      //move forward 12ft
+      else if (step == 7) currentCommand = new MoveBy(drive, 12);
+      //turn to face the hub
+      else if (step == 8) currentCommand = new TurnTo(drive, -45);
+      //feedShooter for 3 seconds
+      else if (step == 9) {
+        currentCommand = new TimerCommand(3);
+        tube.setTubeMode(TubeMode.feed);
+      }
+      //end execute
+      else if (step == 10) isFinished = true;
 
       currentCommand.schedule();
       step++;

@@ -9,13 +9,13 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.constants.Constants;
 import frc.robot.subsystems.DriveSubsystem;
 
-public class PIDTurn extends CommandBase {
+public class TurnBy extends CommandBase {
   DriveSubsystem driveBase;
   PIDController pid = new PIDController(Constants.turnPID[0], Constants.turnPID[1], Constants.turnPID[2]);
   double PIDTurnDegrees;
-  double originalYaw = 0;
+  double originalYaw;
 
-  public PIDTurn(DriveSubsystem dt, double degrees) {
+  public TurnBy(DriveSubsystem dt, double degrees) {
     driveBase = dt;
     addRequirements(driveBase);
 

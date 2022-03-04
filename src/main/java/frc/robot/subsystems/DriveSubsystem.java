@@ -43,6 +43,7 @@ public class DriveSubsystem extends SubsystemBase {
   // Creating my kinematics object using the wheel locations.
   MecanumDriveKinematics m_kinematics = new MecanumDriveKinematics(m_frontLeftLocation, m_frontRightLocation, m_backLeftLocation, m_backRightLocation);
   String bruh = "Ask me who Joe is";
+  AHRS initGyro;
   AHRS gyro;
   Double gyroHold = null;
   boolean shouldDrive = true;
@@ -66,7 +67,7 @@ sHAKUANDO WAS HERE
     CameraServer.getInstance().startAutomaticCapture();
 
     this.joysticks = joysticks;
-    gyro = new AHRS(SPI.Port.kMXP);
+    initGyro = new AHRS(SPI.Port.kMXP);
 
     m_frontLeftSpark = new CANSparkMax(IDs.frontLeftSparkID, MotorType.kBrushless);
     m_frontRightSpark = new CANSparkMax(IDs.frontRightSparkID, MotorType.kBrushless);
@@ -112,8 +113,7 @@ sHAKUANDO WAS HERE
   @Override
   public void periodic() {
     if (gyro == null) {
-      gyro = new AHRS(SPI.Port.kMXP);
-      if (!gyro.isConnected()) gyro = null;
+      if (initGyro.isConnected()) gyro = initGyro;
     }
     else {
       if (gyro.isCalibrating()) {
