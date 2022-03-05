@@ -98,18 +98,16 @@ public class Tube extends SubsystemBase {
     //sensors
     if (useSensors) {
       //colorsensor rawcolor for debugging
-      double r = intakeColorSensor.getRed()/intakeColorSensor.getProximity();
-      double g = intakeColorSensor.getGreen()/intakeColorSensor.getProximity();
-      double b = intakeColorSensor.getBlue()/intakeColorSensor.getProximity();
+      double r = (double)intakeColorSensor.getRed()/intakeColorSensor.getProximity();
+      double g = (double)intakeColorSensor.getGreen()/intakeColorSensor.getProximity();
+      double b = (double)intakeColorSensor.getBlue()/intakeColorSensor.getProximity();
 
       //intake color sensor (only if within range)
       if (intakeColorSensor.getProximity() > Constants.minColorSensorDis) {
-        RawColor rT = Constants.redBallThreshold;
-        RawColor bT = Constants.blueBallThreshold;
         //red ball threshold
-        if (r > rT.red && g < rT.green && b < rT.blue) intakeBall = Pipeline.red;
+        if (r > b) intakeBall = Pipeline.red;
         //blue ball threshold
-        else if (r < bT.red && g < bT.green && b > rT.blue) intakeBall = Pipeline.blue;
+        else if (b > r) intakeBall = Pipeline.blue;
         else intakeBall = Pipeline.unknown;
       }
       else intakeBall = Pipeline.none;
@@ -128,6 +126,7 @@ public class Tube extends SubsystemBase {
       SmartDashboard.putString("Intake Ball Color", intakeBall + "");
       SmartDashboard.putBoolean("Index Front", indexFront);
       SmartDashboard.putBoolean("Index Back", indexBack);
+      SmartDashboard.putNumber("Intake Color Sensor Distance", intakeColorSensor.getProximity());
     }
   }
 
