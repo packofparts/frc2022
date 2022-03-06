@@ -6,6 +6,7 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
+import frc.robot.subsystems.ClimbSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.Tube;
 import frc.robot.subsystems.Joysticks;
@@ -25,9 +26,9 @@ public class RobotContainer {
 
   public final DriveSubsystem drive = new DriveSubsystem(joysticks);
   public final Tube tube = new Tube(joysticks);
-  public final Shooter shooter = new Shooter(joysticks);
+  // public final Shooter shooter = new Shooter(joysticks);
   public final Limelight limelight = new Limelight();
- // public final ClimbSubsystem climb = new ClimbSubsystem(joysticks);
+ public final ClimbSubsystem climb = new ClimbSubsystem(joysticks);
 
   // public final limelightMove auto = new limelightMove(drive, limelight, Pipeline.blue, Constants.thor * Constants.tvert);
 

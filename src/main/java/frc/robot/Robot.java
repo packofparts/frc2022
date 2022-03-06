@@ -43,11 +43,11 @@ public class Robot extends TimedRobot {
     ballColor.addOption("red", Pipeline.red);
     SmartDashboard.putData("Ball Color", ballColor);
 
-    autoCommand.setDefaultOption("Two Ball (Simple)", new TwoBallSimple(m_robotContainer.drive, m_robotContainer.tube, m_robotContainer.shooter));
-    autoCommand.addOption("Two Ball (Complex)", new TwoBallComplex(this, m_robotContainer.drive, m_robotContainer.tube, m_robotContainer.shooter, m_robotContainer.limelight));
-    autoCommand.addOption("Four Ball (Simple)", new FourBallSimple(m_robotContainer.drive, m_robotContainer.tube, m_robotContainer.shooter));
-    autoCommand.addOption("Four Ball (Complex)", new FourBallComplex(this, m_robotContainer.drive, m_robotContainer.tube, m_robotContainer.shooter, m_robotContainer.limelight));
-    autoCommand.addOption("moveBy 5ft", new MoveBy(m_robotContainer.drive, 5));
+    // autoCommand.setDefaultOption("Two Ball (Simple)", new TwoBallSimple(m_robotContainer.drive, m_robotContainer.tube, m_robotContainer.shooter));
+    // autoCommand.addOption("Two Ball (Complex)", new TwoBallComplex(this, m_robotContainer.drive, m_robotContainer.tube, m_robotContainer.shooter, m_robotContainer.limelight));
+    // autoCommand.addOption("Four Ball (Simple)", new FourBallSimple(m_robotContainer.drive, m_robotContainer.tube, m_robotContainer.shooter));
+    // autoCommand.addOption("Four Ball (Complex)", new FourBallComplex(this, m_robotContainer.drive, m_robotContainer.tube, m_robotContainer.shooter, m_robotContainer.limelight));
+    // autoCommand.addOption("moveBy 5ft", new MoveBy(m_robotContainer.drive, 5));
     SmartDashboard.putData("Auto Command", autoCommand);
   }
 
@@ -75,7 +75,7 @@ public class Robot extends TimedRobot {
   @Override
   public void disabledInit() {
     m_robotContainer.drive.stop();
-    m_robotContainer.shooter.stopShooter();
+    // m_robotContainer.shooter.stopShooter();
     m_robotContainer.tube.stopTube();
   }
 

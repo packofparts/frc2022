@@ -16,13 +16,16 @@ public class Shooter extends SubsystemBase {
   Joysticks joysticks;
   TalonFX mainTalon = new TalonFX(IDs.flyWheelID);
   TalonFX rollerTalon = new TalonFX(IDs.rollerID);
-
+  int shooterModeIndex = 0;
   ShooterMode shooterMode = ShooterMode.off;
   boolean shooterReady = false;
+  boolean shooterScrollPressed = false;
   double setVelocityMain = 0;
   double setVelocityRoller = 0;
 
   boolean tuningRPM = false;
+  final ShooterMode[] modes = new ShooterMode[] 
+  {ShooterMode.launchPadFar, ShooterMode.launchPadNear, ShooterMode.tarmac, ShooterMode.closeLow};
   
   public Shooter(Joysticks joysticks) {
     this.joysticks = joysticks;
@@ -42,20 +45,42 @@ public class Shooter extends SubsystemBase {
   }
 
   public enum ShooterMode {
-    launchPad, tarmac, auto, off;
+    launchPadNear, launchPadFar, tarmac, closeLow, auto, ballReject, off;
   }
+
 
   @Override
   public void periodic() {
-    //shooter toggle
-    if (joysticks.getShooterHigh()) {
+    // shooter toggle
+    if (joysticks.getShooterToggle()) {
       if (shooterMode != ShooterMode.off) setShooterMode(ShooterMode.off);
-      else setShooterMode(ShooterMode.launchPad);
+      else setShooterMode(modes[shooterModeIndex]);
     }
-    else if (joysticks.getShooterLow()) {
-      if (shooterMode != ShooterMode.off) setShooterMode(ShooterMode.off);
-      else setShooterMode(ShooterMode.tarmac);
+    
+    if (joysticks.getShooterScrollDown()){
+      setShooterMode(ShooterMode.ballReject);
     }
+    else{
+      setShooterMode(ShooterMode.off);
+    }
+
+    if (joysticks.getNotPOV()) {
+      shooterScrollPressed = false;
+    }
+    if (joysticks.getShooterScrollRight() && !shooterScrollPressed){
+      if (shooterModeIndex < modes.length -1){
+        shooterModeIndex ++;
+      }
+      shooterScrollPressed = true;
+    }
+    else if (joysticks.getShooterScrollLeft() && !shooterScrollPressed){
+      if (shooterModeIndex > 0){
+        shooterModeIndex --;
+      }
+      shooterScrollPressed = true;
+    }
+   
+    SmartDashboard.putString("Selected Shooter Mode", modes[shooterModeIndex] + "");
 
     //shooter mode
     runShooter();
@@ -80,7 +105,15 @@ public class Shooter extends SubsystemBase {
       setVelocityRoller = SmartDashboard.getNumber("secondRoll", 0);
     }
     else {
-      if (shooterMode == ShooterMode.launchPad) {
+      if (shooterMode == ShooterMode.launchPadFar) {
+        setVelocityMain = 6600;
+        setVelocityRoller = -4500;
+      }
+      else if (shooterMode == ShooterMode.launchPadNear) {
+        setVelocityMain = 6600;
+        setVelocityRoller = -4500;
+      }
+      else if (shooterMode == ShooterMode.closeLow) {
         setVelocityMain = 6600;
         setVelocityRoller = -4500;
       }
@@ -110,6 +143,7 @@ public class Shooter extends SubsystemBase {
 
     SmartDashboard.putBoolean("Shooter Running", mainTalon.getMotorOutputPercent() != 0 || rollerTalon.getMotorOutputPercent() != 0);
     SmartDashboard.putBoolean("Shooter Ready", shooterReady);
+    SmartDashboard.putString("Active Shooter Mode", shooterMode + "");
     SmartDashboard.putNumber("Shooter-Main", mainTalon.getSelectedSensorVelocity());
     SmartDashboard.putNumber("Shooter-Roller", rollerTalon.getSelectedSensorVelocity());
   }

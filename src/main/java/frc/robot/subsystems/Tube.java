@@ -29,7 +29,7 @@ public class Tube extends SubsystemBase {
   Joysticks joysticks;
 
   //pneumatics
-  final boolean usePneumatics = false;
+  final boolean usePneumatics = true;
   Solenoid intakeSolenoid1;
   Solenoid intakeSolenoid2;
   Compressor phCompressor;
@@ -50,6 +50,7 @@ public class Tube extends SubsystemBase {
   public Tube(Joysticks joysticks) {
     this.joysticks = joysticks;
     indexMotor.setInverted(true);
+    feederMotor.setInverted(true);
  
     if (usePneumatics) {
       intakeSolenoid1 = new Solenoid(PneumaticsModuleType.REVPH, IDs.intakeSolenoid1ID);
@@ -165,29 +166,29 @@ public class Tube extends SubsystemBase {
     if (tubeMode == TubeMode.intake) {
       intakeMotor.set(TalonSRXControlMode.PercentOutput, 1);
       indexMotor.set(TalonSRXControlMode.PercentOutput, 1);
-      if (feederMotor != null) feederMotor.set(TalonSRXControlMode.PercentOutput, -1);
+      feederMotor.set(TalonSRXControlMode.PercentOutput, -1);
     }
     //all in
     else if (tubeMode == TubeMode.feed) {
       intakeMotor.set(TalonSRXControlMode.PercentOutput, 1);
       indexMotor.set(TalonSRXControlMode.PercentOutput, 1);
-      if (feederMotor != null) feederMotor.set(TalonSRXControlMode.PercentOutput, 1);
+      feederMotor.set(TalonSRXControlMode.PercentOutput, 1);
     }
     //all out
     else if (tubeMode == TubeMode.reverse) {
       intakeMotor.set(TalonSRXControlMode.PercentOutput, -1);
       indexMotor.set(TalonSRXControlMode.PercentOutput, -1);
-      if (feederMotor != null) feederMotor.set(TalonSRXControlMode.PercentOutput, -1);
+      feederMotor.set(TalonSRXControlMode.PercentOutput, -1);
     }
     else {
       intakeMotor.set(TalonSRXControlMode.PercentOutput, 0);
       indexMotor.set(TalonSRXControlMode.PercentOutput, 0);
-      if (feederMotor != null) feederMotor.set(TalonSRXControlMode.PercentOutput, 0);
+      feederMotor.set(TalonSRXControlMode.PercentOutput, 0);
     }
     
     SmartDashboard.putBoolean("Intake Running", intakeMotor.getMotorOutputPercent() != 0);
     SmartDashboard.putBoolean("Index Running", indexMotor.getMotorOutputPercent() != 0);
-    if (feederMotor != null) SmartDashboard.putBoolean("Feeder Running", feederMotor.getMotorOutputPercent() != 0);
+    SmartDashboard.putBoolean("Feeder Running", feederMotor.getMotorOutputPercent() != 0);
   }
 
   public void setPneumatics(boolean extend) {

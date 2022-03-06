@@ -4,6 +4,8 @@
 
 package frc.robot.subsystems;
 
+import java.sql.Blob;
+
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 
@@ -19,7 +21,6 @@ public class Joysticks {
   public boolean getRobotOrientedToggle() {return driveJoystickMain.getRawButton(1);}
   public boolean getGyroResetButton() {return driveJoystickMain.getRawButtonPressed(8);}
   public boolean getEncoderResetButton() {return driveJoystickMain.getRawButtonPressed(9);}
-
 
   //side drive joysticks
   private final Joystick driveJoystickSide = new Joystick(1);
@@ -38,7 +39,10 @@ public class Joysticks {
 
   //operator controls
   private final XboxController operatorController = new XboxController(2);
-  public double getClimbAxis() {return operatorController.getLeftY();}
+  public double getClimbAxisRight() {return operatorController.getRightY();}
+  public double getClimbAxisLeft() {return operatorController.getLeftY();}
+  public double getClimbAxis() {return operatorController.getLeftTriggerAxis()-operatorController.getRightTriggerAxis();}
+  public boolean getClimbSolenoidToggle() {return operatorController.getYButtonPressed();}
 
   public boolean getIntakeSolenoidToggle() {return operatorController.getXButtonPressed();}
   public boolean getIndexToggle() {return operatorController.getBButton();}
@@ -47,7 +51,10 @@ public class Joysticks {
   public boolean getOutakeToggle() {return operatorController.getLeftBumper();}
   public boolean getIncreaseShooter() {return operatorController.getPOV() == 0;}
   public boolean getDecreaseShooter() {return operatorController.getPOV() == 180;}
-
-  public boolean getShooterHigh() {return operatorController.getYButtonPressed();}
-  public boolean getShooterLow() {return operatorController.getAButtonPressed();}
+  // switch to is pressed
+  public boolean getNotPOV() {return operatorController.getPOV() == -1;}
+  public boolean getShooterScrollRight() {return operatorController.getPOV() == 90;}
+  public boolean getShooterScrollLeft() {return operatorController.getPOV() == 270;}
+  public boolean getShooterScrollDown() {return operatorController.getPOV() == 180;}
+  public boolean getShooterToggle() {return operatorController.getAButtonPressed();}
 }

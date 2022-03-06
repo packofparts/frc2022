@@ -113,7 +113,10 @@ sHAKUANDO WAS HERE
   @Override
   public void periodic() {
     if (gyro == null) {
-      if (initGyro.isConnected()) gyro = initGyro;
+      if (initGyro.isConnected() && !initGyro.isCalibrating()) {
+        initGyro.zeroYaw();
+        gyro = initGyro;
+      }
     }
     else {
       if (gyro.isCalibrating()) {
