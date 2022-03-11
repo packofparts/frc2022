@@ -127,6 +127,10 @@ public class Tube extends SubsystemBase {
       SmartDashboard.putBoolean("Index Front", indexFront);
       SmartDashboard.putBoolean("Index Back", indexBack);
       SmartDashboard.putNumber("Intake Color Sensor Distance", intakeColorSensor.getProximity());
+      SmartDashboard.putNumber("UltraFront", indexUltrasonicFront.getValue());
+      SmartDashboard.putNumber("UltraBack", indexUltrasonicBack.getValue());
+      SmartDashboard.putBoolean("IsBallFront", indexUltrasonicFront.getValue() < 430);
+      SmartDashboard.putBoolean("IsBallBack", indexUltrasonicBack.getValue() < 430);
     }
   }
 
