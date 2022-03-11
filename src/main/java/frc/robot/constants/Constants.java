@@ -67,7 +67,7 @@ public final class Constants {
     //shooter main RPM PID
     public static final double[] shooterMainPID = new double[] {0.2, 0.000135, 0.0};
     //shooter roller RPM PID
-    public static final double[] shooterRollerPID = new double[] {0.2, 0.000130, 0.0};
+    public static final double[] shooterRollerPID = new double[] {0.2, 0.000135, 0.0};
 
 
     /*
@@ -82,7 +82,7 @@ public final class Constants {
     Encoder Conversions
     */
     //drive conversion
-    public static final double encoderConversion = 0.14771805182393566186414699677227;
+    public static final double encoderConversion = 0.07;
     //drive position deadzone
     public static final double encoderDeadzone = 0.5;
     //climb encoder conversion

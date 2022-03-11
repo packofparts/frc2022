@@ -21,9 +21,9 @@ public class MoveBy extends CommandBase {
     this.move = move;
   }
 
-  public void setMove(double move) {
-    this.move = move;
-  }
+  // public void setMove(double move) {
+  //   this.move = move;
+  // }
 
   // Called when the command is initially scheduled.
   @Override
@@ -35,6 +35,7 @@ public class MoveBy extends CommandBase {
   @Override
   public void execute() {
     double speed = movePID.calculate(drive.getAveragePos(), initialPos+move);
+    System.out.println(speed);
     drive.drive(0, speed, 0, false);
   }
 
@@ -47,6 +48,6 @@ public class MoveBy extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return (Math.abs(drive.getAveragePos()-initialPos) < Constants.encoderDeadzone);
+    return false;//(Math.abs(drive.getAveragePos()-initialPos) < Constants.encoderDeadzone);
   }
 }

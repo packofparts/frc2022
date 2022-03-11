@@ -23,7 +23,7 @@ public class Shooter extends SubsystemBase {
   double setVelocityMain = 0;
   double setVelocityRoller = 0;
 
-  boolean tuningRPM = false;
+  final boolean tuningRPM = false;
   final ShooterMode[] modes = new ShooterMode[] 
   {ShooterMode.launchPadFar, ShooterMode.launchPadNear, ShooterMode.tarmac, ShooterMode.closeLow};
   
@@ -56,13 +56,13 @@ public class Shooter extends SubsystemBase {
       if (shooterMode != ShooterMode.off) setShooterMode(ShooterMode.off);
       else setShooterMode(modes[shooterModeIndex]);
     }
-    
+
     if (joysticks.getShooterScrollDown()){
       setShooterMode(ShooterMode.ballReject);
     }
-    else{
-      setShooterMode(ShooterMode.off);
-    }
+    // else{
+    //   setShooterMode(ShooterMode.off);
+    // }
 
     if (joysticks.getNotPOV()) {
       shooterScrollPressed = false;
@@ -105,23 +105,29 @@ public class Shooter extends SubsystemBase {
       setVelocityRoller = SmartDashboard.getNumber("secondRoll", 0);
     }
     else {
+      //done
       if (shooterMode == ShooterMode.launchPadFar) {
         setVelocityMain = 6600;
         setVelocityRoller = -4500;
       }
+      //done
       else if (shooterMode == ShooterMode.launchPadNear) {
         setVelocityMain = 6600;
-        setVelocityRoller = -4500;
+        setVelocityRoller = -4000;
       }
       else if (shooterMode == ShooterMode.closeLow) {
         setVelocityMain = 6600;
         setVelocityRoller = -4500;
       }
       else if (shooterMode == ShooterMode.tarmac) {
-        setVelocityMain = 1000;
-        setVelocityRoller = -1000;
+        setVelocityMain = 4900;
+        setVelocityRoller = -4700;
       }
       else if (shooterMode == ShooterMode.auto) {
+        setVelocityMain = 5500;
+        setVelocityRoller = -4500;
+      }
+      else if (shooterMode == ShooterMode.ballReject) {
         setVelocityMain = 2000;
         setVelocityRoller = -2000;
       }
@@ -130,7 +136,7 @@ public class Shooter extends SubsystemBase {
         setVelocityRoller = 0;
       }
     }
-    
+
     if (setVelocityMain == 0) mainTalon.set(TalonFXControlMode.PercentOutput, 0);
     else mainTalon.set(TalonFXControlMode.Velocity, setVelocityMain);
 

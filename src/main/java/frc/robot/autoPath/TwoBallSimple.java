@@ -45,7 +45,7 @@ public class TwoBallSimple extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (!currentCommand.isScheduled()) {
+    if (currentCommand == null || !currentCommand.isScheduled()) {
       //move forward 4 ft
       if (step == 0) currentCommand = new MoveBy(drive, 4);
       //rotate 180

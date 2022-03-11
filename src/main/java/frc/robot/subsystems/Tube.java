@@ -50,7 +50,7 @@ public class Tube extends SubsystemBase {
   public Tube(Joysticks joysticks) {
     this.joysticks = joysticks;
     indexMotor.setInverted(true);
-    feederMotor.setInverted(true);
+    feederMotor.setInverted(false);
  
     if (usePneumatics) {
       intakeSolenoid1 = new Solenoid(PneumaticsModuleType.REVPH, IDs.intakeSolenoid1ID);

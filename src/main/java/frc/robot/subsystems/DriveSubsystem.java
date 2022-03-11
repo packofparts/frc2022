@@ -64,7 +64,7 @@ public class DriveSubsystem extends SubsystemBase {
 sHAKUANDO WAS HERE
     */
     CameraServer.getInstance().startAutomaticCapture();
-    CameraServer.getInstance().startAutomaticCapture();
+    //CameraServer.getInstance().startAutomaticCapture();
 
     this.joysticks = joysticks;
     initGyro = new AHRS(SPI.Port.kMXP);
@@ -112,6 +112,7 @@ sHAKUANDO WAS HERE
 
   @Override
   public void periodic() {
+    SmartDashboard.putNumber("avg pos", getAveragePos());
     if (gyro == null) {
       if (initGyro.isConnected() && !initGyro.isCalibrating()) {
         initGyro.zeroYaw();
@@ -212,8 +213,8 @@ sHAKUANDO WAS HERE
     //closed loop turning
     rotation = -ratePID.calculate(gyro.getRate(), rotation*Constants.rateFactor*Constants.maxRate) * Constants.maxTurnOutput;
     // rotation *= Constants.maxTurnOutput;
-    SmartDashboard.putString("gyrohold", gyroHold+"");
-    SmartDashboard.putNumber("rotation", rotation);
+    // SmartDashboard.putString("gyrohold", gyroHold+"");
+    // SmartDashboard.putNumber("rotation", rotation);
 
     // Convert to wheel speeds
     ChassisSpeeds speeds;
@@ -232,6 +233,8 @@ sHAKUANDO WAS HERE
     double frontRight = wheelSpeedDouble[1];
     double backLeft = wheelSpeedDouble[2];
     double backRight = wheelSpeedDouble[3];
+
+    System.out.println(frontLeft);
 
     //set motor speeds
     m_frontLeftSpark.getPIDController().setReference(frontLeft, ControlType.kVelocity);
@@ -373,6 +376,8 @@ sHAKUANDO WAS HERE
     m_frontRightSpark.set(0);
     m_backLeftSpark.set(0);
     m_backRightSpark.set(0);
+
+    System.out.println("STOPPED");
   }
 
   public double getAveragePos() {
