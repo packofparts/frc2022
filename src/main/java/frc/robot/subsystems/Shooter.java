@@ -60,9 +60,6 @@ public class Shooter extends SubsystemBase {
     if (joysticks.getShooterScrollDown()){
       setShooterMode(ShooterMode.ballReject);
     }
-    // else{
-    //   setShooterMode(ShooterMode.off);
-    // }
 
     if (joysticks.getNotPOV()) {
       shooterScrollPressed = false;
@@ -100,42 +97,42 @@ public class Shooter extends SubsystemBase {
   }
 
   public void runShooter() {
-    if (tuningRPM) {
-      setVelocityMain = SmartDashboard.getNumber("mainRoll", 0);
-      setVelocityRoller = SmartDashboard.getNumber("secondRoll", 0);
+    // if (tuningRPM) {
+    //   setVelocityMain = SmartDashboard.getNumber("mainRoll", 0);
+    //   setVelocityRoller = SmartDashboard.getNumber("secondRoll", 0);
+    // }
+    // else {
+      //done
+    if (shooterMode == ShooterMode.launchPadFar) {
+      setVelocityMain = 7000;
+      setVelocityRoller = -6000;
+    }
+    //done
+    else if (shooterMode == ShooterMode.launchPadNear) {
+      setVelocityMain = 6600;
+      setVelocityRoller = -4000;
+    }
+    else if (shooterMode == ShooterMode.closeLow) {
+      setVelocityMain = 6600;
+      setVelocityRoller = -4500;
+    }
+    else if (shooterMode == ShooterMode.tarmac) {
+      setVelocityMain = 4900;
+      setVelocityRoller = -4700;
+    }
+    else if (shooterMode == ShooterMode.auto) {
+      setVelocityMain = 5500;
+      setVelocityRoller = -4500;
+    }
+    else if (shooterMode == ShooterMode.ballReject) {
+      setVelocityMain = 2000;
+      setVelocityRoller = -2000;
     }
     else {
-      //done
-      if (shooterMode == ShooterMode.launchPadFar) {
-        setVelocityMain = 6600;
-        setVelocityRoller = -4500;
-      }
-      //done
-      else if (shooterMode == ShooterMode.launchPadNear) {
-        setVelocityMain = 6600;
-        setVelocityRoller = -4000;
-      }
-      else if (shooterMode == ShooterMode.closeLow) {
-        setVelocityMain = 6600;
-        setVelocityRoller = -4500;
-      }
-      else if (shooterMode == ShooterMode.tarmac) {
-        setVelocityMain = 4900;
-        setVelocityRoller = -4700;
-      }
-      else if (shooterMode == ShooterMode.auto) {
-        setVelocityMain = 5500;
-        setVelocityRoller = -4500;
-      }
-      else if (shooterMode == ShooterMode.ballReject) {
-        setVelocityMain = 2000;
-        setVelocityRoller = -2000;
-      }
-      else {
-        setVelocityMain = 0;
-        setVelocityRoller = 0;
-      }
+      setVelocityMain = 0;
+      setVelocityRoller = 0;
     }
+    // }
 
     if (setVelocityMain == 0) mainTalon.set(TalonFXControlMode.PercentOutput, 0);
     else mainTalon.set(TalonFXControlMode.Velocity, setVelocityMain);
@@ -148,9 +145,13 @@ public class Shooter extends SubsystemBase {
                     setVelocityMain != 0 && setVelocityRoller != 0;
 
     SmartDashboard.putBoolean("Shooter Running", mainTalon.getMotorOutputPercent() != 0 || rollerTalon.getMotorOutputPercent() != 0);
-    SmartDashboard.putBoolean("Shooter Ready", shooterReady);
+    // SmartDashboard.putBoolean("Shooter Ready", shooterReady);
+
+    if (shooterReady) joysticks.rumbleOperator(1);
+    else joysticks.rumbleOperator(0);
+
     SmartDashboard.putString("Active Shooter Mode", shooterMode + "");
-    SmartDashboard.putNumber("Shooter-Main", mainTalon.getSelectedSensorVelocity());
-    SmartDashboard.putNumber("Shooter-Roller", rollerTalon.getSelectedSensorVelocity());
+    // SmartDashboard.putNumber("Shooter-Main", mainTalon.getSelectedSensorVelocity());
+    // SmartDashboard.putNumber("Shooter-Roller", rollerTalon.getSelectedSensorVelocity());
   }
 }

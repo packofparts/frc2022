@@ -14,8 +14,8 @@ public class IDs {
     public static final int backRightSparkID = 4;
 
     //CLIMB TALON IDs
-    public static final int climbTalonLeftID = 16;
-    public static final int climbTalonRighID = 15;
+    public static final int climbTalonLeftID = 15;
+    public static final int climbTalonRighID = 16;
 
     //SHOOTER TALON IDs
     public static final int flyWheelID = 6;

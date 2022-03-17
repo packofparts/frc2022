@@ -34,12 +34,16 @@ public class TwoBallSimple extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    tube.setUseJoysticks(false);
     //extend pneumatics
     tube.setPneumatics(true);
     //set intake mode
     tube.setTubeMode(TubeMode.intake);
     //set shooter mode
     shooter.setShooterMode(ShooterMode.auto);
+    
+    step = 1;
+    currentCommand = null;
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -51,13 +55,13 @@ public class TwoBallSimple extends CommandBase {
       //rotate 180
       else if (step == 1) currentCommand = new TurnBy(drive, 180);
       //feedShooter for 5 seconds
-      else if (step == 2) {
-        currentCommand = new TimerCommand(5);
+      if (step == 2) {
         tube.setTubeMode(TubeMode.feed);
+        currentCommand = new TimerCommand(5);
       }
       //stop robot
       else if (step == 3) isFinished = true;
-
+ 
       currentCommand.schedule();
       step++;
     }
@@ -73,6 +77,9 @@ public class TwoBallSimple extends CommandBase {
     drive.stop();
     tube.stopTube();
     shooter.stopShooter();
+
+    tube.setUseJoysticks(true);
+    if (currentCommand != null) currentCommand.cancel();
   }
 
   // Returns true when the command should end.

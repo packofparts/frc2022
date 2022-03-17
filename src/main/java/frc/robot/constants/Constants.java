@@ -82,9 +82,9 @@ public final class Constants {
     Encoder Conversions
     */
     //drive conversion
-    public static final double encoderConversion = 0.07;
+    public static final double encoderConversion = 0.12345;
     //drive position deadzone
-    public static final double encoderDeadzone = 0.5;
+    public static final double encoderDeadzone = 0.05;
     //climb encoder conversion
     public static final double climbFactor = 1;
 
@@ -95,7 +95,7 @@ public final class Constants {
     //drive wheel velocity PID
     public static final Gains velocityPID = new Gains(0.0002, 0.0000005, 0.0, 0.0, 0.0, -1, 1, 0);
     //drive position movement PID
-    public static final Gains movePID = new Gains(0.2, 0.0, 0.0, 0.0, 0.0, -1, 1, 1);
+    public static final Gains movePID = new Gains(0.10, 0.0, 0.0, 0.0, 0.0, -1, 1, 1);
     //drive limelight move PID
     public static final double[] limelightPID = new double[] {0.00001, 0.0, 0.0};
     public static final double[] limelightTurnPID = new double[] {0.017, 0.0, 0.002};

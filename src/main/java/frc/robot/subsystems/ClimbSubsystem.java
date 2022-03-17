@@ -4,11 +4,13 @@
 
 package frc.robot.subsystems;
 
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Solenoid;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.IDs;
 
@@ -19,7 +21,7 @@ public class ClimbSubsystem extends SubsystemBase {
   Joysticks joysticks;
   Solenoid climbSolenoid1;
   Solenoid climbSolenoid2;
-  private final boolean usePneumatics = false;
+  private final boolean usePneumatics = true;
      
   public ClimbSubsystem(Joysticks joysticks) {
     this.joysticks = joysticks; 
@@ -27,15 +29,22 @@ public class ClimbSubsystem extends SubsystemBase {
       climbSolenoid1 = new Solenoid(PneumaticsModuleType.REVPH, IDs.climbSolenoid1ID);
       climbSolenoid2 = new Solenoid(PneumaticsModuleType.REVPH, IDs.climbSolenoid2ID);
     }
+    
+    climbFalconLeft.setNeutralMode(NeutralMode.Brake);
+    climbFalconLeft.setInverted(true);
+    climbFalconRight.setNeutralMode(NeutralMode.Brake);
   }
 
   @Override
   public void periodic() {
+    // SmartDashboard.putNumber("leftClimbPos", climbFalconLeft.getSelectedSensorPosition());
+    // SmartDashboard.putNumber("rightClimbPos", climbFalconRight.getSelectedSensorPosition());
+
     climbFalconLeft.set(TalonFXControlMode.PercentOutput, joysticks.getClimbAxisLeft());
     climbFalconRight.set(TalonFXControlMode.PercentOutput, joysticks.getClimbAxisRight());
     
     if (usePneumatics) {
-      if (joysticks.getIntakeSolenoidToggle()) {
+      if (joysticks.getClimbSolenoidToggle()) {
         if (climbSolenoid1.get()) setPneumatics(false);
         else setPneumatics(true);
       }

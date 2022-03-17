@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.PneumaticHub;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Solenoid;
+import edu.wpi.first.wpilibj.Timer;
 
 import com.ctre.phoenix.motorcontrol.TalonSRXControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
@@ -46,6 +47,9 @@ public class Tube extends SubsystemBase {
 
   AnalogInput indexUltrasonicBack;
   boolean indexBack = false;
+
+  boolean useJoysticks = true;
+  Timer intakeTimeout = new Timer();
   
   public Tube(Joysticks joysticks) {
     this.joysticks = joysticks;
@@ -64,19 +68,27 @@ public class Tube extends SubsystemBase {
       indexUltrasonicFront = new AnalogInput(IDs.intakeUltrasonicFront);
       indexUltrasonicBack = new AnalogInput(IDs.intakeUltrasonicBack);
     }
+
+    intakeTimeout.reset();
   }
 
   public enum TubeMode {
     intake, feed, reverse, off;
   }
 
+  public void setUseJoysticks(boolean joysticks) {
+    this.useJoysticks = joysticks;
+  }
+
   @Override
   public void periodic() {
-    //set tube mode && run
-    if (joysticks.getIntakeToggle()) setTubeMode(TubeMode.intake);
-    else if (joysticks.getOutakeToggle()) setTubeMode(TubeMode.reverse);
-    else if (joysticks.getIndexToggle()) setTubeMode(TubeMode.feed);
-    else setTubeMode(TubeMode.off);
+    if (useJoysticks) {
+      //set tube mode && run
+      if (joysticks.getIntakeToggle()) setTubeMode(TubeMode.intake);
+      else if (joysticks.getOutakeToggle()) setTubeMode(TubeMode.reverse);
+      else if (joysticks.getIndexToggle()) setTubeMode(TubeMode.feed);
+      else setTubeMode(TubeMode.off);
+    }
 
     runTube();
 
@@ -168,14 +180,27 @@ public class Tube extends SubsystemBase {
     //intake in, index in, feeder out
     if (tubeMode == TubeMode.intake) {
       intakeMotor.set(TalonSRXControlMode.PercentOutput, 1);
-      indexMotor.set(TalonSRXControlMode.PercentOutput, 1);
-      feederMotor.set(TalonSRXControlMode.PercentOutput, -1);
+      indexMotor.set(TalonSRXControlMode.PercentOutput, 0);
+      feederMotor.set(TalonSRXControlMode.PercentOutput, -0.2);
     }
     //all in
     else if (tubeMode == TubeMode.feed) {
-      intakeMotor.set(TalonSRXControlMode.PercentOutput, 1);
-      indexMotor.set(TalonSRXControlMode.PercentOutput, 1);
-      feederMotor.set(TalonSRXControlMode.PercentOutput, 1);
+      if (intakeTimeout.get() == 0) intakeTimeout.start();
+
+      if (intakeTimeout.get() <= 0.5) {
+        intakeMotor.set(TalonSRXControlMode.PercentOutput, 1);
+        indexMotor.set(TalonSRXControlMode.PercentOutput, 1);
+        feederMotor.set(TalonSRXControlMode.PercentOutput, 1);
+      }
+      else {
+        intakeMotor.set(TalonSRXControlMode.PercentOutput, 0);
+        indexMotor.set(TalonSRXControlMode.PercentOutput, 0);
+        feederMotor.set(TalonSRXControlMode.PercentOutput, 0);
+        if (intakeTimeout.get() >= 0.6) {
+          intakeTimeout.stop();
+          intakeTimeout.reset();
+        }
+      }
     }
     //all out
     else if (tubeMode == TubeMode.reverse) {

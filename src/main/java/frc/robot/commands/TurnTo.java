@@ -10,38 +10,41 @@ import frc.robot.constants.Constants;
 import frc.robot.subsystems.DriveSubsystem;
 
 public class TurnTo extends CommandBase {
-  DriveSubsystem driveBase;
+  DriveSubsystem drive;
   PIDController pid = new PIDController(Constants.turnPID[0], Constants.turnPID[1], Constants.turnPID[2]);
   double PIDTurnDegrees;
   double originalYaw = 0;
 
   public TurnTo(DriveSubsystem dt, double degrees) {
-    driveBase = dt;
-    addRequirements(driveBase);
-
+    drive = dt;
+    addRequirements(drive);
+    
     this.PIDTurnDegrees = degrees;
   }
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+    drive.setShouldDrive(false);
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double speed = pid.calculate(driveBase.getAngle(), PIDTurnDegrees);
-    driveBase.drive(0, 0, speed, false);
+    double speed = pid.calculate(drive.getAngle(), PIDTurnDegrees);
+    drive.drive(0, 0, speed, false);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    driveBase.stop();
+    drive.stop();
+    drive.setShouldDrive(true);
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return Math.abs(driveBase.getAngle()-PIDTurnDegrees) < Constants.gyroDeadzone;
+    return Math.abs(drive.getAngle()-PIDTurnDegrees) < Constants.gyroDeadzone;
   }
 }

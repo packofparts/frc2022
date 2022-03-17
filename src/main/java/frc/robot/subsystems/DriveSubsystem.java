@@ -55,7 +55,7 @@ public class DriveSubsystem extends SubsystemBase {
   Joysticks joysticks;
   
   //set booleans
-  final boolean useGyroHold = true;
+  final boolean useGyroHold = false;
   final boolean usingXboxController = false;//Joysticks.driveXboxController != null;
   final boolean tuningPID = false;
 
@@ -88,10 +88,10 @@ sHAKUANDO WAS HERE
     m_backLeftSpark.getEncoder().setPosition(0);
     m_backRightSpark.getEncoder().setPosition(0);
 
-    m_frontLeftSpark.getEncoder().setPositionConversionFactor(Constants.encoderConversion);
-    m_frontRightSpark.getEncoder().setPositionConversionFactor(Constants.encoderConversion);
-    m_backLeftSpark.getEncoder().setPositionConversionFactor(Constants.encoderConversion);
-    m_backRightSpark.getEncoder().setPositionConversionFactor(Constants.encoderConversion);
+    // m_frontLeftSpark.getEncoder(). (Constants.encoderConversion);
+    // m_frontRightSpark.getEncoder().setPositionConversionFactor(Constants.encoderConversion);
+    // m_backLeftSpark.getEncoder().setPositionConversionFactor(Constants.encoderConversion);
+    // m_backRightSpark.getEncoder().setPositionConversionFactor(Constants.encoderConversion);
 
     m_frontLeftSpark.setSmartCurrentLimit(60);
     m_frontRightSpark.setSmartCurrentLimit(60);
@@ -126,38 +126,40 @@ sHAKUANDO WAS HERE
       }
       else {
         SmartDashboard.putNumber("Gyro Yaw", gyro.getYaw());
-        SmartDashboard.putNumber("Gyro Rate", gyro.getRate());
+        // SmartDashboard.putNumber("Gyro Rate", gyro.getRate());
       }
     }
     
     if (joysticks.getGyroResetButton()) resetGyro();
     if (joysticks.getEncoderResetButton()) resetEncoders();
 
-    if (tuningPID) {
-      //modify PID w/ joysticks
-      if (joysticks.getPIncrease()) turnPID.setP(turnPID.getP() + 0.0005);;
-      if (joysticks.getPDecrease()) turnPID.setP(turnPID.getP() - 0.0005);
-      if (joysticks.getIIncrease()) turnPID.setI(turnPID.getI() + 0.0000005);
-      if (joysticks.getIDecrease()) turnPID.setI(turnPID.getI() - 0.0000005);
-      if (joysticks.getDIncrease()) turnPID.setD(turnPID.getD() + 0.00005);
-      if (joysticks.getDDecrease()) turnPID.setD(turnPID.getD() - 0.00005);
+    // if (tuningPID) {
+    //   //modify PID w/ joysticks
+    //   if (joysticks.getPIncrease()) turnPID.setP(turnPID.getP() + 0.0005);;
+    //   if (joysticks.getPDecrease()) turnPID.setP(turnPID.getP() - 0.0005);
+    //   if (joysticks.getIIncrease()) turnPID.setI(turnPID.getI() + 0.0000005);
+    //   if (joysticks.getIDecrease()) turnPID.setI(turnPID.getI() - 0.0000005);
+    //   if (joysticks.getDIncrease()) turnPID.setD(turnPID.getD() + 0.00005);
+    //   if (joysticks.getDDecrease()) turnPID.setD(turnPID.getD() - 0.00005);
 
-      //display PID values
-      SmartDashboard.putNumber("P: ", turnPID.getP());
-      SmartDashboard.putNumber("I: ", turnPID.getI());
-      SmartDashboard.putNumber("D: ", turnPID.getD());
+    //   //display PID values
+    //   SmartDashboard.putNumber("P: ", turnPID.getP());
+    //   SmartDashboard.putNumber("I: ", turnPID.getI());
+    //   SmartDashboard.putNumber("D: ", turnPID.getD());
 
-      //calculate PID on button input
-      Double pidOutput = null;
-      if (joysticks.getPIDLeft()) pidOutput = -turnPID.calculate(gyro.getAngle(), 90);
-      else if (joysticks.getPIDRight()) pidOutput = -turnPID.calculate(gyro.getAngle(), -90);
+    //   //calculate PID on button input
+    //   Double pidOutput = null;
+    //   if (joysticks.getPIDLeft()) pidOutput = -turnPID.calculate(gyro.getAngle(), 90);
+    //   else if (joysticks.getPIDRight()) pidOutput = -turnPID.calculate(gyro.getAngle(), -90);
 
-      //apply PID on button input
-      if (pidOutput != null) drive(0, 0, pidOutput, true);
-      else drive(0, 0, 0, true);
-      SmartDashboard.putString("pid output", pidOutput+"");
-    }
-    else drive();
+    //   //apply PID on button input
+    //   if (pidOutput != null) drive(0, 0, pidOutput, true);
+    //   else drive(0, 0, 0, true);
+    //   SmartDashboard.putString("pid output", pidOutput+"");
+    // }
+    // else drive();
+
+    drive();
   }
 
   //drive with joystick inputs
@@ -210,11 +212,9 @@ sHAKUANDO WAS HERE
         if (gyroHold != null) rotation = -turnPID.calculate(gyro.getAngle(), gyroHold) * Constants.rateAggresiveness;
       }
     }
+
     //closed loop turning
     rotation = -ratePID.calculate(gyro.getRate(), rotation*Constants.rateFactor*Constants.maxRate) * Constants.maxTurnOutput;
-    // rotation *= Constants.maxTurnOutput;
-    // SmartDashboard.putString("gyrohold", gyroHold+"");
-    // SmartDashboard.putNumber("rotation", rotation);
 
     // Convert to wheel speeds
     ChassisSpeeds speeds;
@@ -234,28 +234,11 @@ sHAKUANDO WAS HERE
     double backLeft = wheelSpeedDouble[2];
     double backRight = wheelSpeedDouble[3];
 
-    System.out.println(frontLeft);
-
     //set motor speeds
     m_frontLeftSpark.getPIDController().setReference(frontLeft, ControlType.kVelocity);
     m_frontRightSpark.getPIDController().setReference(frontRight, ControlType.kVelocity);
     m_backLeftSpark.getPIDController().setReference(backLeft, ControlType.kVelocity);
     m_backRightSpark.getPIDController().setReference(backRight, ControlType.kVelocity);
-
-    // SmartDashboard.putNumber("frontLeftSet", frontLeft);
-    // SmartDashboard.putNumber("frontRightSet", frontRight);
-    // SmartDashboard.putNumber("rearLeftSet", backLeft);
-    // SmartDashboard.putNumber("rearRightSet", backRight);
-
-    // SmartDashboard.putNumber("frontLeftPos", m_frontLeftSpark.getEncoder().getPosition());
-    // SmartDashboard.putNumber("frontRightPos", m_frontRightSpark.getEncoder().getPosition());
-    // SmartDashboard.putNumber("rearLeftPos", m_backLeftSpark.getEncoder().getPosition());
-    // SmartDashboard.putNumber("rearRightPos", m_backRightSpark.getEncoder().getPosition());
-    
-    // SmartDashboard.putNumber("frontLeftVel", m_frontLeftSpark.getEncoder().getVelocity());
-    // SmartDashboard.putNumber("frontRightVel", m_frontRightSpark.getEncoder().getVelocity());
-    // SmartDashboard.putNumber("rearLeftVel", m_backLeftSpark.getEncoder().getVelocity());
-    // SmartDashboard.putNumber("rearRightVel", m_backRightSpark.getEncoder().getVelocity());
   }
 
   public void resetEncoders() {
@@ -377,7 +360,7 @@ sHAKUANDO WAS HERE
     m_backLeftSpark.set(0);
     m_backRightSpark.set(0);
 
-    System.out.println("STOPPED");
+    this.gyroHold = null;
   }
 
   public double getAveragePos() {

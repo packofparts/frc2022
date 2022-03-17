@@ -79,11 +79,12 @@ public class Robot extends TimedRobot {
     m_robotContainer.drive.stop();
     m_robotContainer.shooter.stopShooter();
     m_robotContainer.tube.stopTube();
+    m_robotContainer.tube.setPneumatics(false);
+    m_robotContainer.climb.setPneumatics(false);
   }
 
   @Override
-  public void disabledPeriodic() {
-  }
+  public void disabledPeriodic() {}
 
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
   @Override
@@ -91,8 +92,10 @@ public class Robot extends TimedRobot {
     //dont take joystick inputs in auto
     m_autonomousCommand = autoCommand.getSelected();
 
+    CommandScheduler.getInstance().cancelAll();
+
     // schedule the autonomous command (example)
-    if (m_autonomousCommand != null) {
+    if (m_autonomousCommand != null && !m_autonomousCommand.isScheduled()) {
       m_autonomousCommand.schedule();
     }
   }
@@ -100,9 +103,9 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during autonomous. */
   @Override
   public void autonomousPeriodic() {
-    if (!m_autonomousCommand.isScheduled()) {
-      m_autonomousCommand.schedule();
-    }
+    // if (!m_autonomousCommand.isFinished() && !m_autonomousCommand.isScheduled()) {
+    //   m_autonomousCommand.schedule();
+    // }
   }
 
   @Override

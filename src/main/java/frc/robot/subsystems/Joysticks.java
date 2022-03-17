@@ -8,6 +8,7 @@ import java.sql.Blob;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 
 public class Joysticks {
   // private final XboxController driveXboxController = null;//new XboxController(0);
@@ -43,7 +44,11 @@ public class Joysticks {
   public double getClimbAxisLeft() {return operatorController.getLeftY();}
   public double getClimbAxis() {return operatorController.getLeftTriggerAxis()-operatorController.getRightTriggerAxis();}
   public boolean getClimbSolenoidToggle() {return operatorController.getYButtonPressed();}
-
+  public void rumbleOperator(int amount) {
+    operatorController.setRumble(RumbleType.kLeftRumble, amount);
+    operatorController.setRumble(RumbleType.kRightRumble, amount);
+  }
+  
   public boolean getIntakeSolenoidToggle() {return operatorController.getXButtonPressed();}
   public boolean getIndexToggle() {return operatorController.getBButton();}
   // public boolean getOutdexToggle() {return operatorController.getXButton();}
