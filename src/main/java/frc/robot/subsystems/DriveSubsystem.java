@@ -88,10 +88,10 @@ sHAKUANDO WAS HERE
     m_backLeftSpark.getEncoder().setPosition(0);
     m_backRightSpark.getEncoder().setPosition(0);
 
-    // m_frontLeftSpark.getEncoder(). (Constants.encoderConversion);
-    // m_frontRightSpark.getEncoder().setPositionConversionFactor(Constants.encoderConversion);
-    // m_backLeftSpark.getEncoder().setPositionConversionFactor(Constants.encoderConversion);
-    // m_backRightSpark.getEncoder().setPositionConversionFactor(Constants.encoderConversion);
+    m_frontLeftSpark.getEncoder().setPositionConversionFactor(Constants.encoderConversion);
+    m_frontRightSpark.getEncoder().setPositionConversionFactor(Constants.encoderConversion);
+    m_backLeftSpark.getEncoder().setPositionConversionFactor(Constants.encoderConversion);
+    m_backRightSpark.getEncoder().setPositionConversionFactor(Constants.encoderConversion);
 
     m_frontLeftSpark.setSmartCurrentLimit(60);
     m_frontRightSpark.setSmartCurrentLimit(60);
@@ -179,6 +179,7 @@ sHAKUANDO WAS HERE
     if (Math.abs(xSpeed) < Constants.joystickDeadzone) xSpeed = 0;
     if (Math.abs(ySpeed) < Constants.joystickDeadzone) ySpeed = 0;
     if (Math.abs(rotation) < Constants.joystickDeadzone) rotation = 0;
+    rotation *= 0.7;
 
     //apply input scaling
     xSpeed = ((1-Constants.minPower) * (Math.pow(((Math.abs(xSpeed)-Constants.joystickDeadzone) * (1/(1-Constants.joystickDeadzone))), Constants.exponentFactor)) + Constants.minPower) * getSign(xSpeed);
@@ -186,7 +187,7 @@ sHAKUANDO WAS HERE
     rotation = ((1-Constants.minTurn) * (Math.pow(((Math.abs(rotation)-Constants.joystickDeadzone) * (1/(1-Constants.joystickDeadzone))), Constants.turnExponentFactor)) + Constants.minTurn) * getSign(rotation);
 
     //precision toggle
-    if (joysticks.getPrecisionRotationToggle()) rotation *= Constants.precisionFactor;
+    if (joysticks.getPrecisionRotationToggle()) rotation *= 0.2;
 
     //field-oriented toggle
     boolean fieldOrientated = true;

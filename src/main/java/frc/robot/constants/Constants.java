@@ -50,7 +50,7 @@ public final class Constants {
     //min forward/side power input for movement
     public static final double minPower = 0.1;
     //min rotation input for turning
-    public static final double minTurn = 0.05;
+    public static final double minTurn = 0.1;
     /*
     Tube Sensor Constants
     */
@@ -63,11 +63,11 @@ public final class Constants {
     /*
     Shooter Constants
     */
-    public static final double shooterDeadzone = 100;
+    public static final double shooterDeadzone = 50;
     //shooter main RPM PID
-    public static final double[] shooterMainPID = new double[] {0.2, 0.000135, 0.0};
+    public static final double[] shooterMainPID = new double[] {0.2, 0.000125, 0.0};
     //shooter roller RPM PID
-    public static final double[] shooterRollerPID = new double[] {0.2, 0.000135, 0.0};
+    public static final double[] shooterRollerPID = new double[] {0.2, 0.00020, 0.0};
 
 
     /*

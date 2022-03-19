@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.constants.Constants;
 import frc.robot.constants.IDs;
 
 public class ClimbSubsystem extends SubsystemBase {
@@ -37,12 +38,22 @@ public class ClimbSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
-    // SmartDashboard.putNumber("leftClimbPos", climbFalconLeft.getSelectedSensorPosition());
-    // SmartDashboard.putNumber("rightClimbPos", climbFalconRight.getSelectedSensorPosition());
+    SmartDashboard.putNumber("leftClimbPos", climbFalconLeft.getSelectedSensorPosition());
+    SmartDashboard.putNumber("rightClimbPos", climbFalconRight.getSelectedSensorPosition());
 
-    climbFalconLeft.set(TalonFXControlMode.PercentOutput, joysticks.getClimbAxisLeft());
-    climbFalconRight.set(TalonFXControlMode.PercentOutput, joysticks.getClimbAxisRight());
+    //climb limits
+    if (climbFalconLeft.getSelectedSensorPosition() >= -250000 && joysticks.getClimbAxisLeftPressed()) climbFalconLeft.set(TalonFXControlMode.PercentOutput, joysticks.getClimbAxisLeft());
+    else if (climbFalconLeft.getSelectedSensorPosition() < -250000) climbFalconLeft.set(TalonFXControlMode.PercentOutput, 0.2);
+    else climbFalconLeft.set(TalonFXControlMode.PercentOutput, 0);
+
+    if (climbFalconRight.getSelectedSensorPosition() >= -250000 && joysticks.getClimbAxisRightPressed()) climbFalconRight.set(TalonFXControlMode.PercentOutput, joysticks.getClimbAxisRight());
+    else if (climbFalconRight.getSelectedSensorPosition() < -250000) climbFalconRight.set(TalonFXControlMode.PercentOutput, 0.2);
+    else climbFalconRight.set(TalonFXControlMode.PercentOutput, 0);
     
+    if (joysticks.getClimbReset()) {
+      climbFalconLeft.setSelectedSensorPosition(0);
+      climbFalconRight.setSelectedSensorPosition(0);
+    }
     if (usePneumatics) {
       if (joysticks.getClimbSolenoidToggle()) {
         if (climbSolenoid1.get()) setPneumatics(false);

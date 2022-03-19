@@ -42,7 +42,7 @@ public class TwoBallSimple extends CommandBase {
     //set shooter mode
     shooter.setShooterMode(ShooterMode.auto);
     
-    step = 1;
+    step = 0;
     currentCommand = null;
   }
 

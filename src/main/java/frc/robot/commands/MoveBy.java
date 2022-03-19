@@ -34,7 +34,10 @@ public class MoveBy extends CommandBase {
   @Override
   public void execute() {
     double speed = movePID.calculate(drive.getAveragePos(), initialPos+move);
-    //SmartDashboard.putNumber("speed", speed);
+
+    if (speed > 0.5) speed = 0.5;
+    else if (speed < -0.5) speed = -0.5;
+
     drive.drive(0, speed, 0, false);
   }
 

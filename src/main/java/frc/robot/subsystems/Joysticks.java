@@ -41,14 +41,17 @@ public class Joysticks {
   //operator controls
   private final XboxController operatorController = new XboxController(2);
   public double getClimbAxisRight() {return operatorController.getRightY();}
+  public boolean getClimbAxisRightPressed() {return operatorController.getRawButton(10);}
   public double getClimbAxisLeft() {return operatorController.getLeftY();}
+  public boolean getClimbAxisLeftPressed() {return operatorController.getRawButton(9);}
   public double getClimbAxis() {return operatorController.getLeftTriggerAxis()-operatorController.getRightTriggerAxis();}
   public boolean getClimbSolenoidToggle() {return operatorController.getYButtonPressed();}
   public void rumbleOperator(int amount) {
     operatorController.setRumble(RumbleType.kLeftRumble, amount);
     operatorController.setRumble(RumbleType.kRightRumble, amount);
   }
-  
+  public boolean getClimbReset() {return operatorController.getRawButtonPressed(8);}
+
   public boolean getIntakeSolenoidToggle() {return operatorController.getXButtonPressed();}
   public boolean getIndexToggle() {return operatorController.getBButton();}
   // public boolean getOutdexToggle() {return operatorController.getXButton();}

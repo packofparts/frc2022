@@ -109,8 +109,8 @@ public class Shooter extends SubsystemBase {
     }
     //done
     else if (shooterMode == ShooterMode.launchPadNear) {
-      setVelocityMain = 6600;
-      setVelocityRoller = -4000;
+      setVelocityMain = 6400;
+      setVelocityRoller = -4200;
     }
     else if (shooterMode == ShooterMode.closeLow) {
       setVelocityMain = 6600;
@@ -151,7 +151,7 @@ public class Shooter extends SubsystemBase {
     else joysticks.rumbleOperator(0);
 
     SmartDashboard.putString("Active Shooter Mode", shooterMode + "");
-    // SmartDashboard.putNumber("Shooter-Main", mainTalon.getSelectedSensorVelocity());
-    // SmartDashboard.putNumber("Shooter-Roller", rollerTalon.getSelectedSensorVelocity());
+    SmartDashboard.putNumber("Shooter-Main", mainTalon.getSelectedSensorVelocity());
+    SmartDashboard.putNumber("Shooter-Roller", rollerTalon.getSelectedSensorVelocity());
   }
 }
