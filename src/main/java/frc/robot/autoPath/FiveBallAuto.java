@@ -17,7 +17,7 @@ import frc.robot.subsystems.Tube;
 import frc.robot.subsystems.Shooter.ShooterMode;
 import frc.robot.subsystems.Tube.TubeMode;
 
-public class FourBallDifferent extends CommandBase {
+public class FiveBallAuto extends CommandBase {
   boolean isFinished = false;
   int step = 0;
 
@@ -28,7 +28,7 @@ public class FourBallDifferent extends CommandBase {
 
   Command currentCommand;
 
-  public FourBallDifferent(DriveSubsystem drive, Tube tube, Shooter shooter, Limelight limelight) {
+  public FiveBallAuto(DriveSubsystem drive, Tube tube, Shooter shooter, Limelight limelight) {
     this.drive = drive;
     this.tube = tube;
     this.shooter = shooter;
@@ -79,35 +79,47 @@ public class FourBallDifferent extends CommandBase {
         tube.setTubeMode(TubeMode.intake);
         currentCommand = new MoveBy(drive, 10);
       }
-      //turn 50 degrees (not final)
+      //turn 105 degrees
       else if (step == 5) {
         tube.setTubeMode(TubeMode.off);
-        currentCommand = new TurnBy(drive, -50);
+        currentCommand = new TurnBy(drive, 105);
+      }
+      //shoot
+      else if (step == 6 && shooter.getShooterReady()) {
+        tube.setTubeMode(TubeMode.feed);
+        currentCommand = new TimerCommand(3);
+        shooter.runShooter();
+      }
+      //turn 180 degrees
+      else if (step == 7) {
+        currentCommand = new TurnBy(drive, 180);
       }
       //go forward 12ft while intaking
-      else if (step == 6) {
+      else if (step == 8) {
         tube.setTubeMode(TubeMode.intake);
         currentCommand = new MoveBy(drive, 12);
       }
+      //pause for 3 seconds to let human player feed ball
+      else if (step == 9) currentCommand = new TimerCommand(3);
       //turn 180
-      else if (step == 7) {
+      else if (step == 10) {
         tube.setTubeMode(TubeMode.off);
         currentCommand = new TurnBy(drive, 180);
       }
       //go forward 12 ft again
-      else if (step == 8) {
+      else if (step == 11) {
         currentCommand = new MoveBy(drive, 12);
       }
       //shoot
-      else if (step == 9 && shooter.getShooterReady()) {
+      else if (step == 12 && shooter.getShooterReady()) {
         tube.setTubeMode(TubeMode.feed);
         currentCommand = new TimerCommand(3);
         shooter.runShooter();
       }
       //spin to celebrate
-      else if (step == 10) currentCommand = new TurnBy(drive, 720);
+      else if (step == 13) currentCommand = new TurnBy(drive, 720);
       //stop robot
-      else if (step == 11) isFinished = true;
+      else if (step == 14) isFinished = true;
  
       currentCommand.schedule();
       step++;
