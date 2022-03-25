@@ -7,7 +7,9 @@ public class Limelight {
   /** Creates a new limelight. */
   NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight");
 
-  public Limelight() {}
+  public Limelight() {
+    setPipeline(Pipeline.drive);
+  }
 
   public enum Pipeline {
     drive, blue, red, hub, unknown, none;
@@ -34,8 +36,6 @@ public class Limelight {
         table.getEntry("camMode").setNumber(0);
         break;
     }
-
-    table.getEntry("pipeline").setNumber(0);
   }
 
   public double getHorizontal() {
@@ -48,6 +48,10 @@ public class Limelight {
 
   public double getTX() {
     return table.getEntry("tx").getDouble(0);
+  }
+
+  public double getTY() {
+    return table.getEntry("ty").getDouble(0);
   }
 
   public boolean getDetected() {

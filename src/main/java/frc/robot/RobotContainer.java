@@ -24,10 +24,10 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   public final Joysticks joysticks = new Joysticks();
 
-  public final DriveSubsystem drive = new DriveSubsystem(joysticks);
+  public final Limelight limelight = new Limelight();
+  public final DriveSubsystem drive = new DriveSubsystem(joysticks, limelight);
   public final Tube tube = new Tube(joysticks);
   public final Shooter shooter = new Shooter(joysticks);
-  public final Limelight limelight = new Limelight();
   public final ClimbSubsystem climb = new ClimbSubsystem(joysticks);
 
   // public final limelightMove auto = new limelightMove(drive, limelight, Pipeline.blue, Constants.thor * Constants.tvert);

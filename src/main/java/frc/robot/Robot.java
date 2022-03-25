@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.autoPath.FourBallComplex;
 import frc.robot.autoPath.FourBallSimple;
+import frc.robot.autoPath.OneBallSimple;
 import frc.robot.autoPath.TwoBallComplex;
 import frc.robot.autoPath.TwoBallSimple;
 import frc.robot.commands.MoveBy;
@@ -45,9 +46,10 @@ public class Robot extends TimedRobot {
     SmartDashboard.putData("Ball Color", ballColor);
 
     autoCommand.setDefaultOption("Two Ball (Simple)", new TwoBallSimple(m_robotContainer.drive, m_robotContainer.tube, m_robotContainer.shooter));
-    autoCommand.addOption("Two Ball (Complex)", new TwoBallComplex(this, m_robotContainer.drive, m_robotContainer.tube, m_robotContainer.shooter, m_robotContainer.limelight));
+    autoCommand.addOption("Two Ball (Complex)", new TwoBallComplex(m_robotContainer.drive, m_robotContainer.tube, m_robotContainer.shooter, m_robotContainer.limelight));
     autoCommand.addOption("Four Ball (Simple)", new FourBallSimple(m_robotContainer.drive, m_robotContainer.tube, m_robotContainer.shooter));
-    autoCommand.addOption("Four Ball (Complex)", new FourBallComplex(this, m_robotContainer.drive, m_robotContainer.tube, m_robotContainer.shooter, m_robotContainer.limelight));
+    autoCommand.addOption("Four Ball (Complex)", new FourBallComplex(m_robotContainer.drive, m_robotContainer.tube, m_robotContainer.shooter, m_robotContainer.limelight));
+    autoCommand.addOption("One Ball (Simple)", new OneBallSimple(m_robotContainer.drive, m_robotContainer.tube, m_robotContainer.shooter));
     autoCommand.addOption("moveBy 5ft", new MoveBy(m_robotContainer.drive, 5));
     autoCommand.addOption("turnBy 180", new TurnBy(m_robotContainer.drive, 180));
     SmartDashboard.putData("Auto Command", autoCommand);
@@ -117,6 +119,7 @@ public class Robot extends TimedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
+    SmartDashboard.putBoolean("gyroReset", false);
   }
 
   /** This function is called periodically during operator control. */

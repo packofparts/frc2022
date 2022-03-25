@@ -11,37 +11,42 @@ import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.Limelight.Pipeline;
 
-public class LimelightTurn extends CommandBase {
+public class LimelightAlign extends CommandBase {
+  /** Creates a new LidarMove. */
   DriveSubsystem drive;
   Limelight limelight;
-  PIDController pid = new PIDController(Constants.turnPID[0], Constants.turnPID[1], Constants.turnPID[2]);
-  double PIDTurnDegrees;
   double originalYaw;
 
-  public LimelightTurn(DriveSubsystem dt, double degrees, Limelight limelight) {
+  PIDController pid = new PIDController(Constants.limelightMovePID[0], Constants.limelightMovePID[1], Constants.limelightMovePID[2]);
+  PIDController turnPID = new PIDController(Constants.limelightTurnPID[0], Constants.limelightTurnPID[1], Constants.limelightTurnPID[2]);
+  
+  public LimelightAlign(DriveSubsystem dt, Limelight limelight) {
     drive = dt;
     this.limelight = limelight;
     addRequirements(drive);
-
-    this.PIDTurnDegrees = degrees;
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    originalYaw = drive.getAngle();
-    drive.setShouldDrive(false);
+    turnPID.setTolerance(Constants.turnPIDTolerance);
     limelight.setPipeline(Pipeline.hub);
+
+    drive.setShouldDrive(false);
+    originalYaw = drive.getAngle();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double speed = 0;
-    if (limelight.getDetected()) speed = -pid.calculate(limelight.getTX(), 0);
-    else speed = -pid.calculate(drive.getAngle(), originalYaw + PIDTurnDegrees);
-
-    drive.drive(0, 0, speed, false);
+    double turn = 0;
+    double move = 0;
+    if (limelight.getDetected()) {
+      turn = turnPID.calculate(limelight.getTX(), 0);
+      move = pid.calculate(limelight.getTY(), 0);
+    }
+    
+    drive.drive(0, move, turn, false);
   }
 
   // Called once the command ends or is interrupted.
@@ -55,7 +60,6 @@ public class LimelightTurn extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return Math.abs(drive.getAngle()-(originalYaw+PIDTurnDegrees)) < Constants.gyroDeadzone || 
-    (limelight.getDetected() && Math.abs(limelight.getTX()) < Constants.gyroDeadzone);
+    return false;//limelight.getTX() < 0.5 && limelight.getTY() < 0.5;
   }
 }

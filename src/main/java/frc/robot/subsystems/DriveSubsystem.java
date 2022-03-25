@@ -25,8 +25,10 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj.SPI;
 import frc.robot.Gains;
+import frc.robot.commands.LimelightAlign;
 import frc.robot.constants.Constants;
 import frc.robot.constants.IDs;
+import frc.robot.subsystems.Limelight.Pipeline;
 
 public class DriveSubsystem extends SubsystemBase {
   public CANSparkMax m_frontLeftSpark;
@@ -59,7 +61,9 @@ public class DriveSubsystem extends SubsystemBase {
   final boolean usingXboxController = false;//Joysticks.driveXboxController != null;
   final boolean tuningPID = false;
 
-  public DriveSubsystem(Joysticks joysticks) {
+  LimelightAlign align;
+
+  public DriveSubsystem(Joysticks joysticks, Limelight limelight) {
     /*
 sHAKUANDO WAS HERE
     */
@@ -98,7 +102,7 @@ sHAKUANDO WAS HERE
     m_backLeftSpark.setSmartCurrentLimit(60);
     m_backRightSpark.setSmartCurrentLimit(60);
 
-    setRampRates(0.5);
+    setRampRates(0);
     setMode(idleMode.brake);
 
     setAllPIDControllers(Constants.movePID);
@@ -108,6 +112,10 @@ sHAKUANDO WAS HERE
     m_frontRightSpark.setInverted(true);
     m_backLeftSpark.setInverted(false);
     m_backRightSpark.setInverted(true);
+
+    SmartDashboard.putBoolean("gyroReset", false);
+    limelight.setPipeline(Pipeline.drive);
+    align = new LimelightAlign(this, limelight);
   }
 
   @Override
@@ -117,6 +125,7 @@ sHAKUANDO WAS HERE
       if (initGyro.isConnected() && !initGyro.isCalibrating()) {
         initGyro.zeroYaw();
         gyro = initGyro;
+        SmartDashboard.putBoolean("gyroReset", false);
       }
     }
     else {
@@ -158,6 +167,11 @@ sHAKUANDO WAS HERE
     //   SmartDashboard.putString("pid output", pidOutput+"");
     // }
     // else drive();
+    
+    if (joysticks.getLimeLightAlign()) {
+      if (!align.isScheduled()) align.schedule();
+    }
+    else align.cancel();
 
     drive();
   }
@@ -240,6 +254,8 @@ sHAKUANDO WAS HERE
     m_frontRightSpark.getPIDController().setReference(frontRight, ControlType.kVelocity);
     m_backLeftSpark.getPIDController().setReference(backLeft, ControlType.kVelocity);
     m_backRightSpark.getPIDController().setReference(backRight, ControlType.kVelocity);
+
+    // SmartDashboard.putNumber("frontLeft", fronkll_frontLeftSpark.getEncoder().getVelocity());
   }
 
   public void resetEncoders() {
@@ -253,6 +269,7 @@ sHAKUANDO WAS HERE
     if (gyro != null && gyro.isConnected() && !gyro.isCalibrating()) {
       gyro.reset();
       this.gyroHold = 0.0;
+      SmartDashboard.putBoolean("gyroReset", true);
     }
   }
 

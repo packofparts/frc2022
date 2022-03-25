@@ -51,19 +51,27 @@ public class TwoBallSimple extends CommandBase {
   public void execute() {
     if (currentCommand == null || !currentCommand.isScheduled()) {
       //move forward 4 ft
-      if (step == 0) currentCommand = new MoveBy(drive, 4);
+      if (step == 0) {
+        currentCommand = new MoveBy(drive, 4);
+        currentCommand.schedule();
+        step++;
+      }
+      
       //rotate 180
-      else if (step == 1) currentCommand = new TurnBy(drive, 180);
+      else if (step == 1) {
+        currentCommand = new TurnBy(drive, 180);
+        currentCommand.schedule();
+        step++;
+      }
       //feedShooter for 5 seconds
-      if (step == 2) {
+      else if (step == 2 && shooter.getShooterReady()) {
         tube.setTubeMode(TubeMode.feed);
         currentCommand = new TimerCommand(5);
+        currentCommand.schedule();
+        step++;
       }
       //stop robot
       else if (step == 3) isFinished = true;
- 
-      currentCommand.schedule();
-      step++;
     }
 
     //run shooter and tube

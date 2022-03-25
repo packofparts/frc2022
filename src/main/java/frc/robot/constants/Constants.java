@@ -50,7 +50,7 @@ public final class Constants {
     //min forward/side power input for movement
     public static final double minPower = 0.1;
     //min rotation input for turning
-    public static final double minTurn = 0.1;
+    public static final double minTurn = 0.2;
     /*
     Tube Sensor Constants
     */
@@ -98,6 +98,7 @@ public final class Constants {
     public static final Gains movePID = new Gains(0.10, 0.0, 0.0, 0.0, 0.0, -1, 1, 1);
     //drive limelight move PID
     public static final double[] limelightPID = new double[] {0.00001, 0.0, 0.0};
+    public static final double[] limelightMovePID = new double[] {0.125, 0.0, 0.01};
     public static final double[] limelightTurnPID = new double[] {0.017, 0.0, 0.002};
     //drive gyro turn PID
     public static final double[] turnPID = new double[] {0.006, 0.0, 0.0003};

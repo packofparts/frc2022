@@ -13,12 +13,11 @@ public class TurnTo extends CommandBase {
   DriveSubsystem drive;
   PIDController pid = new PIDController(Constants.turnPID[0], Constants.turnPID[1], Constants.turnPID[2]);
   double PIDTurnDegrees;
-  double originalYaw = 0;
 
   public TurnTo(DriveSubsystem dt, double degrees) {
     drive = dt;
     addRequirements(drive);
-    
+
     this.PIDTurnDegrees = degrees;
   }
 
@@ -31,7 +30,7 @@ public class TurnTo extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double speed = pid.calculate(drive.getAngle(), PIDTurnDegrees);
+    double speed = -pid.calculate(drive.getAngle(), PIDTurnDegrees);
     drive.drive(0, 0, speed, false);
   }
 

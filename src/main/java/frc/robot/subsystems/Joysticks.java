@@ -19,6 +19,7 @@ public class Joysticks {
   public double getDriveForward() {return driveJoystickMain.getY();}
   public double getDriveSideways() {return driveJoystickMain.getX();}
 
+  public boolean getLimeLightAlign() {return driveJoystickMain.getRawButton(3);}
   public boolean getRobotOrientedToggle() {return driveJoystickMain.getRawButton(1);}
   public boolean getGyroResetButton() {return driveJoystickMain.getRawButtonPressed(8);}
   public boolean getEncoderResetButton() {return driveJoystickMain.getRawButtonPressed(9);}
