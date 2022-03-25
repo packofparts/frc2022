@@ -168,10 +168,10 @@ sHAKUANDO WAS HERE
     // }
     // else drive();
     
-    if (joysticks.getLimeLightAlign()) {
+    if (joysticks.getLimeLightAlignPressed()) {
       if (!align.isScheduled()) align.schedule();
     }
-    else align.cancel();
+    else if (joysticks.getLimeLightAlignReleased()) align.cancel();
 
     drive();
   }

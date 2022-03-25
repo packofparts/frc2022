@@ -28,7 +28,7 @@ public class RobotContainer {
   public final DriveSubsystem drive = new DriveSubsystem(joysticks, limelight);
   public final Tube tube = new Tube(joysticks);
   public final Shooter shooter = new Shooter(joysticks);
-  public final ClimbSubsystem climb = new ClimbSubsystem(joysticks);
+  // public final ClimbSubsystem climb = new ClimbSubsystem(joysticks);
 
   // public final limelightMove auto = new limelightMove(drive, limelight, Pipeline.blue, Constants.thor * Constants.tvert);
 

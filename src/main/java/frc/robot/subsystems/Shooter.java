@@ -10,6 +10,7 @@ import frc.robot.constants.IDs;
 
 import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
+import com.revrobotics.CANSparkMax.ControlType;
 
 public class Shooter extends SubsystemBase {
   /** Creates a new Shooter. */
@@ -33,10 +34,12 @@ public class Shooter extends SubsystemBase {
     mainTalon.config_kP(0, Constants.shooterMainPID[0]);
     mainTalon.config_kI(0, Constants.shooterMainPID[1]);
     mainTalon.config_kD(0, Constants.shooterMainPID[2]);
+    mainTalon.config_kF(0, Constants.shooterMainPID[3]);
     
     rollerTalon.config_kP(0, Constants.shooterRollerPID[0]);
     rollerTalon.config_kI(0, Constants.shooterRollerPID[1]);
     rollerTalon.config_kD(0, Constants.shooterRollerPID[2]);
+    rollerTalon.config_kF(0, Constants.shooterRollerPID[3]);
 
     if (tuningRPM) {
       SmartDashboard.putNumber("mainRoll", 0);
@@ -97,9 +100,17 @@ public class Shooter extends SubsystemBase {
   }
 
   public void runShooter() {
-    if (shooterMode == ShooterMode.normal) {
-      setVelocityMain = 6400;
-      setVelocityRoller = -4200;
+    if (tuningRPM) {
+      mainTalon.set(TalonFXControlMode.PercentOutput, SmartDashboard.getNumber("mainRoll", 0));
+      rollerTalon.set(TalonFXControlMode.PercentOutput, SmartDashboard.getNumber("secondRoll", 0));
+      
+      SmartDashboard.putNumber("Shooter-Main", mainTalon.getSelectedSensorVelocity());
+      SmartDashboard.putNumber("Shooter-Roller", rollerTalon.getSelectedSensorVelocity());
+      return;
+    }
+    else if (shooterMode == ShooterMode.normal) {
+      setVelocityMain = 5200;//6400;
+      setVelocityRoller = -4600;//-4200;
     }
     else if (shooterMode == ShooterMode.launchPadFar) {
       setVelocityMain = 7000;

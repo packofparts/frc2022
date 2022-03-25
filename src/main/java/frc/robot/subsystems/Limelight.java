@@ -36,6 +36,7 @@ public class Limelight {
         table.getEntry("camMode").setNumber(0);
         break;
     }
+    table.getEntry("camMode").setNumber(0);
   }
 
   public double getHorizontal() {

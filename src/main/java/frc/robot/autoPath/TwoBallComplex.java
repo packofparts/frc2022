@@ -4,9 +4,11 @@
 
 package frc.robot.autoPath;
 
+import java.nio.file.LinkOption;
+
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.commands.LimelightTurn;
+import frc.robot.commands.LimelightAlign;
 import frc.robot.commands.MoveBy;
 import frc.robot.commands.TurnBy;
 import frc.robot.commands.TimerCommand;
@@ -55,19 +57,33 @@ public class TwoBallComplex extends CommandBase {
   public void execute() {
     if (currentCommand == null || !currentCommand.isScheduled()) {
       //move forward 4 ft
-      if (step == 0) currentCommand = new MoveBy(drive, 4);
+      if (step == 0) {
+        currentCommand = new MoveBy(drive, 4);
+        currentCommand.schedule();
+        step++;
+      }
+      
       //rotate 180
-      else if (step == 1) currentCommand = new LimelightTurn(drive, 180, limelight);
+      else if (step == 1) {
+        currentCommand = new TurnBy(drive, 180);
+        currentCommand.schedule();
+        step++;
+      }
       //feedShooter for 5 seconds
-      if (step == 2) {
+      else if (step == 2) {
+        currentCommand = new LimelightAlign(drive, limelight);
+        currentCommand.schedule();
+        step++;
+      }
+      //feedShooter for 5 seconds
+      else if (step == 3 && shooter.getShooterReady()) {
         tube.setTubeMode(TubeMode.feed);
         currentCommand = new TimerCommand(5);
+        currentCommand.schedule();
+        step++;
       }
       //stop robot
-      else if (step == 3) isFinished = true;
- 
-      currentCommand.schedule();
-      step++;
+      else if (step == 4) isFinished = true;
     }
 
     //run shooter and tube

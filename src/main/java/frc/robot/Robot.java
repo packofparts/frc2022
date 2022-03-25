@@ -45,8 +45,8 @@ public class Robot extends TimedRobot {
     ballColor.addOption("red", Pipeline.red);
     SmartDashboard.putData("Ball Color", ballColor);
 
-    autoCommand.setDefaultOption("Two Ball (Simple)", new TwoBallSimple(m_robotContainer.drive, m_robotContainer.tube, m_robotContainer.shooter));
-    autoCommand.addOption("Two Ball (Complex)", new TwoBallComplex(m_robotContainer.drive, m_robotContainer.tube, m_robotContainer.shooter, m_robotContainer.limelight));
+    autoCommand.setDefaultOption("Two Ball (Complex)", new TwoBallComplex(m_robotContainer.drive, m_robotContainer.tube, m_robotContainer.shooter, m_robotContainer.limelight));
+    autoCommand.addOption("Two Ball (Simple)", new TwoBallSimple(m_robotContainer.drive, m_robotContainer.tube, m_robotContainer.shooter));
     autoCommand.addOption("Four Ball (Simple)", new FourBallSimple(m_robotContainer.drive, m_robotContainer.tube, m_robotContainer.shooter));
     autoCommand.addOption("Four Ball (Complex)", new FourBallComplex(m_robotContainer.drive, m_robotContainer.tube, m_robotContainer.shooter, m_robotContainer.limelight));
     autoCommand.addOption("One Ball (Simple)", new OneBallSimple(m_robotContainer.drive, m_robotContainer.tube, m_robotContainer.shooter));
@@ -82,7 +82,7 @@ public class Robot extends TimedRobot {
     m_robotContainer.shooter.stopShooter();
     m_robotContainer.tube.stopTube();
     m_robotContainer.tube.setPneumatics(false);
-    m_robotContainer.climb.setPneumatics(false);
+    // m_robotContainer.climb.setPneumatics(false);
   }
 
   @Override

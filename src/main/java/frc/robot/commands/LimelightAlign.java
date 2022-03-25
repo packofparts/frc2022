@@ -46,6 +46,7 @@ public class LimelightAlign extends CommandBase {
       move = pid.calculate(limelight.getTY(), 0);
     }
     
+    System.out.println(limelight.getTX() + " " + limelight.getTY());
     drive.drive(0, move, turn, false);
   }
 
@@ -60,6 +61,6 @@ public class LimelightAlign extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;//limelight.getTX() < 0.5 && limelight.getTY() < 0.5;
+    return limelight.getDetected() && Math.abs(limelight.getTX()) < 0.25 && Math.abs(limelight.getTY()) < 0.25;
   }
 }
