@@ -71,7 +71,8 @@ public class ThreeBallAuto extends CommandBase {
       //shoot
       else if (step == 2 && shooter.getShooterReady()) {
         tube.setTubeMode(TubeMode.feed);
-        currentCommand = new TimerCommand(5);
+        currentCommand = new TimerCommand(3);
+        shooter.runShooter();
       }
       //turn 180
       else if (step == 3) currentCommand = new LimelightTurn(drive, 180, limelight);
@@ -91,6 +92,7 @@ public class ThreeBallAuto extends CommandBase {
       else if (step == 7) {
         tube.setTubeMode(TubeMode.feed);
         currentCommand = new TimerCommand(3);
+        shooter.runShooter();
       }
       //end execute
       else if (step == 8) isFinished = true;
