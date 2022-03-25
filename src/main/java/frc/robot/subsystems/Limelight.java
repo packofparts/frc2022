@@ -1,5 +1,6 @@
 package frc.robot.subsystems;
 import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 
 
@@ -38,7 +39,24 @@ public class Limelight {
     }
     table.getEntry("camMode").setNumber(0);
   }
+  public double getHubDist(){
+    NetworkTableEntry ty = table.getEntry("ty");
+    double VerticalOffset= ty.getDouble(0.0);
+   // degrees back limelight rotated from perfectly vertical TBD
+    double mountAngle = 497394;
 
+    // distance from limelight to ground TBD
+    double hight= 49893 ;
+
+    // distance from the target to the floor TBD
+    double hubHight = 60.0;
+
+    double hubAngleDegrees = mountAngle + VerticalOffset;
+    double hubAngleRadians = hubAngleDegrees * (3.14159 / 180.0);
+
+    double distance = (hubHight - hight)/Math.tan(hubAngleRadians);
+    return distance;
+  }
   public double getHorizontal() {
     return table.getEntry("thor").getDouble(0);
   }
