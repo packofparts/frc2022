@@ -112,6 +112,13 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
+
+
+    //enable joystick inputs in teleop
+    m_robotContainer.drive.setShouldDrive(true);
+    // m_robotContainer.limelight.setPipeline(Pipeline.drive);
+
+
     // This makes sure that the autonomous stops running when
     // teleop starts running. If you want the autonomous to
     // continue until interrupted by another command, remove
