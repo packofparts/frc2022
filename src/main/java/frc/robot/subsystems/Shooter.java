@@ -3,22 +3,26 @@
 // the WPILib BSD license file in the root directory of this project.
 
 package frc.robot.subsystems;
+import java.lang.Math;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.commands.LimelightTurn;
+import frc.robot.commands.MoveBy;
 import frc.robot.subsystems.Limelight;
 import frc.robot.constants.Constants;
 import frc.robot.constants.IDs;
 import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.revrobotics.CANSparkMax.ControlType;
-
+import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.commands.MoveBy;
 public class Shooter extends SubsystemBase {
   /** Creates a new Shooter. */
   Joysticks joysticks;
   Limelight lime = new Limelight();
   TalonFX mainTalon = new TalonFX(IDs.flyWheelID);
   TalonFX rollerTalon = new TalonFX(IDs.rollerID);
+  DriveSubsystem drivebase = new DriveSubsystem(joysticks, lime);
   int shooterModeIndex = 0;
   ShooterMode shooterMode = ShooterMode.off;
   boolean shooterReady = false;
@@ -50,7 +54,7 @@ public class Shooter extends SubsystemBase {
   }
 
   public enum ShooterMode {
-    normal, launchPadNear, launchPadFar, tarmac, closeLow, auto, ballReject, off, quickShot;
+    normal, launchPadNear, launchPadFar, tarmac, closeLow, auto, ballReject, off, quickShot, autoTrajectory;
   }
 
 
@@ -144,6 +148,27 @@ public class Shooter extends SubsystemBase {
      double ShotRPM = 1727;//MAKE ADVANCED LINEAR REGRESSION ALGORITHM HERE
       setVelocityMain = ShotRPM;
       setVelocityRoller= ShotRPM;
+    }
+    else if (shooterMode == ShooterMode.autoTrajectory){
+      double distance = lime.getHubDist();
+      // 7 intervals initially
+      //rpm values are [setVelocityMain, setVelocityRoller]
+      int[][] rpmValues = ;
+      double[] distanceTrajectoryLength = ;
+      int indexMin = 99999;
+      double moveWhere = 0.0;
+      double minDist = 999999999999.99;
+      for(int i = 0; i< rpmValues.length; i++){
+        double currDist = Math.abs(distance - distanceTrajectoryLength[i]);
+        if(currDist < minDist){
+          minDist = currDist;
+          indexMin = i;
+        }
+      }
+      moveWhere = distanceTrajectoryLength[indexMin];
+      setVelocityMain = rpmValues[indexMin,0]; 
+      setVelocityRoller = rpmValues[indexMin,1];
+      drivebase.drive(moveWhere, 0.0, 0.0, true);
     }
     else {
       setVelocityMain = 0;
