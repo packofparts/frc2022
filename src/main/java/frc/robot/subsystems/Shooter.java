@@ -5,9 +5,10 @@
 package frc.robot.subsystems;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.commands.LimelightTurn;
+import frc.robot.subsystems.Limelight;
 import frc.robot.constants.Constants;
 import frc.robot.constants.IDs;
-
 import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.revrobotics.CANSparkMax.ControlType;
@@ -15,6 +16,7 @@ import com.revrobotics.CANSparkMax.ControlType;
 public class Shooter extends SubsystemBase {
   /** Creates a new Shooter. */
   Joysticks joysticks;
+  Limelight lime = new Limelight();
   TalonFX mainTalon = new TalonFX(IDs.flyWheelID);
   TalonFX rollerTalon = new TalonFX(IDs.rollerID);
   int shooterModeIndex = 0;
@@ -48,7 +50,7 @@ public class Shooter extends SubsystemBase {
   }
 
   public enum ShooterMode {
-    normal, launchPadNear, launchPadFar, tarmac, closeLow, auto, ballReject, off;
+    normal, launchPadNear, launchPadFar, tarmac, closeLow, auto, ballReject, off, quickShot;
   }
 
 
@@ -135,6 +137,13 @@ public class Shooter extends SubsystemBase {
     else if (shooterMode == ShooterMode.ballReject) {
       setVelocityMain = 2000;
       setVelocityRoller = -2000;
+    }
+    else if(shooterMode ==  ShooterMode.quickShot){
+      // get distance from hub
+     double distance = lime.getHubDist();
+     double ShotRPM = 1727;//MAKE ADVANCED LINEAR REGRESSION ALGORITHM HERE
+      setVelocityMain = ShotRPM;
+      setVelocityRoller= ShotRPM;
     }
     else {
       setVelocityMain = 0;
