@@ -153,8 +153,16 @@ public class Shooter extends SubsystemBase {
       double distance = lime.getHubDist();
       // 7 intervals initially
       //rpm values are [setVelocityMain, setVelocityRoller]
-      int[][] rpmValues = ;
-      double[] distanceTrajectoryLength = ;
+      int[][] rpmValues = {
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {}
+      };
+      double[] distanceTrajectoryLength = {32,64,};
       int indexMin = 99999;
       double moveWhere = 0.0;
       double minDist = 999999999999.99;
