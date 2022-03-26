@@ -184,23 +184,23 @@ public class Tube extends SubsystemBase {
       feederMotor.set(TalonSRXControlMode.PercentOutput, -0.2);
     }
     //all in
-    else if (tubeMode == TubeMode.feed) {
-      if (intakeTimeout.get() == 0) intakeTimeout.start();
+    else if (tubeMode == TubeMode.feed) {// REMOVED STOPPER DUE TO INDEX SLOW TO PUSH BALL
+     // if (intakeTimeout.get() == 0) intakeTimeout.start();
 
-      if (intakeTimeout.get() <= 0.5) {
+     // if (intakeTimeout.get() <= 0.5) {
         intakeMotor.set(TalonSRXControlMode.PercentOutput, 0);
-        indexMotor.set(TalonSRXControlMode.PercentOutput, 0.5);
-        feederMotor.set(TalonSRXControlMode.PercentOutput, 0.5);
-      }
-      else {
-        intakeMotor.set(TalonSRXControlMode.PercentOutput, 0);
-        indexMotor.set(TalonSRXControlMode.PercentOutput, 0);
-        feederMotor.set(TalonSRXControlMode.PercentOutput, 0);
-        if (intakeTimeout.get() >= 0.6) {
-          intakeTimeout.stop();
-          intakeTimeout.reset();
-        }
-      }
+        indexMotor.set(TalonSRXControlMode.PercentOutput, .5);
+        feederMotor.set(TalonSRXControlMode.PercentOutput, 1);
+     // }
+      // else {
+      //   intakeMotor.set(TalonSRXControlMode.PercentOutput, 0);
+      //   indexMotor.set(TalonSRXControlMode.PercentOutput, 0);
+      //   feederMotor.set(TalonSRXControlMode.PercentOutput, 0);
+      //   if (intakeTimeout.get() >= 0.6) {
+      //     intakeTimeout.stop();
+      //     intakeTimeout.reset();
+      //   }
+      //}
     }
     //all out
     else if (tubeMode == TubeMode.reverse) {

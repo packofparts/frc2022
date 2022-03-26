@@ -46,7 +46,6 @@ public class LimelightAlign extends CommandBase {
       move = pid.calculate(limelight.getTY(), 0);
     }
     
-    System.out.println(limelight.getTX() + " " + limelight.getTY());
     drive.drive(0, move, turn, false);
   }
 

@@ -63,11 +63,11 @@ public final class Constants {
     /*
     Shooter Constants
     */
-    public static final double shooterDeadzone = 50;
+    public static final double shooterDeadzone = 50; 
     //shooter main RPM PID
-    public static final double[] shooterMainPID = new double[] {0.8, 0.0, 0.0, 0.0521852887938127365476386374856};
+    public static final double[] shooterMainPID = new double[] {0.8, 0.0, 0.0, 0.0521852887938127365476386374856};//8
     //shooter roller RPM PID
-    public static final double[] shooterRollerPID = new double[] {0.45, 0.0, 0.0, 0.05467758620689655172413793103448};
+    public static final double[] shooterRollerPID = new double[] {0.125, 0.0, 0.0, 0.048};//125
 
 
     /*
