@@ -43,13 +43,13 @@ public class Limelight {
     NetworkTableEntry ty = table.getEntry("ty");
     double VerticalOffset= ty.getDouble(0.0);
    // degrees back limelight rotated from perfectly vertical TBD
-    double mountAngle = 497394;
+    double mountAngle = 2;
 
     // distance from limelight to ground TBD
-    double hight= 49893 ;
+    double hight= 17.875;
 
-    // distance from the target to the floor TBD
-    double hubHight = 60.0;
+    // hight of the hub in INCHES
+    double hubHight = 104.03;
 
     double hubAngleDegrees = mountAngle + VerticalOffset;
     double hubAngleRadians = hubAngleDegrees * (3.14159 / 180.0);
