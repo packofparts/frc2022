@@ -2,11 +2,13 @@ package frc.robot.subsystems;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
-
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Limelight {
   /** Creates a new limelight. */
   NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight");
+
 
   public Limelight() {
     setPipeline(Pipeline.drive);
@@ -43,7 +45,7 @@ public class Limelight {
     NetworkTableEntry ty = table.getEntry("ty");
     double VerticalOffset= ty.getDouble(0.0);
    // degrees back limelight rotated from perfectly vertical TBD
-    double mountAngle = 2;
+    double mountAngle = 42;
 
     // distance from limelight to ground TBD
     double hight= 17.875;
@@ -55,6 +57,7 @@ public class Limelight {
     double hubAngleRadians = hubAngleDegrees * (3.14159 / 180.0);
 
     double distance = (hubHight - hight)/Math.tan(hubAngleRadians);
+    SmartDashboard.putNumber("Distance", distance);
     return distance;
   }
   public double getHorizontal() {

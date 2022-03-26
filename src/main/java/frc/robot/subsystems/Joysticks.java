@@ -48,6 +48,7 @@ public class Joysticks {
   public boolean getClimbAxisLeftPressed() {return operatorController.getRawButton(9);}
   public double getClimbAxis() {return operatorController.getLeftTriggerAxis()-operatorController.getRightTriggerAxis();}
   public boolean getClimbSolenoidToggle() {return operatorController.getYButtonPressed();}
+  
   public void rumbleOperator(int amount) {
     operatorController.setRumble(RumbleType.kLeftRumble, amount);
     operatorController.setRumble(RumbleType.kRightRumble, amount);

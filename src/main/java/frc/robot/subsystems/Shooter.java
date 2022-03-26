@@ -26,7 +26,7 @@ public class Shooter extends SubsystemBase {
   double setVelocityMain = 0;
   double setVelocityRoller = 0;
 
-  final boolean tuningRPM = false;
+  final boolean tuningRPM = true;
   final ShooterMode[] modes = new ShooterMode[] 
   {ShooterMode.normal, ShooterMode.launchPadFar, ShooterMode.launchPadNear, ShooterMode.tarmac, ShooterMode.closeLow};
   
@@ -81,7 +81,8 @@ public class Shooter extends SubsystemBase {
       }
       shooterScrollPressed = true;
     }
-   
+
+
     SmartDashboard.putString("Selected Shooter Mode", modes[shooterModeIndex] + "");
 
     //shooter mode

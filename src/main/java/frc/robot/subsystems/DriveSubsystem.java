@@ -49,7 +49,7 @@ public class DriveSubsystem extends SubsystemBase {
   AHRS gyro;
   Double gyroHold = null;
   boolean shouldDrive = true;
-
+  Limelight lime = new Limelight();
   PIDController turnPID = new PIDController(Constants.turnPID[0], Constants.turnPID[1], Constants.turnPID[2]);
   PIDController ratePID = new PIDController(Constants.ratePID[0], Constants.ratePID[1], Constants.ratePID[2]);
 
@@ -120,6 +120,7 @@ sHAKUANDO WAS HERE
 
   @Override
   public void periodic() {
+    lime.getHubDist();
     SmartDashboard.putNumber("avg pos", getAveragePos());
     if (gyro == null) {
       if (initGyro.isConnected() && !initGyro.isCalibrating()) {
