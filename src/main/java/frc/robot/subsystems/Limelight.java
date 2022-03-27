@@ -41,9 +41,9 @@ public class Limelight {
     }
     table.getEntry("camMode").setNumber(0);
   }
+
   public double getHubDist(){
-    NetworkTableEntry ty = table.getEntry("ty");
-    double VerticalOffset= ty.getDouble(0.0);
+    double VerticalOffset= getTY();
    // degrees back limelight rotated from perfectly vertical TBD
     double mountAngle = 42;
 
@@ -60,6 +60,7 @@ public class Limelight {
     SmartDashboard.putNumber("Distance", distance);
     return distance;
   }
+
   public double getHorizontal() {
     return table.getEntry("thor").getDouble(0);
   }

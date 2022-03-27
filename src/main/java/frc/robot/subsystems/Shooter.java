@@ -19,10 +19,8 @@ import frc.robot.commands.MoveBy;
 public class Shooter extends SubsystemBase {
   /** Creates a new Shooter. */
   Joysticks joysticks;
-  Limelight lime = new Limelight();
   TalonFX mainTalon = new TalonFX(IDs.flyWheelID);
   TalonFX rollerTalon = new TalonFX(IDs.rollerID);
-  DriveSubsystem drivebase = new DriveSubsystem(joysticks, lime);
   int shooterModeIndex = 0;
   ShooterMode shooterMode = ShooterMode.off;
   boolean shooterReady = false;
@@ -108,8 +106,8 @@ public class Shooter extends SubsystemBase {
 
   public void runShooter() {
     if (tuningRPM) {
-      mainTalon.set(TalonFXControlMode.PercentOutput, SmartDashboard.getNumber("mainRoll", 0));
-      rollerTalon.set(TalonFXControlMode.PercentOutput, SmartDashboard.getNumber("secondRoll", 0));
+      mainTalon.set(TalonFXControlMode.Velocity, SmartDashboard.getNumber("mainRoll", 0));
+      rollerTalon.set(TalonFXControlMode.Velocity, SmartDashboard.getNumber("secondRoll", 0));
       
       SmartDashboard.putNumber("Shooter-Main", mainTalon.getSelectedSensorVelocity());
       SmartDashboard.putNumber("Shooter-Roller", rollerTalon.getSelectedSensorVelocity());
@@ -143,43 +141,14 @@ public class Shooter extends SubsystemBase {
       setVelocityMain = 2000;
       setVelocityRoller = -2000;
     }
-    else if(shooterMode ==  ShooterMode.quickShot){
-      // get distance from hub
-     double distance = lime.getHubDist();
-     double ShotRPM = 1727;//MAKE ADVANCED LINEAR REGRESSION ALGORITHM HERE
-      setVelocityMain = ShotRPM;
-      setVelocityRoller= ShotRPM;
-    }
-    else if (shooterMode == ShooterMode.autoTrajectory){
-      double distance = lime.getHubDist();
-      // 7 intervals initially
-      //rpm values are [setVelocityMain, setVelocityRoller]
-      int[][] rpmValues = {
-        {},
-        {},
-        {},
-        {},
-        {},
-        {},
-        {}
-      };
-      double[] distanceTrajectoryLength = {32,64,};
-      int indexMin = 99999;
-      double moveWhere = 0.0;
-      double minDist = 999999999999.99;
-      for(int i = 0; i< rpmValues.length; i++){
-        double currDist = Math.abs(distance - distanceTrajectoryLength[i]);
-        if(currDist < minDist){
-          minDist = currDist;
-          indexMin = i;
-        }
-      }
-      moveWhere = distanceTrajectoryLength[indexMin];
-      setVelocityMain = rpmValues[indexMin,0]; 
-      setVelocityRoller = rpmValues[indexMin,1];
-      drivebase.drive(moveWhere, 0.0, 0.0, true);
-    }
-    else {
+    // else if(shooterMode ==  ShooterMode.quickShot){
+    //   // get distance from hub
+    //  double distance = lime.getHubDist();
+    //  double ShotRPM = 1727;//MAKE ADVANCED LINEAR REGRESSION ALGORITHM HERE
+    //   setVelocityMain = ShotRPM;
+    //   setVelocityRoller= ShotRPM;
+    // }
+    else if (shooterMode == ShooterMode.off) {
       setVelocityMain = 0;
       setVelocityRoller = 0;
     }

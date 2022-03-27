@@ -49,7 +49,6 @@ public class DriveSubsystem extends SubsystemBase {
   AHRS gyro;
   Double gyroHold = null;
   boolean shouldDrive = true;
-  Limelight lime = new Limelight();
   PIDController turnPID = new PIDController(Constants.turnPID[0], Constants.turnPID[1], Constants.turnPID[2]);
   PIDController ratePID = new PIDController(Constants.ratePID[0], Constants.ratePID[1], Constants.ratePID[2]);
 
@@ -61,6 +60,7 @@ public class DriveSubsystem extends SubsystemBase {
   final boolean usingXboxController = false;//Joysticks.driveXboxController != null;
   final boolean tuningPID = false;
 
+  Limelight limelight;
   LimelightAlign align;
 
   public DriveSubsystem(Joysticks joysticks, Limelight limelight) {
@@ -71,6 +71,7 @@ sHAKUANDO WAS HERE
     //CameraServer.getInstance().startAutomaticCapture();
 
     this.joysticks = joysticks;
+    this.limelight = limelight;
     initGyro = new AHRS(SPI.Port.kMXP);
 
     m_frontLeftSpark = new CANSparkMax(IDs.frontLeftSparkID, MotorType.kBrushless);
@@ -120,7 +121,6 @@ sHAKUANDO WAS HERE
 
   @Override
   public void periodic() {
-    lime.getHubDist();
     SmartDashboard.putNumber("avg pos", getAveragePos());
     if (gyro == null) {
       if (initGyro.isConnected() && !initGyro.isCalibrating()) {
@@ -175,6 +175,8 @@ sHAKUANDO WAS HERE
     else if (joysticks.getLimeLightAlignReleased()) align.cancel();
 
     drive();
+
+    limelight.getHubDist();
   }
 
   //drive with joystick inputs
