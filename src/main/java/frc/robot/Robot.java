@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.autoPath.FourBallComplex;
 import frc.robot.autoPath.FourBallSimple;
 import frc.robot.autoPath.OneBallSimple;
+import frc.robot.autoPath.ThreeBallAuto;
 import frc.robot.autoPath.TwoBallComplex;
 import frc.robot.autoPath.TwoBallSimple;
 import frc.robot.commands.MoveBy;
@@ -52,6 +53,8 @@ public class Robot extends TimedRobot {
     autoCommand.addOption("One Ball (Simple)", new OneBallSimple(m_robotContainer.drive, m_robotContainer.tube, m_robotContainer.shooter));
     autoCommand.addOption("moveBy 5ft", new MoveBy(m_robotContainer.drive, 5));
     autoCommand.addOption("turnBy 180", new TurnBy(m_robotContainer.drive, 180));
+    autoCommand.addOption("Three Ball (Auto)", new ThreeBallAuto(m_robotContainer.drive, m_robotContainer.tube, m_robotContainer.shooter, m_robotContainer.limelight));
+    
     SmartDashboard.putData("Auto Command", autoCommand);
   }
 

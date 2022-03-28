@@ -49,7 +49,7 @@ public class ThreeBallAuto extends CommandBase {
     //set shooter mode
     shooter.setShooterMode(ShooterMode.auto);
 
-    step = 0;
+    step = 4;
     currentCommand = null;
     initalAngle = drive.getAngle();
   }
@@ -57,7 +57,7 @@ public class ThreeBallAuto extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (!currentCommand.isScheduled()) {
+    if (currentCommand == null || !currentCommand.isScheduled()) {
       //move forward 5.25 ft while intaking
       if (step == 0) {
         tube.setTubeMode(TubeMode.intake);
@@ -75,11 +75,18 @@ public class ThreeBallAuto extends CommandBase {
         shooter.runShooter();
       }
       //turn 180
-      else if (step == 3) currentCommand = new LimelightTurn(drive, 180, limelight);
+      else if (step == 3) {
+        currentCommand = new TurnBy(drive, 150);
+        //currentCommand = new TimerCommand(3);
+      
+      }  
         //intake while driving forward 12 ft
-      else if (step == 4) {
+      else if (step == 4) { 
         tube.setTubeMode(TubeMode.intake);
-        currentCommand = new MoveBy(drive, 12);
+        currentCommand = new MoveBy(drive, 13.6);
+        //isFinished = true;
+        
+
       }
       //move backwards 12ft
       else if (step == 5) {
@@ -98,12 +105,13 @@ public class ThreeBallAuto extends CommandBase {
       else if (step == 8) isFinished = true;
 
       currentCommand.schedule();
-      step++;
+      //step++;
     }
 
     //run shooter and tube
     shooter.runShooter();
     tube.runTube();
+    
   }
 
   // Called once the command ends or is interrupted.
