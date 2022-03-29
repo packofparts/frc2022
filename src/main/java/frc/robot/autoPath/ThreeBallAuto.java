@@ -4,6 +4,7 @@
 
 package frc.robot.autoPath;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.commands.LimelightTurn;
@@ -41,6 +42,7 @@ public class ThreeBallAuto extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    System.out.println("Initializing auto command");
     tube.setUseJoysticks(false);
     //extend pneumatics
     tube.setPneumatics(true);
@@ -49,7 +51,7 @@ public class ThreeBallAuto extends CommandBase {
     //set shooter mode
     shooter.setShooterMode(ShooterMode.auto);
 
-    step = 4;
+    step = 3;
     currentCommand = null;
     initalAngle = drive.getAngle();
   }
@@ -59,6 +61,7 @@ public class ThreeBallAuto extends CommandBase {
   public void execute() {
     if (currentCommand == null || !currentCommand.isScheduled()) {
       //move forward 5.25 ft while intaking
+      /**
       if (step == 0) {
         tube.setTubeMode(TubeMode.intake);
         currentCommand = new MoveBy(drive, 5.25);
@@ -74,20 +77,28 @@ public class ThreeBallAuto extends CommandBase {
         currentCommand = new TimerCommand(3);
         shooter.runShooter();
       }
-      //turn 180
-      else if (step == 3) {
+      **/
+      //turn 150
+      if (step == 3) {
+        System.out.println("Executing step 3");
         currentCommand = new TurnBy(drive, 150);
+        currentCommand.schedule();
+        step++;
         //currentCommand = new TimerCommand(3);
-      
+        
       }  
         //intake while driving forward 12 ft
       else if (step == 4) { 
+        System.out.println("Executing step 4");
         tube.setTubeMode(TubeMode.intake);
         currentCommand = new MoveBy(drive, 13.6);
-        //isFinished = true;
+        currentCommand.schedule();
+        isFinished = true;
         
 
       }
+      
+      /** 
       //move backwards 12ft
       else if (step == 5) {
         tube.setTubeMode(TubeMode.off);
@@ -103,10 +114,9 @@ public class ThreeBallAuto extends CommandBase {
       }
       //end execute
       else if (step == 8) isFinished = true;
-
-      currentCommand.schedule();
-      //step++;
+      **/
     }
+    
 
     //run shooter and tube
     shooter.runShooter();
