@@ -12,7 +12,6 @@ import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.constants.Constants;
 import frc.robot.constants.IDs;
 
 public class ClimbSubsystem extends SubsystemBase {
@@ -24,6 +23,7 @@ public class ClimbSubsystem extends SubsystemBase {
   Solenoid climbSolenoid2;
   
   private final boolean usePneumatics = true;
+  private boolean manualMode = false;
      
   public ClimbSubsystem(Joysticks joysticks) {
     this.joysticks = joysticks; 
@@ -36,6 +36,8 @@ public class ClimbSubsystem extends SubsystemBase {
     climbFalconLeft.setNeutralMode(NeutralMode.Brake);
     climbFalconLeft.setInverted(true);
     climbFalconRight.setNeutralMode(NeutralMode.Brake);
+
+    SmartDashboard.putBoolean("Manual Climb", false);
   }
 
   @Override
@@ -43,16 +45,38 @@ public class ClimbSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("leftClimbPos", climbFalconLeft.getSelectedSensorPosition());
     SmartDashboard.putNumber("rightClimbPos", climbFalconRight.getSelectedSensorPosition());
 
-    //climb limits
-    if (climbFalconLeft.getSelectedSensorPosition() <= 0 && climbFalconLeft.getSelectedSensorPosition() >= -250000 && joysticks.getClimbAxisLeftPressed()) climbFalconLeft.set(TalonFXControlMode.PercentOutput, joysticks.getClimbAxisLeft());
-    else if (climbFalconLeft.getSelectedSensorPosition() < -250000) climbFalconLeft.set(TalonFXControlMode.PercentOutput, 0.2);
-    else if (climbFalconLeft.getSelectedSensorPosition() > 0) climbFalconLeft.set(TalonFXControlMode.PercentOutput, -0.2);
-    else climbFalconLeft.set(TalonFXControlMode.PercentOutput, 0);
+    //ignore climb limits, and seperate joystick control
+    manualMode = SmartDashboard.getBoolean("Manual Climb", false);
 
-    if (climbFalconRight.getSelectedSensorPosition() <= 0 && climbFalconRight.getSelectedSensorPosition() >= -250000 && joysticks.getClimbAxisRightPressed() ) climbFalconRight.set(TalonFXControlMode.PercentOutput, joysticks.getClimbAxisRight());
-    else if (climbFalconRight.getSelectedSensorPosition() < -250000) climbFalconRight.set(TalonFXControlMode.PercentOutput, 0.2);
-    else if (climbFalconRight.getSelectedSensorPosition() > 0) climbFalconRight.set(TalonFXControlMode.PercentOutput, -0.2);
-    else climbFalconRight.set(TalonFXControlMode.PercentOutput, 0);
+    //climb limits
+    double climbLeft = 0.0;
+    boolean leftControl = false;
+    //ignore lower limit during manual mode
+    if ((climbFalconLeft.getSelectedSensorPosition() <= 0 || manualMode) && climbFalconLeft.getSelectedSensorPosition() >= -250000 && joysticks.getClimbAxisLeftPressed()) leftControl = true;
+    else if (climbFalconLeft.getSelectedSensorPosition() < -250000) climbLeft = 0.2;
+    else if (climbFalconLeft.getSelectedSensorPosition() > 0) climbLeft = -0.2;
+
+    double climbRight = 0.0;
+    boolean rightControl = false;
+    //ignore lower limit during manual mode
+    if ((climbFalconRight.getSelectedSensorPosition() <= 0 || manualMode) && climbFalconRight.getSelectedSensorPosition() >= -250000 && joysticks.getClimbAxisRightPressed()) rightControl = true;
+    else if (climbFalconRight.getSelectedSensorPosition() < -250000) climbRight = 0.2;
+    else if (climbFalconRight.getSelectedSensorPosition() > 0) climbRight = -0.2;
+
+    //joystick controls
+    //seperate axis in manual mode
+    if (manualMode) {
+      if (leftControl) climbLeft = joysticks.getClimbAxisLeft();
+      if (rightControl) climbRight = joysticks.getClimbAxisRight();
+    }
+    //otherwise combined axis
+    else {
+      if (leftControl) climbLeft = joysticks.getClimbAxisLeft();
+      if (rightControl) climbRight = joysticks.getClimbAxisLeft();
+    }
+
+    climbFalconLeft.set(TalonFXControlMode.PercentOutput, climbLeft);
+    climbFalconRight.set(TalonFXControlMode.PercentOutput, climbRight);
     
     if (joysticks.getClimbReset()) {
       climbFalconLeft.setSelectedSensorPosition(0);
