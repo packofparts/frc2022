@@ -51,7 +51,7 @@ public class ThreeBallAuto extends CommandBase {
     //set shooter mode
     shooter.setShooterMode(ShooterMode.auto);
 
-    step = 3;
+    step = 7;
     currentCommand = null;
     initalAngle = drive.getAngle();
   }
@@ -81,7 +81,7 @@ public class ThreeBallAuto extends CommandBase {
       //turn 150
       if (step == 3) {
         System.out.println("Executing step 3");
-        currentCommand = new TurnBy(drive, 150);
+        currentCommand = new TurnBy(drive, -150);
         currentCommand.schedule();
         step++;
         //currentCommand = new TimerCommand(3);
@@ -93,34 +93,41 @@ public class ThreeBallAuto extends CommandBase {
         tube.setTubeMode(TubeMode.intake);
         currentCommand = new MoveBy(drive, 13.6);
         currentCommand.schedule();
-        isFinished = true;
+        //isFinished = true;
         
 
       }
       
-      /** 
+     
       //move backwards 12ft
       else if (step == 5) {
         tube.setTubeMode(TubeMode.off);
         currentCommand = new MoveBy(drive, -12);
       }
+
       //turn to face the hub
-      else if (step == 6) currentCommand = new LimelightTurn(drive, 180, limelight);
+      else if (step == 6) {
+        currentCommand = new LimelightTurn(drive, 180, limelight);
+      }
       //feedShooter for 3 seconds
-      else if (step == 7) {
-        tube.setTubeMode(TubeMode.feed);
-        currentCommand = new TimerCommand(3);
+      else if (step == 7 && shooter.getShooterReady()) {
+        System.out.println("a,pmgus");
+        System.out.println("AMPOGUS");
         shooter.runShooter();
+        currentCommand = new TimerCommand(5);
+        tube.setTubeMode(TubeMode.feed);
+        currentCommand.schedule();
+
+        System.out.println("AMONG {US !");
       }
       //end execute
       else if (step == 8) isFinished = true;
-      **/
     }
     
 
     //run shooter and tube
-    shooter.runShooter();
-    tube.runTube();
+    //shooter.runShooter();
+    //tube.runTube();
     
   }
 

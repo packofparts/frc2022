@@ -23,12 +23,12 @@ public class Shooter extends SubsystemBase {
   TalonFX rollerTalon = new TalonFX(IDs.rollerID);
   int shooterModeIndex = 0;
   ShooterMode shooterMode = ShooterMode.off;
-  boolean shooterReady = false;
+  boolean shooterReady = true;
   boolean shooterScrollPressed = false;
   double setVelocityMain = 0;
   double setVelocityRoller = 0;
 
-  final boolean tuningRPM = true;
+  final boolean tuningRPM = false;
   final ShooterMode[] modes = new ShooterMode[] 
   {ShooterMode.normal, ShooterMode.launchPadFar, ShooterMode.launchPadNear, ShooterMode.tarmac, ShooterMode.closeLow};
   

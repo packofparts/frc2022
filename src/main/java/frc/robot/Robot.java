@@ -116,7 +116,7 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopInit() {
 
-
+    System.out.println("Gayness");
     //enable joystick inputs in teleop
     m_robotContainer.drive.setShouldDrive(true);
     // m_robotContainer.limelight.setPipeline(Pipeline.drive);
