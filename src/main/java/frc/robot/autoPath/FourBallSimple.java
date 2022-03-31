@@ -107,10 +107,10 @@ public class FourBallSimple extends CommandBase {
         shooter.runShooter();
         currentCommand = new TimerCommand(3);
       }
-      
+
       else if (step==9) {
         tube.setTubeMode(TubeMode.feed);
-        currentCommand = new TimerCommand(3);
+        currentCommand = new TimerCommand(5);
         
       }
       //end execute
