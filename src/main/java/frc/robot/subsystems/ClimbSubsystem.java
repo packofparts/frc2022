@@ -52,16 +52,16 @@ public class ClimbSubsystem extends SubsystemBase {
     double climbLeft = 0.0;
     boolean leftControl = false;
     //ignore lower limit during manual mode
-    if ((climbFalconLeft.getSelectedSensorPosition() <= 0 || manualMode) && climbFalconLeft.getSelectedSensorPosition() >= -250000 && joysticks.getClimbAxisLeftPressed()) leftControl = true;
+    if ((climbFalconLeft.getSelectedSensorPosition() <= -2000 || manualMode) && climbFalconLeft.getSelectedSensorPosition() >= -250000 && joysticks.getClimbAxisLeftPressed()) leftControl = true;
     else if (climbFalconLeft.getSelectedSensorPosition() < -250000) climbLeft = 0.2;
-    else if (climbFalconLeft.getSelectedSensorPosition() > 0) climbLeft = -0.2;
+    else if (climbFalconLeft.getSelectedSensorPosition() > -2000 && !manualMode) climbLeft = -0.2;
 
     double climbRight = 0.0;
     boolean rightControl = false;
     //ignore lower limit during manual mode
-    if ((climbFalconRight.getSelectedSensorPosition() <= 0 || manualMode) && climbFalconRight.getSelectedSensorPosition() >= -250000 && joysticks.getClimbAxisRightPressed()) rightControl = true;
+    if ((climbFalconRight.getSelectedSensorPosition() <= -2000 || manualMode) && climbFalconRight.getSelectedSensorPosition() >= -250000 && joysticks.getClimbAxisRightPressed()) rightControl = true;
     else if (climbFalconRight.getSelectedSensorPosition() < -250000) climbRight = 0.2;
-    else if (climbFalconRight.getSelectedSensorPosition() > 0) climbRight = -0.2;
+    else if (climbFalconRight.getSelectedSensorPosition() > -2000 && !manualMode) climbRight = -0.2;
 
     //joystick controls
     //seperate axis in manual mode

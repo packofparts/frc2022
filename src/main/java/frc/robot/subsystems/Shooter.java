@@ -28,7 +28,7 @@ public class Shooter extends SubsystemBase {
   double setVelocityMain = 0;
   double setVelocityRoller = 0;
 
-  final boolean tuningRPM = true;
+  final boolean tuningRPM = false;
   final ShooterMode[] modes = new ShooterMode[] 
   {ShooterMode.normal, ShooterMode.launchPadFar, ShooterMode.launchPadNear, ShooterMode.tarmac, ShooterMode.closeLow};
   
@@ -106,8 +106,8 @@ public class Shooter extends SubsystemBase {
 
   public void runShooter() {
     if (tuningRPM) {
-      mainTalon.set(TalonFXControlMode.Velocity, SmartDashboard.getNumber("mainRoll", 0));
-      rollerTalon.set(TalonFXControlMode.Velocity, SmartDashboard.getNumber("secondRoll", 0));
+      mainTalon.set(TalonFXControlMode.PercentOutput, SmartDashboard.getNumber("mainRoll", 0));
+      rollerTalon.set(TalonFXControlMode.PercentOutput, SmartDashboard.getNumber("secondRoll", 0));
       
       SmartDashboard.putNumber("Shooter-Main", mainTalon.getSelectedSensorVelocity());
       SmartDashboard.putNumber("Shooter-Roller", rollerTalon.getSelectedSensorVelocity());
