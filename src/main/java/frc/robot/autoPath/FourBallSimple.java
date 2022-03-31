@@ -88,28 +88,33 @@ public class FourBallSimple extends CommandBase {
         
 
       }
+
+      // wait for human player to drop ball
+      else if (step==5) {
+        currentCommand = new TimerCommand(3);
+      }
+
       //move backwards 12ft
-      else if (step == 5) {
+      else if (step == 6) {
         tube.setTubeMode(TubeMode.off);
         currentCommand = new MoveBy(drive, -12);
       }
       //turn to face the hub
-      else if (step == 6) currentCommand = new LimelightTurn(drive, 180, limelight);
+      else if (step == 7) currentCommand = new LimelightTurn(drive, 180, limelight);
       //feedShooter for 3 seconds
-      else if (step == 7) {
+      else if (step == 8) {
         
         shooter.runShooter();
         currentCommand = new TimerCommand(3);
-        
-        
       }
-      else if (step==8) {
+      
+      else if (step==9) {
         tube.setTubeMode(TubeMode.feed);
         currentCommand = new TimerCommand(3);
         
       }
       //end execute
-      else if (step == 9) isFinished = true;
+      else if (step == 10) isFinished = true;
 
       currentCommand.schedule();
       step++;

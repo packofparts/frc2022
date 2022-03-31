@@ -48,7 +48,7 @@ public class Robot extends TimedRobot {
 
     autoCommand.setDefaultOption("Two Ball (Complex)", new TwoBallComplex(m_robotContainer.drive, m_robotContainer.tube, m_robotContainer.shooter, m_robotContainer.limelight));
     autoCommand.addOption("Two Ball (Simple)", new TwoBallSimple(m_robotContainer.drive, m_robotContainer.tube, m_robotContainer.shooter));
-    autoCommand.addOption("Four Ball (Simple)", new FourBallSimple(m_robotContainer.drive, m_robotContainer.tube, m_robotContainer.shooter));
+    autoCommand.addOption("Four Ball (Simple)", new FourBallSimple(m_robotContainer.drive, m_robotContainer.tube, m_robotContainer.shooter, m_robotContainer.limelight));
     autoCommand.addOption("Four Ball (Complex)", new FourBallComplex(m_robotContainer.drive, m_robotContainer.tube, m_robotContainer.shooter, m_robotContainer.limelight));
     autoCommand.addOption("One Ball (Simple)", new OneBallSimple(m_robotContainer.drive, m_robotContainer.tube, m_robotContainer.shooter));
     autoCommand.addOption("moveBy 5ft", new MoveBy(m_robotContainer.drive, 5));
