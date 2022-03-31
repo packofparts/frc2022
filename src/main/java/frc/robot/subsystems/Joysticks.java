@@ -65,6 +65,7 @@ public class Joysticks {
   // switch to is pressed
   
   public boolean getNotPOV() {return operatorController.getPOV() == -1;}
+  
   public boolean getShooterScrollRight() {return operatorController.getPOV() == 90;}
   public boolean getShooterScrollLeft() {return operatorController.getPOV() == 270;}
   public boolean getShooterScrollDown() {return operatorController.getPOV() == 180;}
