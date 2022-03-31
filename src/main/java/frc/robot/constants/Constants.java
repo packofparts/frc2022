@@ -67,7 +67,8 @@ public final class Constants {
     //shooter main RPM PID
     public static final double[] shooterMainPID = new double[] {0.8, 0.0, 0.0, 0.0495};//8
     //shooter roller RPM PID
-    public static final double[] shooterRollerPID = new double[] {0.125, 0.0, 0.0, 0.048};//125
+    public static final double[] shooterRollerPID = new double[] {0.125, 0.0, 0.0, 0.048};
+    //125
 
 
     /*
