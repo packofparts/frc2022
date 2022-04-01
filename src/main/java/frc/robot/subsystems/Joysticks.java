@@ -57,7 +57,6 @@ public class Joysticks {
 
   public boolean getIntakeSolenoidToggle() {return operatorController.getXButtonPressed();}
   public boolean getIndexToggle() {return operatorController.getBButton();}
-  // public boolean getOutdexToggle() {return operatorController.getXButton();}
   public boolean getIntakeToggle() {return operatorController.getRightBumper();}
   public boolean getOutakeToggle() {return operatorController.getLeftBumper();}
   public boolean getIncreaseShooter() {return operatorController.getPOV() == 0;}

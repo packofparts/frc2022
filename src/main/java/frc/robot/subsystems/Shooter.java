@@ -6,16 +6,11 @@ package frc.robot.subsystems;
 import java.lang.Math;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.commands.LimelightTurn;
-import frc.robot.commands.MoveBy;
-import frc.robot.subsystems.Limelight;
 import frc.robot.constants.Constants;
 import frc.robot.constants.IDs;
 import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
-import com.revrobotics.CANSparkMax.ControlType;
-import frc.robot.subsystems.DriveSubsystem;
-import frc.robot.commands.MoveBy;
+
 public class Shooter extends SubsystemBase {
   /** Creates a new Shooter. */
   Joysticks joysticks;
@@ -63,27 +58,17 @@ public class Shooter extends SubsystemBase {
       if (shooterMode != ShooterMode.off) setShooterMode(ShooterMode.off);
       else setShooterMode(modes[shooterModeIndex]);
     }
+    if (joysticks.getShooterScrollDown()) setShooterMode(ShooterMode.ballReject);
 
-    if (joysticks.getShooterScrollDown()){
-      setShooterMode(ShooterMode.ballReject);
-    }
-
-    if (joysticks.getNotPOV()) {
-      shooterScrollPressed = false;
-    }
+    if (joysticks.getNotPOV()) shooterScrollPressed = false;
     if (joysticks.getShooterScrollRight() && !shooterScrollPressed){
-      if (shooterModeIndex < modes.length -1){
-        shooterModeIndex ++;
-      }
+      if (shooterModeIndex < modes.length -1) shooterModeIndex++;
       shooterScrollPressed = true;
     }
     else if (joysticks.getShooterScrollLeft() && !shooterScrollPressed){
-      if (shooterModeIndex > 0){
-        shooterModeIndex --;
-      }
+      if (shooterModeIndex > 0) shooterModeIndex--;
       shooterScrollPressed = true;
     }
-
 
     SmartDashboard.putString("Selected Shooter Mode", modes[shooterModeIndex] + "");
 
@@ -103,7 +88,7 @@ public class Shooter extends SubsystemBase {
     this.shooterMode = ShooterMode.off;
     runShooter();
   }
-// sus
+  
   public void runShooter() {
     if (tuningRPM) {
       mainTalon.set(TalonFXControlMode.PercentOutput, SmartDashboard.getNumber("mainRoll", 0));
@@ -149,7 +134,6 @@ public class Shooter extends SubsystemBase {
     if (shooterReady) joysticks.rumbleOperator(1);
     else joysticks.rumbleOperator(0);
 
-    SmartDashboard.putString("Active Shooter Mode", shooterMode + "");
     SmartDashboard.putNumber("Shooter-Main", mainTalon.getSelectedSensorVelocity());
     SmartDashboard.putNumber("Shooter-Roller", rollerTalon.getSelectedSensorVelocity());
   }

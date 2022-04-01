@@ -22,31 +22,23 @@ public class ClimbSubsystem extends SubsystemBase {
   Solenoid climbSolenoid1;
   Solenoid climbSolenoid2;
   
-  private final boolean usePneumatics = true;
   private boolean manualMode = true;
      
   public ClimbSubsystem(Joysticks joysticks) {
     this.joysticks = joysticks; 
-    if (usePneumatics) {
-      climbSolenoid1 = new Solenoid(PneumaticsModuleType.REVPH, IDs.climbSolenoid1ID);
-      climbSolenoid2 = new Solenoid(PneumaticsModuleType.REVPH, IDs.climbSolenoid2ID);
-    }
+    climbSolenoid1 = new Solenoid(PneumaticsModuleType.REVPH, IDs.climbSolenoid1ID);
+    climbSolenoid2 = new Solenoid(PneumaticsModuleType.REVPH, IDs.climbSolenoid2ID);
     climbFalconLeft.setSelectedSensorPosition(0);
     climbFalconRight.setSelectedSensorPosition(0);
     climbFalconLeft.setNeutralMode(NeutralMode.Brake);
     climbFalconLeft.setInverted(true);
     climbFalconRight.setNeutralMode(NeutralMode.Brake);
-
-    SmartDashboard.putBoolean("Manual Climb", true);
   }
 
   @Override
   public void periodic() {
-    SmartDashboard.putNumber("leftClimbPos", climbFalconLeft.getSelectedSensorPosition());
-    SmartDashboard.putNumber("rightClimbPos", climbFalconRight.getSelectedSensorPosition());
-
-    //ignore climb limits, and seperate joystick control
-    manualMode = SmartDashboard.getBoolean("Manual Climb", false);
+    // SmartDashboard.putNumber("leftClimbPos", climbFalconLeft.getSelectedSensorPosition());
+    // SmartDashboard.putNumber("rightClimbPos", climbFalconRight.getSelectedSensorPosition());
 
     //climb limits
     double climbLeft = 0.0;
@@ -82,11 +74,9 @@ public class ClimbSubsystem extends SubsystemBase {
       climbFalconLeft.setSelectedSensorPosition(0);
       climbFalconRight.setSelectedSensorPosition(0);
     }
-    if (usePneumatics) {
-      if (joysticks.getClimbSolenoidToggle()) {
-        if (climbSolenoid1.get()) setPneumatics(false);
-        else setPneumatics(true);
-      }
+    if (joysticks.getClimbSolenoidToggle()) {
+      if (climbSolenoid1.get()) setPneumatics(false);
+      else setPneumatics(true);
     }
   }
 

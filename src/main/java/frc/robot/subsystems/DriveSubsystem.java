@@ -57,16 +57,13 @@ public class DriveSubsystem extends SubsystemBase {
   
   //set booleans
   final boolean useGyroHold = false;
-  final boolean usingXboxController = false;//Joysticks.driveXboxController != null;
+  final boolean usingXboxController = false;
   final boolean tuningPID = false;
 
   Limelight limelight;
   LimelightAlign align;
 
   public DriveSubsystem(Joysticks joysticks, Limelight limelight) {
-    /*
-sHAKUANDO WAS HERE
-    */
     CameraServer.getInstance().startAutomaticCapture();
     //CameraServer.getInstance().startAutomaticCapture();
 
@@ -121,7 +118,6 @@ sHAKUANDO WAS HERE
 
   @Override
   public void periodic() {
-    SmartDashboard.putNumber("avg pos", getAveragePos());
     if (gyro == null) {
       if (initGyro.isConnected() && !initGyro.isCalibrating()) {
         initGyro.zeroYaw();
@@ -136,38 +132,11 @@ sHAKUANDO WAS HERE
       }
       else {
         SmartDashboard.putNumber("Gyro Yaw", gyro.getYaw());
-        // SmartDashboard.putNumber("Gyro Rate", gyro.getRate());
       }
     }
     
     if (joysticks.getGyroResetButton()) resetGyro();
     if (joysticks.getEncoderResetButton()) resetEncoders();
-
-    // if (tuningPID) {
-    //   //modify PID w/ joysticks
-    //   if (joysticks.getPIncrease()) turnPID.setP(turnPID.getP() + 0.0005);;
-    //   if (joysticks.getPDecrease()) turnPID.setP(turnPID.getP() - 0.0005);
-    //   if (joysticks.getIIncrease()) turnPID.setI(turnPID.getI() + 0.0000005);
-    //   if (joysticks.getIDecrease()) turnPID.setI(turnPID.getI() - 0.0000005);
-    //   if (joysticks.getDIncrease()) turnPID.setD(turnPID.getD() + 0.00005);
-    //   if (joysticks.getDDecrease()) turnPID.setD(turnPID.getD() - 0.00005);
-
-    //   //display PID values
-    //   SmartDashboard.putNumber("P: ", turnPID.getP());
-    //   SmartDashboard.putNumber("I: ", turnPID.getI());
-    //   SmartDashboard.putNumber("D: ", turnPID.getD());
-
-    //   //calculate PID on button input
-    //   Double pidOutput = null;
-    //   if (joysticks.getPIDLeft()) pidOutput = -turnPID.calculate(gyro.getAngle(), 90);
-    //   else if (joysticks.getPIDRight()) pidOutput = -turnPID.calculate(gyro.getAngle(), -90);
-
-    //   //apply PID on button input
-    //   if (pidOutput != null) drive(0, 0, pidOutput, true);
-    //   else drive(0, 0, 0, true);
-    //   SmartDashboard.putString("pid output", pidOutput+"");
-    // }
-    // else drive();
     
     if (joysticks.getLimeLightAlignPressed()) {
       if (!align.isScheduled()) align.schedule();
@@ -175,8 +144,6 @@ sHAKUANDO WAS HERE
     else if (joysticks.getLimeLightAlignReleased()) align.cancel();
 
     drive();
-
-    limelight.getHubDist();
   }
 
   //drive with joystick inputs
@@ -257,8 +224,6 @@ sHAKUANDO WAS HERE
     m_frontRightSpark.getPIDController().setReference(frontRight, ControlType.kVelocity);
     m_backLeftSpark.getPIDController().setReference(backLeft, ControlType.kVelocity);
     m_backRightSpark.getPIDController().setReference(backRight, ControlType.kVelocity);
-
-    // SmartDashboard.putNumber("frontLeft", fronkll_frontLeftSpark.getEncoder().getVelocity());
   }
 
   public void resetEncoders() {
