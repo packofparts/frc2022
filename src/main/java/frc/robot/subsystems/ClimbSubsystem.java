@@ -37,7 +37,7 @@ public class ClimbSubsystem extends SubsystemBase {
     climbFalconLeft.setInverted(true);
     climbFalconRight.setNeutralMode(NeutralMode.Brake);
 
-    SmartDashboard.putBoolean("Manual Climb", false);
+    SmartDashboard.putBoolean("Manual Climb", true);
   }
 
   @Override
