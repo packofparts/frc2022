@@ -17,12 +17,21 @@ public class LimelightAlign extends CommandBase {
   Limelight limelight;
   double originalYaw;
 
+  Double PIDTurnDegrees;
+
   PIDController pid = new PIDController(Constants.limelightMovePID[0], Constants.limelightMovePID[1], Constants.limelightMovePID[2]);
   PIDController turnPID = new PIDController(Constants.limelightTurnPID[0], Constants.limelightTurnPID[1], Constants.limelightTurnPID[2]);
   
   public LimelightAlign(DriveSubsystem dt, Limelight limelight) {
     drive = dt;
     this.limelight = limelight;
+    addRequirements(drive);
+  }
+
+  public LimelightAlign(DriveSubsystem dt, Limelight limelight, double PIDTurnDegrees) {
+    drive = dt;
+    this.limelight = limelight;
+    this.PIDTurnDegrees = PIDTurnDegrees;
     addRequirements(drive);
   }
 
@@ -41,9 +50,13 @@ public class LimelightAlign extends CommandBase {
   public void execute() {
     double turn = 0;
     double move = 0;
+    
     if (limelight.getDetected()) {
       turn = turnPID.calculate(limelight.getTX(), 0);
       move = pid.calculate(limelight.getTY(), 0);
+    }
+    else if (PIDTurnDegrees != null) {
+      turn = -turnPID.calculate(drive.getAngle(), originalYaw + PIDTurnDegrees);
     }
     
     drive.drive(0, move, turn, false);

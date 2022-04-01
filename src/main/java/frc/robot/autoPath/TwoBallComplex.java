@@ -6,6 +6,7 @@ package frc.robot.autoPath;
 
 import java.nio.file.LinkOption;
 
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.commands.LimelightAlign;
@@ -16,6 +17,7 @@ import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Tube;
+import frc.robot.subsystems.Limelight.Pipeline;
 import frc.robot.subsystems.Shooter.ShooterMode;
 import frc.robot.subsystems.Tube.TubeMode;
 
@@ -29,6 +31,8 @@ public class TwoBallComplex extends CommandBase {
   Limelight limelight;
 
   Command currentCommand;
+
+  Timer feedTimer;
 
   public TwoBallComplex(DriveSubsystem drive, Tube tube, Shooter shooter, Limelight limelight) {
     this.drive = drive;
@@ -46,49 +50,72 @@ public class TwoBallComplex extends CommandBase {
     //set intake mode
     tube.setTubeMode(TubeMode.intake);
     //set shooter mode
-    shooter.setShooterMode(ShooterMode.auto);
+    shooter.setShooterMode(ShooterMode.normal);
     
     step = 0;
     currentCommand = null;
+
+    feedTimer = new Timer();
+    timer(false);
   }
 
-  // Called every time the scheduler runs while the command is scheduled.
+  //Called every time the scheduler runs while the command is scheduled.
+  //TODO check step 1 limelight align, step 2 running & feed
   @Override
   public void execute() {
+    boolean feed = false;
+
     if (currentCommand == null || !currentCommand.isScheduled()) {
+      boolean next = true;
+
       //move forward 4 ft
-      if (step == 0) {
-        currentCommand = new MoveBy(drive, 4);
-        currentCommand.schedule();
-        step++;
-      }
-      
-      //rotate 180
-      else if (step == 1) {
-        currentCommand = new TurnBy(drive, 180);
-        currentCommand.schedule();
-        step++;
-      }
-      //feedShooter for 5 seconds
-      else if (step == 2) {
-        currentCommand = new LimelightAlign(drive, limelight);
-        currentCommand.schedule();
-        step++;
-      }
-      //feedShooter for 5 seconds
-      else if (step == 3 && shooter.getShooterReady()) {
+      if (step == 0) currentCommand = new MoveBy(drive, 4);
+      //turn to face hub and align
+      else if (step == 1) currentCommand = new LimelightAlign(drive, limelight, 180);
+      //feedShooter for 10 seconds
+      else if (step == 2 && shooter.getShooterReady()) {
+        feed = true;
         tube.setTubeMode(TubeMode.feed);
-        currentCommand = new TimerCommand(5);
+        currentCommand = new TimerCommand(10);
+      }
+      else if (step == 2 & !shooter.getShooterReady()) next = false;
+      //stop robot
+      else if (step == 3) isFinished = true;
+
+      //manage step increments
+      if (next) {
         currentCommand.schedule();
         step++;
       }
-      //stop robot
-      else if (step == 4) isFinished = true;
     }
+
+    //manage feeding
+    if (feed) {
+      if (shooter.getShooterReady() && feedTimer.get() > 0.5)  {
+        tube.setTubeMode(TubeMode.feed);
+        timer(false);
+      }
+      else {
+        tube.setTubeMode(TubeMode.off);
+        timer(true);
+      }
+    }
+    else timer(false);
 
     //run shooter and tube
     shooter.runShooter();
     tube.runTube();
+  }
+
+  public void timer(boolean start) {
+    if (start) {
+      feedTimer.reset();
+      feedTimer.start();
+    }
+    else {
+      feedTimer.stop();
+      feedTimer.reset();
+    }
   }
 
   // Called once the command ends or is interrupted.
