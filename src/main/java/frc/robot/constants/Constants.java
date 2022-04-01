@@ -67,7 +67,7 @@ public final class Constants {
     //shooter main RPM PID
     public static final double[] shooterMainPID = new double[] {0.8, 0.0, 0.0, 0.0495};//8
     //shooter roller RPM PID
-    public static final double[] shooterRollerPID = new double[] {0.125, 0.0, 0.0, 0.048};//125
+    public static final double[] shooterRollerPID = new double[] {0.15, 0.0, 0.0, 0.050};//125
 
 
     /*
@@ -101,7 +101,7 @@ public final class Constants {
     public static final double[] limelightMovePID = new double[] {0.125, 0.0, 0.01};
     public static final double[] limelightTurnPID = new double[] {0.017, 0.0, 0.002};
     //drive gyro turn PID
-    public static final double[] turnPID = new double[] {0.006, 0.0, 0.0003};
+    public static final double[] turnPID= new double[] {0.006, 0.0, 0.0003};
     public static final double turnPIDTolerance = 0.5;
     //drive gyro rate PID
     public static final double[] ratePID = new double[] {0.080, 0.0, 0.0};

@@ -23,7 +23,7 @@ public class ClimbSubsystem extends SubsystemBase {
   Solenoid climbSolenoid2;
   
   private final boolean usePneumatics = true;
-  private boolean manualMode = false;
+  private boolean manualMode = true;
      
   public ClimbSubsystem(Joysticks joysticks) {
     this.joysticks = joysticks; 
