@@ -10,7 +10,6 @@ import com.ctre.phoenix.motorcontrol.can.TalonFX;
 
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Solenoid;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.IDs;
 
@@ -37,9 +36,6 @@ public class ClimbSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
-    // SmartDashboard.putNumber("leftClimbPos", climbFalconLeft.getSelectedSensorPosition());
-    // SmartDashboard.putNumber("rightClimbPos", climbFalconRight.getSelectedSensorPosition());
-
     //climb limits
     double climbLeft = 0.0;
     boolean leftControl = false;

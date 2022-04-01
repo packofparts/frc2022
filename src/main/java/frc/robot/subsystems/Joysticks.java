@@ -4,8 +4,6 @@
 
 package frc.robot.subsystems;
 
-import java.sql.Blob;
-
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;

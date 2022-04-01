@@ -34,9 +34,9 @@ public class Robot extends TimedRobot {
   public void robotInit() {
     m_robotContainer = new RobotContainer();
 
+    autoCommand.addOption("One Ball", new OneBallVision(m_robotContainer.drive, m_robotContainer.tube, m_robotContainer.shooter, m_robotContainer.limelight));
     autoCommand.setDefaultOption("Two Ball", new TwoBallVision(m_robotContainer.drive, m_robotContainer.tube, m_robotContainer.shooter, m_robotContainer.limelight));
     autoCommand.addOption("Four Ball", new FourBall(m_robotContainer.drive, m_robotContainer.tube, m_robotContainer.shooter, m_robotContainer.limelight));
-    autoCommand.addOption("One Ball", new OneBallVision(m_robotContainer.drive, m_robotContainer.tube, m_robotContainer.shooter, m_robotContainer.limelight));
     
     SmartDashboard.putData("Auto Command", autoCommand);
   }

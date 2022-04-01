@@ -65,7 +65,6 @@ public class DriveSubsystem extends SubsystemBase {
 
   public DriveSubsystem(Joysticks joysticks, Limelight limelight) {
     CameraServer.getInstance().startAutomaticCapture();
-    //CameraServer.getInstance().startAutomaticCapture();
 
     this.joysticks = joysticks;
     this.limelight = limelight;
