@@ -30,7 +30,7 @@ public class Shooter extends SubsystemBase {
 
   final boolean tuningRPM = false;
   final ShooterMode[] modes = new ShooterMode[] 
-  {ShooterMode.normal, ShooterMode.launchPadFar, ShooterMode.launchPadNear, ShooterMode.tarmac, ShooterMode.closeLow};
+  {ShooterMode.normal, ShooterMode.launchPadFar, ShooterMode.launchPadNear};
   
   public Shooter(Joysticks joysticks) {
     this.joysticks = joysticks;
@@ -52,7 +52,7 @@ public class Shooter extends SubsystemBase {
   }
 
   public enum ShooterMode {
-    normal, launchPadNear, launchPadFar, tarmac, closeLow, auto, ballReject, off, quickShot, autoTrajectory;
+    normal, launchPadNear, launchPadFar, ballReject, off;
   }
 
 
@@ -125,29 +125,10 @@ public class Shooter extends SubsystemBase {
       setVelocityMain = 6400;
       setVelocityRoller = -4200;
     }
-    else if (shooterMode == ShooterMode.closeLow) {
-      setVelocityMain = 6600;
-      setVelocityRoller = -4500;
-    }
-    else if (shooterMode == ShooterMode.tarmac) {
-      setVelocityMain = 4900;
-      setVelocityRoller = -4700;
-    }
-    else if (shooterMode == ShooterMode.auto) {
-      setVelocityMain = 4900;
-      setVelocityRoller = -4700;
-    }
     else if (shooterMode == ShooterMode.ballReject) {
       setVelocityMain = 2000;
       setVelocityRoller = -2000;
     }
-    // else if(shooterMode ==  ShooterMode.quickShot){
-    //   // get distance from hub
-    //  double distance = lime.getHubDist();
-    //  double ShotRPM = 1727;//MAKE ADVANCED LINEAR REGRESSION ALGORITHM HERE
-    //   setVelocityMain = ShotRPM;
-    //   setVelocityRoller= ShotRPM;
-    // }
     else if (shooterMode == ShooterMode.off) {
       setVelocityMain = 0;
       setVelocityRoller = 0;
@@ -164,7 +145,6 @@ public class Shooter extends SubsystemBase {
                     setVelocityMain != 0 && setVelocityRoller != 0;
 
     SmartDashboard.putBoolean("Shooter Running", mainTalon.getMotorOutputPercent() != 0 || rollerTalon.getMotorOutputPercent() != 0);
-    // SmartDashboard.putBoolean("Shooter Ready", shooterReady);
 
     if (shooterReady) joysticks.rumbleOperator(1);
     else joysticks.rumbleOperator(0);

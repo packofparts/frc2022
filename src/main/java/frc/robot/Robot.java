@@ -9,14 +9,9 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.robot.autoPath.FourBallComplex;
-import frc.robot.autoPath.FourBallSimple;
-import frc.robot.autoPath.OneBallSimple;
-import frc.robot.autoPath.ThreeBallAuto;
-import frc.robot.autoPath.TwoBallComplex;
-import frc.robot.autoPath.TwoBallSimple;
-import frc.robot.commands.MoveBy;
-import frc.robot.commands.TurnBy;
+import frc.robot.autoPath.FourBall;
+import frc.robot.autoPath.OneBallVision;
+import frc.robot.autoPath.TwoBallVision;
 import frc.robot.subsystems.Limelight.Pipeline;
 
 /**
@@ -29,7 +24,6 @@ public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
   private RobotContainer m_robotContainer;
   
-  private SendableChooser<Pipeline> ballColor = new SendableChooser<>();
   private SendableChooser<Command> autoCommand = new SendableChooser<>();
 
   /**
@@ -38,28 +32,13 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotInit() {
-    // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
-    // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
 
-    ballColor.setDefaultOption("blue", Pipeline.blue);
-    ballColor.addOption("red", Pipeline.red);
-    SmartDashboard.putData("Ball Color", ballColor);
-
-    autoCommand.setDefaultOption("Two Ball (Complex)", new TwoBallComplex(m_robotContainer.drive, m_robotContainer.tube, m_robotContainer.shooter, m_robotContainer.limelight));
-    autoCommand.addOption("Two Ball (Simple)", new TwoBallSimple(m_robotContainer.drive, m_robotContainer.tube, m_robotContainer.shooter));
-    autoCommand.addOption("Four Ball (Simple)", new FourBallSimple(m_robotContainer.drive, m_robotContainer.tube, m_robotContainer.shooter, m_robotContainer.limelight));
-    autoCommand.addOption("Four Ball (Complex)", new FourBallComplex(m_robotContainer.drive, m_robotContainer.tube, m_robotContainer.shooter, m_robotContainer.limelight));
-    autoCommand.addOption("One Ball (Simple)", new OneBallSimple(m_robotContainer.drive, m_robotContainer.tube, m_robotContainer.shooter));
-    autoCommand.addOption("moveBy 5ft", new MoveBy(m_robotContainer.drive, 5));
-    autoCommand.addOption("turnBy 180", new TurnBy(m_robotContainer.drive, 180));
-    autoCommand.addOption("Three Ball (Auto)", new ThreeBallAuto(m_robotContainer.drive, m_robotContainer.tube, m_robotContainer.shooter, m_robotContainer.limelight));
+    autoCommand.setDefaultOption("Two Ball", new TwoBallVision(m_robotContainer.drive, m_robotContainer.tube, m_robotContainer.shooter, m_robotContainer.limelight));
+    autoCommand.addOption("Four Ball", new FourBall(m_robotContainer.drive, m_robotContainer.tube, m_robotContainer.shooter, m_robotContainer.limelight));
+    autoCommand.addOption("One Ball", new OneBallVision(m_robotContainer.drive, m_robotContainer.tube, m_robotContainer.shooter, m_robotContainer.limelight));
     
     SmartDashboard.putData("Auto Command", autoCommand);
-  }
-
-  public Pipeline getBallColor() {
-    return ballColor.getSelected();
   }
 
   /**
@@ -94,7 +73,6 @@ public class Robot extends TimedRobot {
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
   @Override
   public void autonomousInit() {
-    //dont take joystick inputs in auto
     m_autonomousCommand = autoCommand.getSelected();
 
     CommandScheduler.getInstance().cancelAll();
@@ -107,21 +85,10 @@ public class Robot extends TimedRobot {
 
   /** This function is called periodically during autonomous. */
   @Override
-  public void autonomousPeriodic() {
-    // if (!m_autonomousCommand.isFinished() && !m_autonomousCommand.isScheduled()) {
-    //   m_autonomousCommand.schedule();
-    // }
-  }
+  public void autonomousPeriodic() {}
 
   @Override
   public void teleopInit() {
-
-
-    //enable joystick inputs in teleop
-    m_robotContainer.drive.setShouldDrive(true);
-    // m_robotContainer.limelight.setPipeline(Pipeline.drive);
-
-
     // This makes sure that the autonomous stops running when
     // teleop starts running. If you want the autonomous to
     // continue until interrupted by another command, remove
@@ -129,6 +96,12 @@ public class Robot extends TimedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
+
+    //enable joystick inputs in teleop
+    m_robotContainer.drive.setShouldDrive(true);
+    m_robotContainer.limelight.setPipeline(Pipeline.drive);
+
+    //enable gyro reset warning
     SmartDashboard.putBoolean("gyroReset", false);
   }
 

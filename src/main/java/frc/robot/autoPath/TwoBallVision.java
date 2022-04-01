@@ -4,12 +4,11 @@
 
 package frc.robot.autoPath;
 
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.commands.LimelightTurn;
+import frc.robot.commands.LimelightAlign;
 import frc.robot.commands.MoveBy;
-import frc.robot.commands.TurnBy;
-import frc.robot.commands.TurnTo;
 import frc.robot.commands.TimerCommand;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.Limelight;
@@ -18,7 +17,7 @@ import frc.robot.subsystems.Tube;
 import frc.robot.subsystems.Shooter.ShooterMode;
 import frc.robot.subsystems.Tube.TubeMode;
 
-public class FourBallComplex extends CommandBase {
+public class TwoBallVision extends CommandBase {
   boolean isFinished = false;
   int step = 0;
 
@@ -29,9 +28,9 @@ public class FourBallComplex extends CommandBase {
 
   Command currentCommand;
 
-  double initalAngle;
+  Timer feedTimer;
 
-  public FourBallComplex(DriveSubsystem drive, Tube tube, Shooter shooter, Limelight limelight) {
+  public TwoBallVision(DriveSubsystem drive, Tube tube, Shooter shooter, Limelight limelight) {
     this.drive = drive;
     this.tube = tube;
     this.shooter = shooter;
@@ -41,66 +40,79 @@ public class FourBallComplex extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    drive.setShouldDrive(false);
     tube.setUseJoysticks(false);
     //extend pneumatics
     tube.setPneumatics(true);
     //set intake mode
     tube.setTubeMode(TubeMode.intake);
     //set shooter mode
-    shooter.setShooterMode(ShooterMode.auto);
-
+    shooter.setShooterMode(ShooterMode.normal);
+    
     step = 0;
     currentCommand = null;
-    initalAngle = drive.getAngle();
+
+    feedTimer = new Timer();
+    timer(false);
   }
 
-  // Called every time the scheduler runs while the command is scheduled.
+  //Called every time the scheduler runs while the command is scheduled.
+  //TODO check step 1 limelight align, step 2 running & feed
   @Override
   public void execute() {
-    if (!currentCommand.isScheduled()) {
-      //move forward 5 ft
-      if (step == 0) currentCommand = new MoveBy(drive, 5.25);
-      //rotate towards hub
-      else if (step == 1) currentCommand = new LimelightTurn(drive, 160, limelight);
-      //feedShooter for 3 seconds
-      else if (step == 2) {
-        currentCommand = new TimerCommand(3);
-        tube.setTubeMode(TubeMode.feed);
-      }
-      //turns robot back to inital angle && stop intaking
-      else if (step == 3) {
-        tube.setTubeMode(TubeMode.off);
-        currentCommand = new TurnTo(drive, initalAngle);
-      }
-      //intake while driving forward 10 ft
-      else if (step == 4) {
-        tube.setTubeMode(TubeMode.intake);
-        currentCommand = new MoveBy(drive, 12);
-      }
-      //pause for 3 seconds to let human player feed ball
-      else if (step == 5) currentCommand = new TimerCommand(3);
-      //move backwards 12ft
-      else if (step == 6) {
-        tube.setTubeMode(TubeMode.off);
-        currentCommand = new MoveBy(drive, -12);
-      }
-      //turn to face the hub
-      else if (step == 7) currentCommand = new TurnBy(drive, 180);
-      //feedShooter for 3 seconds
-      else if (step == 8) {
-        currentCommand = new TimerCommand(3);
-        tube.setTubeMode(TubeMode.feed);
-      }
-      //end execute
-      else if (step == 9) isFinished = true;
+    boolean feed = false;
 
-      currentCommand.schedule();
-      step++;
+    if (currentCommand == null || !currentCommand.isScheduled()) {
+      boolean next = true;
+
+      //move forward 4 ft
+      if (step == 0) currentCommand = new MoveBy(drive, 4);
+      //turn to face hub and align
+      else if (step == 1) currentCommand = new LimelightAlign(drive, limelight, 180);
+      //feedShooter for 10 seconds
+      else if (step == 2 && shooter.getShooterReady()) {
+        feed = true;
+        tube.setTubeMode(TubeMode.feed);
+        currentCommand = new TimerCommand(10);
+      }
+      else if (step == 2 & !shooter.getShooterReady()) next = false;
+      //stop robot
+      else if (step == 3) isFinished = true;
+
+      //manage step increments
+      if (next) {
+        currentCommand.schedule();
+        step++;
+      }
     }
+
+    //manage feeding
+    if (feed) {
+      if (shooter.getShooterReady() && feedTimer.get() > 0.5)  {
+        tube.setTubeMode(TubeMode.feed);
+        timer(false);
+      }
+      else {
+        tube.setTubeMode(TubeMode.off);
+        timer(true);
+      }
+    }
+    else timer(false);
 
     //run shooter and tube
     shooter.runShooter();
     tube.runTube();
+  }
+
+  public void timer(boolean start) {
+    if (start) {
+      feedTimer.reset();
+      feedTimer.start();
+    }
+    else {
+      feedTimer.stop();
+      feedTimer.reset();
+    }
   }
 
   // Called once the command ends or is interrupted.
@@ -110,6 +122,7 @@ public class FourBallComplex extends CommandBase {
     tube.stopTube();
     shooter.stopShooter();
 
+    drive.setShouldDrive(true);
     tube.setUseJoysticks(true);
     if (currentCommand != null) currentCommand.cancel();
   }

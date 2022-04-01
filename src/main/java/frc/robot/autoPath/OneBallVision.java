@@ -4,24 +4,19 @@
 
 package frc.robot.autoPath;
 
-import java.nio.file.LinkOption;
-
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.commands.LimelightAlign;
-import frc.robot.commands.MoveBy;
-import frc.robot.commands.TurnBy;
 import frc.robot.commands.TimerCommand;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Tube;
-import frc.robot.subsystems.Limelight.Pipeline;
 import frc.robot.subsystems.Shooter.ShooterMode;
 import frc.robot.subsystems.Tube.TubeMode;
 
-public class TwoBallComplex extends CommandBase {
+public class OneBallVision extends CommandBase {
   boolean isFinished = false;
   int step = 0;
 
@@ -34,7 +29,7 @@ public class TwoBallComplex extends CommandBase {
 
   Timer feedTimer;
 
-  public TwoBallComplex(DriveSubsystem drive, Tube tube, Shooter shooter, Limelight limelight) {
+  public OneBallVision(DriveSubsystem drive, Tube tube, Shooter shooter, Limelight limelight) {
     this.drive = drive;
     this.tube = tube;
     this.shooter = shooter;
@@ -44,6 +39,7 @@ public class TwoBallComplex extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    drive.setShouldDrive(false);
     tube.setUseJoysticks(false);
     //extend pneumatics
     tube.setPneumatics(true);
@@ -68,19 +64,17 @@ public class TwoBallComplex extends CommandBase {
     if (currentCommand == null || !currentCommand.isScheduled()) {
       boolean next = true;
 
-      //move forward 4 ft
-      if (step == 0) currentCommand = new MoveBy(drive, 4);
-      //turn to face hub and align
-      else if (step == 1) currentCommand = new LimelightAlign(drive, limelight, 180);
+      //align to hub
+      if (step == 0) currentCommand = new LimelightAlign(drive, limelight);
       //feedShooter for 10 seconds
-      else if (step == 2 && shooter.getShooterReady()) {
+      else if (step == 1 && shooter.getShooterReady()) {
         feed = true;
         tube.setTubeMode(TubeMode.feed);
         currentCommand = new TimerCommand(10);
       }
-      else if (step == 2 & !shooter.getShooterReady()) next = false;
+      else if (step == 1 & !shooter.getShooterReady()) next = false;
       //stop robot
-      else if (step == 3) isFinished = true;
+      else if (step == 2) isFinished = true;
 
       //manage step increments
       if (next) {
@@ -125,6 +119,7 @@ public class TwoBallComplex extends CommandBase {
     tube.stopTube();
     shooter.stopShooter();
 
+    drive.setShouldDrive(true);
     tube.setUseJoysticks(true);
     if (currentCommand != null) currentCommand.cancel();
   }

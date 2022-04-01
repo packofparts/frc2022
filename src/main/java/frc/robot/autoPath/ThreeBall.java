@@ -9,7 +9,6 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.commands.LimelightTurn;
 import frc.robot.commands.MoveBy;
 import frc.robot.commands.TurnBy;
-import frc.robot.commands.TurnTo;
 import frc.robot.commands.TimerCommand;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.Limelight;
@@ -18,7 +17,7 @@ import frc.robot.subsystems.Tube;
 import frc.robot.subsystems.Shooter.ShooterMode;
 import frc.robot.subsystems.Tube.TubeMode;
 
-public class ThreeBallAuto extends CommandBase {
+public class ThreeBall extends CommandBase {
   boolean isFinished = false;
   int step = 0;
 
@@ -31,7 +30,7 @@ public class ThreeBallAuto extends CommandBase {
 
   double initalAngle;
 
-  public ThreeBallAuto(DriveSubsystem drive, Tube tube, Shooter shooter, Limelight limelight) {
+  public ThreeBall(DriveSubsystem drive, Tube tube, Shooter shooter, Limelight limelight) {
     this.drive = drive;
     this.tube = tube;
     this.shooter = shooter;
@@ -47,7 +46,7 @@ public class ThreeBallAuto extends CommandBase {
     //set intake mode
     tube.setTubeMode(TubeMode.intake);
     //set shooter mode
-    shooter.setShooterMode(ShooterMode.auto);
+    shooter.setShooterMode(ShooterMode.normal);
 
     step = 4;
     currentCommand = null;

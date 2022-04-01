@@ -40,7 +40,7 @@ public class TwoBallSimple extends CommandBase {
     //set intake mode
     tube.setTubeMode(TubeMode.intake);
     //set shooter mode
-    shooter.setShooterMode(ShooterMode.auto);
+    shooter.setShooterMode(ShooterMode.normal);
     
     step = 0;
     currentCommand = null;
