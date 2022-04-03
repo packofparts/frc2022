@@ -69,8 +69,8 @@ public class Tube extends SubsystemBase {
     runTube();
 
     //compressor management
-    if (phCompressor.getPressure() > 112) phCompressor.disable();
-    else if (phCompressor.getPressure() < 110) phCompressor.enableDigital();
+    if (phCompressor.getPressure() > 119) phCompressor.disable();
+    else if (phCompressor.getPressure() < 118) phCompressor.enableDigital();
 
     //toggle intake solenoids
     if (joysticks.getIntakeSolenoidToggle()) {

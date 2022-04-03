@@ -64,7 +64,7 @@ public class DriveSubsystem extends SubsystemBase {
   LimelightAlign align;
 
   public DriveSubsystem(Joysticks joysticks, Limelight limelight) {
-    CameraServer.getInstance().startAutomaticCapture();
+    // CameraServer.getInstance().startAutomaticCapture();
 
     this.joysticks = joysticks;
     this.limelight = limelight;
@@ -140,7 +140,13 @@ public class DriveSubsystem extends SubsystemBase {
     if (joysticks.getLimeLightAlignPressed()) {
       if (!align.isScheduled()) align.schedule();
     }
-    else if (joysticks.getLimeLightAlignReleased()) align.cancel();
+    else if (joysticks.getLimeLightAlignReleased()) {
+      align.cancel();
+      setShouldDrive(true);
+    }
+    else if (joysticks.getLimeLightAlignHeld()) {
+      setShouldDrive(false);
+    }
 
     drive();
   }

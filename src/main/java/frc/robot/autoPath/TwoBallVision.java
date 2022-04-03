@@ -53,7 +53,8 @@ public class TwoBallVision extends CommandBase {
     currentCommand = null;
 
     feedTimer = new Timer();
-    timer(false);
+    feedTimer.stop();
+    feedTimer.reset();
   }
 
   //Called every time the scheduler runs while the command is scheduled.
@@ -88,31 +89,27 @@ public class TwoBallVision extends CommandBase {
 
     //manage feeding
     if (feed) {
-      if (shooter.getShooterReady() && feedTimer.get() > 0.5)  {
+      if (shooter.getShooterReady()) {
+        feedTimer.start();
+      }
+      else if (shooter.getShooterReady() && feedTimer.get() > 0.5)  {
         tube.setTubeMode(TubeMode.feed);
-        timer(false);
+        feedTimer.stop();
       }
       else {
         tube.setTubeMode(TubeMode.off);
-        timer(true);
+        feedTimer.stop();
+        feedTimer.reset();
       }
-    }
-    else timer(false);
-
-    //run shooter and tube
-    shooter.runShooter();
-    tube.runTube();
-  }
-
-  public void timer(boolean start) {
-    if (start) {
-      feedTimer.reset();
-      feedTimer.start();
     }
     else {
       feedTimer.stop();
       feedTimer.reset();
     }
+
+    //run shooter and tube
+    shooter.runShooter();
+    tube.runTube();
   }
 
   // Called once the command ends or is interrupted.
