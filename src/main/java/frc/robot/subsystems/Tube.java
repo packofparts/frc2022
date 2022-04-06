@@ -105,7 +105,7 @@ public class Tube extends SubsystemBase {
 
      // if (intakeTimeout.get() <= 0.5) {
         intakeMotor.set(TalonSRXControlMode.PercentOutput, 1);
-        indexMotor.set(TalonSRXControlMode.PercentOutput, .5);
+        indexMotor.set(TalonSRXControlMode.PercentOutput, 0.5);
         feederMotor.set(TalonSRXControlMode.PercentOutput, 1);
      // }
       // else {

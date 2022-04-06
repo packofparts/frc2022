@@ -9,16 +9,19 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 
 import frc.robot.constants.Constants;
 import frc.robot.subsystems.DriveSubsystem;
-public class MoveBy extends CommandBase {
+public class MoveTurn extends CommandBase {
   DriveSubsystem drive;
   double initialPos;
   double move = 0;
+  double turnTarget;
 
   PIDController movePID = new PIDController(Constants.movePID.kP, Constants.movePID.kI, Constants.movePID.kD);
+  PIDController turnPID = new PIDController(Constants.turnPID[0], Constants.turnPID[1], Constants.turnPID[2]);
 
-  public MoveBy(DriveSubsystem drive, double move) {
+  public MoveTurn(DriveSubsystem drive, double move, double turnTarget) {
     this.drive = drive;
     this.move = move;
+    this.turnTarget = turnTarget;
   }
 
   // Called when the command is initially scheduled.
@@ -27,19 +30,16 @@ public class MoveBy extends CommandBase {
     initialPos = drive.getAveragePos();
     drive.setShouldDrive(false);  
     drive.stop();
+    //initialTurn = drive.getAngle(); //amonggus
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
     double speed = movePID.calculate(drive.getAveragePos(), initialPos+move);
-
-    // if (speed > 0.5) speed = 0.5;
-    // else if (speed < -0.5) speed = -0.5;
-
-    drive.drive(0, speed, 0, false);
+    double turn = -turnPID.calculate(drive.getAngle(), turnTarget);
+    drive.drive(speed*Math.sin(drive.getAngle()*Math.PI/180), speed*Math.cos(drive.getAngle()*Math.PI/180), turn, true);
   }
-
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {

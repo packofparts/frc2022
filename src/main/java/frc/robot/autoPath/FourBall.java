@@ -56,6 +56,7 @@ public class FourBall extends CommandBase {
     step = 0;
     currentCommand = null;
     initalAngle = drive.getAngle();
+    drive.resetGyro();
     
     feedTimer = new Timer();
     feedTimer.reset();
@@ -78,19 +79,19 @@ public class FourBall extends CommandBase {
       //turn 180
       else if (step == 1) {
         tube.setTubeMode(TubeMode.off);
-        currentCommand = new LimelightTurn(drive, 180, limelight);
-      }
-      //shoot only when ready
-      else if (step == 2 && shooter.getShooterReady()) {
+        currentCommand =  new LimelightAlign(drive, limelight, 180);
+       }
+      // //shoot only when ready
+       else if (step == 2 ) {//&& shooter.getShooterReady()) {
         feed = true;
         tube.setTubeMode(TubeMode.feed);
         currentCommand = new TimerCommand(3);
       }
-      else if (step == 2 && !shooter.getShooterReady()) next = false;
+      //else if (step == 2 && !shooter.getShooterReady()) next = false;
       //turn back onto course
       else if (step == 3) {
         tube.setTubeMode(TubeMode.off);
-        shooter.setShooterMode(ShooterMode.off);
+        //shooter.setShooterMode(ShooterMode.off);
         currentCommand = new TurnTo(drive, initalAngle);
       }
       //intake while driving forward 12 ft
@@ -99,23 +100,28 @@ public class FourBall extends CommandBase {
         currentCommand = new MoveBy(drive, 12.35); //13.6
       }
       // wait for human player to drop ball
-      else if (step == 5) currentCommand = new TimerCommand(3);
+      else if (step == 5) currentCommand = new TimerCommand(2);
       //move backwards 12ft
       else if (step == 6) {
-        tube.setTubeMode(TubeMode.off);
-        shooter.setShooterMode(ShooterMode.normal);
+        //tube.setTubeMode(TubeMode.off);
+        //shooter.setShooterMode(ShooterMode.normal);
         currentCommand = new MoveBy(drive, -12.35);
       }
       //turn to face the hub and align
-      else if (step == 7) currentCommand = new LimelightAlign(drive, limelight, 180);
+      else if (step == 7) 
+      {     
+        tube.setTubeMode(TubeMode.feed);
+
+        currentCommand = new LimelightAlign(drive, limelight, 180);
+      }
       //feedShooter for 3 seconds
       
-      else if (step == 8 && shooter.getShooterReady()) {
+      else if (step == 8 ){//&& shooter.getShooterReady()) {
         feed = true;
-        tube.setTubeMode(TubeMode.feed);
-        currentCommand = new TimerCommand(5);
+//        tube.setTubeMode(TubeMode.feed);
+        currentCommand = new TimerCommand(2);
       }
-      else if (step == 8 && !shooter.getShooterReady()) next = false;
+     // else if (step == 8 && !shooter.getShooterReady()) next = false;
       //end execute
       else if (step == 9) isFinished = true;
 
@@ -127,22 +133,23 @@ public class FourBall extends CommandBase {
 
     //manage feeding
     if (feed) {
-      if (shooter.getShooterReady() && feedTimer.get() > 0.5)  {
+      if (shooter.getShooterReady()) {
+        feedTimer.start();
+      }
+      else if (shooter.getShooterReady() && feedTimer.get() > 0.5)  {
         tube.setTubeMode(TubeMode.feed);
         feedTimer.stop();
-        feedTimer.reset();
       }
       else {
         tube.setTubeMode(TubeMode.off);
+        feedTimer.stop();
         feedTimer.reset();
-        feedTimer.start();
       }
     }
     else {
       feedTimer.stop();
       feedTimer.reset();
     }
-
     //run shooter and tube
     shooter.runShooter();
     tube.runTube();

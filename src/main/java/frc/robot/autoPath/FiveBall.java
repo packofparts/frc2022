@@ -6,6 +6,7 @@ package frc.robot.autoPath;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.commands.LimelightAlign;
 import frc.robot.commands.LimelightTurn;
 import frc.robot.commands.MoveBy;
 import frc.robot.commands.TurnBy;
@@ -62,7 +63,7 @@ public class FiveBall extends CommandBase {
       //turn 180
       else if (step == 1) {
         tube.setTubeMode(TubeMode.off);
-        currentCommand = new LimelightTurn(drive, 180, limelight);
+        currentCommand = new LimelightAlign(drive, limelight, 180);
       }
       //shoot
       else if (step == 2 && shooter.getShooterReady()) {

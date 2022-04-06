@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.autoPath.FiveBall;
 import frc.robot.autoPath.FourBall;
 import frc.robot.autoPath.OneBallVision;
 import frc.robot.autoPath.TwoBallVision;
@@ -37,6 +38,7 @@ public class Robot extends TimedRobot {
     autoCommand.addOption("One Ball", new OneBallVision(m_robotContainer.drive, m_robotContainer.tube, m_robotContainer.shooter, m_robotContainer.limelight));
     autoCommand.setDefaultOption("Two Ball", new TwoBallVision(m_robotContainer.drive, m_robotContainer.tube, m_robotContainer.shooter, m_robotContainer.limelight));
     autoCommand.addOption("Four Ball", new FourBall(m_robotContainer.drive, m_robotContainer.tube, m_robotContainer.shooter, m_robotContainer.limelight));
+    autoCommand.addOption("Five Ball", new FiveBall(m_robotContainer.drive, m_robotContainer.tube, m_robotContainer.shooter, m_robotContainer.limelight));
     
     SmartDashboard.putData("Auto Command", autoCommand);
   }
