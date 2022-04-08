@@ -11,12 +11,14 @@ import edu.wpi.first.wpilibj.Timer;
 
 import com.ctre.phoenix.motorcontrol.TalonSRXControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Tube extends SubsystemBase {
   //base motors
-  TalonSRX intakeMotor = new TalonSRX(IDs.intakeMotorID);
+  CANSparkMax intakeMotor = new CANSparkMax(IDs.intakeMotorID, MotorType.kBrushless);
   TalonSRX indexMotor = new TalonSRX(IDs.indexMotorID);
   TalonSRX feederMotor = new TalonSRX(IDs.feederMotorID);
   TubeMode tubeMode = TubeMode.off;
@@ -36,9 +38,14 @@ public class Tube extends SubsystemBase {
   
   public Tube(Joysticks joysticks) {
     this.joysticks = joysticks;
+    intakeMotor.setInverted(true);
     indexMotor.setInverted(true);
     feederMotor.setInverted(false);
  
+    indexMotor.configVoltageCompSaturation(12);
+    indexMotor.enableVoltageCompensation(true);
+    feederMotor.configVoltageCompSaturation(12);
+    feederMotor.enableVoltageCompensation(true);
     intakeSolenoid1 = new Solenoid(PneumaticsModuleType.REVPH, IDs.intakeSolenoid1ID);
     intakeSolenoid2 = new Solenoid(PneumaticsModuleType.REVPH, IDs.intakeSolenoid2ID);
     phCompressor = new Compressor(IDs.compressorID, PneumaticsModuleType.REVPH);
@@ -95,16 +102,16 @@ public class Tube extends SubsystemBase {
   public void runTube() {
     //intake in, index in, feeder out
     if (tubeMode == TubeMode.intake) {
-      intakeMotor.set(TalonSRXControlMode.PercentOutput, 1);
-      indexMotor.set(TalonSRXControlMode.PercentOutput, 0);
-      feederMotor.set(TalonSRXControlMode.PercentOutput, -0.2);
+      intakeMotor.set(1);
+      indexMotor.set(TalonSRXControlMode.PercentOutput, 0.3);
+      feederMotor.set(TalonSRXControlMode.PercentOutput, -0.3);
     }
     //all in
     else if (tubeMode == TubeMode.feed) {// REMOVED STOPPER DUE TO INDEX SLOW TO PUSH BALL
      // if (intakeTimeout.get() == 0) intakeTimeout.start();
 
      // if (intakeTimeout.get() <= 0.5) {
-        intakeMotor.set(TalonSRXControlMode.PercentOutput, 1);
+        intakeMotor.set(1);
         indexMotor.set(TalonSRXControlMode.PercentOutput, 0.5);
         feederMotor.set(TalonSRXControlMode.PercentOutput, 1);
      // }
@@ -120,17 +127,17 @@ public class Tube extends SubsystemBase {
     }
     //all out
     else if (tubeMode == TubeMode.reverse) {
-      intakeMotor.set(TalonSRXControlMode.PercentOutput, -1);
+      intakeMotor.set(-1);
       indexMotor.set(TalonSRXControlMode.PercentOutput, -1);
       feederMotor.set(TalonSRXControlMode.PercentOutput, -1);
     }
     else {
-      intakeMotor.set(TalonSRXControlMode.PercentOutput, 0);
+      intakeMotor.set(0);
       indexMotor.set(TalonSRXControlMode.PercentOutput, 0);
       feederMotor.set(TalonSRXControlMode.PercentOutput, 0);
     }
     
-    SmartDashboard.putBoolean("Intake Running", intakeMotor.getMotorOutputPercent() != 0);
+    SmartDashboard.putBoolean("Intake Running", intakeMotor.get() != 0);
     SmartDashboard.putBoolean("Index Running", indexMotor.getMotorOutputPercent() != 0);
     SmartDashboard.putBoolean("Feeder Running", feederMotor.getMotorOutputPercent() != 0);
   }

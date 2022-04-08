@@ -9,8 +9,10 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 
 import frc.robot.constants.Constants;
 import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.subsystems.Limelight;
 public class MoveTurn extends CommandBase {
   DriveSubsystem drive;
+  Limelight limelight;
   double initialPos;
   double move = 0;
   double turnTarget;
@@ -20,6 +22,13 @@ public class MoveTurn extends CommandBase {
 
   public MoveTurn(DriveSubsystem drive, double move, double turnTarget) {
     this.drive = drive;
+    this.move = move;
+    this.turnTarget = turnTarget;
+  }
+
+  public MoveTurn(DriveSubsystem drive, Limelight limelight, double move, double turnTarget) {
+    this.drive = drive;
+    this.limelight = limelight;
     this.move = move;
     this.turnTarget = turnTarget;
   }
@@ -36,8 +45,11 @@ public class MoveTurn extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    double turn = 0.0;
+    if (limelight != null && limelight.getDetected()) turn = turnPID.calculate(limelight.getTX(), 0);
+    else turn = -turnPID.calculate(drive.getAngle(), turnTarget);
     double speed = movePID.calculate(drive.getAveragePos(), initialPos+move);
-    double turn = -turnPID.calculate(drive.getAngle(), turnTarget);
+    
     drive.drive(speed*Math.sin(drive.getAngle()*Math.PI/180), speed*Math.cos(drive.getAngle()*Math.PI/180), turn, true);
   }
   // Called once the command ends or is interrupted.

@@ -65,7 +65,7 @@ public class ThreeBall extends CommandBase {
       //turn 180
       else if (step == 1) {
         tube.setTubeMode(TubeMode.off);
-        currentCommand = new LimelightTurn(drive, 180, limelight);
+        currentCommand = new LimelightTurn(drive, limelight, 180);
       }
       //shoot
       else if (step == 2 && shooter.getShooterReady()) {
@@ -93,7 +93,7 @@ public class ThreeBall extends CommandBase {
         currentCommand = new MoveBy(drive, -12);
       }
       //turn to face the hub
-      else if (step == 6) currentCommand = new LimelightTurn(drive, 180, limelight);
+      else if (step == 6) currentCommand = new LimelightTurn(drive, limelight, 180);
       //feedShooter for 3 seconds
       else if (step == 7) {
         tube.setTubeMode(TubeMode.feed);

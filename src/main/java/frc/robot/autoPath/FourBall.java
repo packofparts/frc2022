@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.commands.LimelightAlign;
 import frc.robot.commands.LimelightTurn;
 import frc.robot.commands.MoveBy;
+import frc.robot.commands.MoveTurn;
 import frc.robot.commands.TurnTo;
 import frc.robot.commands.TimerCommand;
 import frc.robot.subsystems.DriveSubsystem;
@@ -79,51 +80,36 @@ public class FourBall extends CommandBase {
       //turn 180
       else if (step == 1) {
         tube.setTubeMode(TubeMode.off);
-        currentCommand =  new LimelightAlign(drive, limelight, 180);
+        currentCommand =  new LimelightTurn(drive, limelight, 180);
        }
       // //shoot only when ready
-       else if (step == 2 ) {//&& shooter.getShooterReady()) {
+       else if (step == 2) {//&& shooter.getShooterReady()) {
         feed = true;
         tube.setTubeMode(TubeMode.feed);
         currentCommand = new TimerCommand(3);
       }
       //else if (step == 2 && !shooter.getShooterReady()) next = false;
-      //turn back onto course
+      //turn back onto course and also move
       else if (step == 3) {
-        tube.setTubeMode(TubeMode.off);
-        //shooter.setShooterMode(ShooterMode.off);
-        currentCommand = new TurnTo(drive, initalAngle);
-      }
-      //intake while driving forward 12 ft
-      else if (step == 4) { 
         tube.setTubeMode(TubeMode.intake);
-        currentCommand = new MoveBy(drive, 12.35); //13.6
+        currentCommand = new MoveTurn(drive, 12.35, 0);
       }
       // wait for human player to drop ball
-      else if (step == 5) currentCommand = new TimerCommand(2);
-      //move backwards 12ft
-      else if (step == 6) {
-        //tube.setTubeMode(TubeMode.off);
-        //shooter.setShooterMode(ShooterMode.normal);
-        currentCommand = new MoveBy(drive, -12.35);
-      }
-      //turn to face the hub and align
-      else if (step == 7) 
-      {     
-        tube.setTubeMode(TubeMode.feed);
-
-        currentCommand = new LimelightAlign(drive, limelight, 180);
+      else if (step == 4) currentCommand = new TimerCommand(2);
+      //move backwards 12ft and also turns to align with hub oh boy
+      else if (step == 5) {
+        tube.setTubeMode(TubeMode.off);
+        currentCommand = new MoveTurn(drive, limelight, -12.35, 180);
       }
       //feedShooter for 3 seconds
-      
-      else if (step == 8 ){//&& shooter.getShooterReady()) {
+      else if (step == 6) {//&& shooter.getShooterReady()) {
         feed = true;
-//        tube.setTubeMode(TubeMode.feed);
+        tube.setTubeMode(TubeMode.feed);
         currentCommand = new TimerCommand(2);
       }
      // else if (step == 8 && !shooter.getShooterReady()) next = false;
       //end execute
-      else if (step == 9) isFinished = true;
+      else if (step == 7) isFinished = true;
 
       if (next) {
         currentCommand.schedule();

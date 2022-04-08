@@ -23,9 +23,12 @@ public class Shooter extends SubsystemBase {
   double setVelocityMain = 0;
   double setVelocityRoller = 0;
 
+  final double rpmDiff = 200;
+  double rpmOffset = -400;
+
   final boolean tuningRPM = false;
   final ShooterMode[] modes = new ShooterMode[] 
-  {ShooterMode.normal, ShooterMode.launchPadFar, ShooterMode.launchPadNear};
+  {ShooterMode.normal};
   
   public Shooter(Joysticks joysticks) {
     this.joysticks = joysticks;
@@ -47,7 +50,7 @@ public class Shooter extends SubsystemBase {
   }
 
   public enum ShooterMode {
-    normal, launchPadNear, launchPadFar, ballReject, off;
+    normal, normalLess, normalLessPlus, ballReject, off;
   }
 
 
@@ -58,7 +61,7 @@ public class Shooter extends SubsystemBase {
       if (shooterMode != ShooterMode.off) setShooterMode(ShooterMode.off);
       else setShooterMode(modes[shooterModeIndex]);
     }
-    if (joysticks.getShooterScrollDown()) setShooterMode(ShooterMode.ballReject);
+    else if (joysticks.getSlowModeShooter()) setShooterMode(ShooterMode.ballReject);
 
     if (joysticks.getNotPOV()) shooterScrollPressed = false;
     if (joysticks.getShooterScrollRight() && !shooterScrollPressed){
@@ -68,8 +71,17 @@ public class Shooter extends SubsystemBase {
     else if (joysticks.getShooterScrollLeft() && !shooterScrollPressed){
       if (shooterModeIndex > 0) shooterModeIndex--;
       shooterScrollPressed = true;
+    } 
+    else if (joysticks.getShooterScrollUp() && !shooterScrollPressed){
+      rpmOffset += rpmDiff;
+      shooterScrollPressed = true;
     }
+    else if (joysticks.getShooterScrollDown() && !shooterScrollPressed){
+      rpmOffset -= rpmDiff;
+      shooterScrollPressed = true;
+    } 
 
+    SmartDashboard.putNumber("RPM Offset", rpmOffset);
     SmartDashboard.putString("Selected Shooter Mode", modes[shooterModeIndex] + "");
 
     //shooter mode
@@ -100,15 +112,16 @@ public class Shooter extends SubsystemBase {
     }
     else if (shooterMode == ShooterMode.normal) {
       setVelocityMain = 5200;//7000//6000;//5100;//5600;//5200;//6400;
-      setVelocityRoller = -4600;//-3600//-2000;//-4650;//-4300;//-4600;//-4200;
+      setVelocityRoller = -4600-rpmOffset;//-3600//-2000;//-4650;//-4300;//-4600;//-4200;
     }
-    else if (shooterMode == ShooterMode.launchPadFar) {
-      setVelocityMain = 7000;
-      setVelocityRoller = -6000;
+    else if (shooterMode == ShooterMode.normalLess) {
+      setVelocityMain = 5200;
+      setVelocityRoller = -4400-rpmOffset;
+
     }
-    else if (shooterMode == ShooterMode.launchPadNear) {
-      setVelocityMain = 6400;
-      setVelocityRoller = -4200;
+    else if (shooterMode == ShooterMode.normalLessPlus) {
+      setVelocityMain = 5200;
+      setVelocityRoller = -4200-rpmOffset;
     }
     else if (shooterMode == ShooterMode.ballReject) {
       setVelocityMain = 2000;

@@ -18,7 +18,7 @@ public class LimelightTurn extends CommandBase {
   double PIDTurnDegrees;
   double originalYaw;
 
-  public LimelightTurn(DriveSubsystem dt, double degrees, Limelight limelight) {
+  public LimelightTurn(DriveSubsystem dt, Limelight limelight, double degrees) {
     drive = dt;
     this.limelight = limelight;
     addRequirements(drive);
@@ -38,7 +38,7 @@ public class LimelightTurn extends CommandBase {
   @Override
   public void execute() {
     double speed = 0;
-    if (limelight.getDetected()) speed = -pid.calculate(limelight.getTX(), 0);
+    if (limelight.getDetected()) speed = pid.calculate(limelight.getTX(), 0);
     else speed = -pid.calculate(drive.getAngle(), originalYaw + PIDTurnDegrees);
 
     drive.drive(0, 0, speed, false);

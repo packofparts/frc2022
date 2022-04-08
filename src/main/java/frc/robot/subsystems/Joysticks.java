@@ -64,6 +64,8 @@ public class Joysticks {
   public boolean getNotPOV() {return operatorController.getPOV() == -1;}
   public boolean getShooterScrollRight() {return operatorController.getPOV() == 90;}
   public boolean getShooterScrollLeft() {return operatorController.getPOV() == 270;}
+  public boolean getShooterScrollUp() {return operatorController.getPOV() == 0;}
   public boolean getShooterScrollDown() {return operatorController.getPOV() == 180;}
+  public boolean getSlowModeShooter() {return operatorController.getRawButtonPressed(7);}
   public boolean getShooterToggle() {return operatorController.getAButtonPressed();}
 }
