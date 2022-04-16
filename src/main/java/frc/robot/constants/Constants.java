@@ -106,5 +106,8 @@ public final class Constants {
     public static final double turnPIDTolerance = 0.5;
     //drive gyro rate PID
     public static final double[] ratePID = new double[] {0.080, 0.0, 0.0};
-
+    //Robot characterization gains for feedforward loop FIND THESE VALUES
+    public final static double ks = 0;
+    public final static double kv = 0;
+    public final static double ka = 0;
 }

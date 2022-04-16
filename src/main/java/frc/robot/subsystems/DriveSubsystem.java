@@ -14,16 +14,21 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.MecanumDriveKinematics;
 import edu.wpi.first.math.kinematics.MecanumDriveWheelSpeeds;
+import edu.wpi.first.math.kinematics.MecanumDriveOdometry;
+import edu.wpi.first.math.estimator.MecanumDrivePoseEstimator;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj.SPI;
+import edu.wpi.first.wpilibj.drive.DifferentialDrive.WheelSpeeds;
 import frc.robot.Gains;
 import frc.robot.commands.LimelightAlign;
 import frc.robot.constants.Constants;
@@ -35,6 +40,7 @@ public class DriveSubsystem extends SubsystemBase {
   public CANSparkMax m_frontRightSpark;
   public CANSparkMax m_backLeftSpark;
   public CANSparkMax m_backRightSpark;
+  Pose2d pose= new Pose2d();
 
   // Locations of the wheels relative to the robot center.
   Translation2d m_frontLeftLocation = new Translation2d(Constants.wheelDisFromCenter, Constants.wheelDisFromCenter);
@@ -44,6 +50,7 @@ public class DriveSubsystem extends SubsystemBase {
 
   // Creating my kinematics object using the wheel locations.
   MecanumDriveKinematics m_kinematics = new MecanumDriveKinematics(m_frontLeftLocation, m_frontRightLocation, m_backLeftLocation, m_backRightLocation);
+  MecanumDriveOdometry m_odometry = new MecanumDriveOdometry(m_kinematics, Rotation2d.fromDegrees(-getAngle()));
   String bruh = "Ask me who Joe is";
   AHRS initGyro;
   AHRS gyro;
@@ -54,7 +61,7 @@ public class DriveSubsystem extends SubsystemBase {
 
   NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight");
   Joysticks joysticks;
-  
+  SimpleMotorFeedforward feedforward =  new SimpleMotorFeedforward(Constants.ks, Constants.kv, Constants.ka);
   //set booleans
   final boolean useGyroHold = false;
   final boolean usingXboxController = false;//Joysticks.driveXboxController != null;
@@ -121,6 +128,7 @@ sHAKUANDO WAS HERE
 
   @Override
   public void periodic() {
+
     SmartDashboard.putNumber("avg pos", getAveragePos());
     if (gyro == null) {
       if (initGyro.isConnected() && !initGyro.isCalibrating()) {
@@ -177,6 +185,7 @@ sHAKUANDO WAS HERE
     drive();
 
     limelight.getHubDist();
+    pose = m_odometry.update(Rotation2d.fromDegrees(getAngle()),getSpeeds());
   }
 
   //drive with joystick inputs
@@ -245,7 +254,6 @@ sHAKUANDO WAS HERE
       wheelSpeeds.rearLeftMetersPerSecond,
       wheelSpeeds.rearRightMetersPerSecond};
     desaturate(Constants.maxSpeed, wheelSpeedDouble);
-
     // Get the individual wheel speeds
     double frontLeft = wheelSpeedDouble[0];
     double frontRight = wheelSpeedDouble[1];
@@ -259,6 +267,7 @@ sHAKUANDO WAS HERE
     m_backRightSpark.getPIDController().setReference(backRight, ControlType.kVelocity);
 
     // SmartDashboard.putNumber("frontLeft", fronkll_frontLeftSpark.getEncoder().getVelocity());
+
   }
 
   public void resetEncoders() {
@@ -400,8 +409,28 @@ sHAKUANDO WAS HERE
   public double getRearRightPos() {
     return m_backRightSpark.getEncoder().getPosition();
   }
-
+  public SimpleMotorFeedforward getFeedForward(){
+    return feedforward;
+  }
+  public MecanumDriveWheelSpeeds getSpeeds(){
+    return new MecanumDriveWheelSpeeds(getFrontLeftPos(), getFrontRightPos(), getRearLeftPos(),getRearRightPos());
+  }
   public double getAngle() {
     return gyro.getAngle();
+  }
+  public MecanumDriveOdometry getOdometry(){
+    return m_odometry;
+  }
+  public MecanumDriveKinematics getKinematics(){
+    return m_kinematics;
+  }
+  public Pose2d getpose(){
+    return pose;
+  }
+  public void setOutputVolts(double leftVolts,double rightVolts){
+    m_frontLeftSpark.set(leftVolts/12);
+    m_frontRightSpark.set(rightVolts/12);
+    m_backLeftSpark.set(leftVolts/12);
+    m_backRightSpark.set(rightVolts/12);
   }
 }
