@@ -42,8 +42,9 @@ public class TrajectoryGeneration extends CommandBase {
   double desiredTime [] = new double[] {1,3,4,5}; // change these values to key waypoints on the trajectory
   int temp = 0;
   HolonomicDriveController controller = new HolonomicDriveController(
-    new PIDController(1, 0, 0), new PIDController(1, 0, 0),
-    new ProfiledPIDController(1, 0, 0, new TrapezoidProfile.Constraints(6.28, 3.14)));
+    new PIDController(0, 0, 0), new PIDController(0, 0, 0),
+    new ProfiledPIDController(0, 0, 0, new TrapezoidProfile.Constraints(6.28, 3.14)));
+    // Tune TrapezoidProfile consstraints to turning speed and acceleration
 
   // Called when the command is initially scheduled.
   public TrajectoryGeneration(DriveSubsystem drive){
