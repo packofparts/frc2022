@@ -7,10 +7,17 @@ package frc.robot.autoPath;
 import java.io.IOException;
 import java.nio.file.Path;
 
+import edu.wpi.first.math.controller.HolonomicDriveController;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.controller.RamseteController;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.kinematics.MecanumDriveKinematics;
+import edu.wpi.first.math.kinematics.MecanumDriveWheelSpeeds;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryUtil;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -29,9 +36,15 @@ import frc.robot.subsystems.Tube.TubeMode;
 
 public class TrajectoryGeneration extends CommandBase {
   boolean isFinished = false;
-  String trajectoryJSON = "Paths/5ball+defence.wpilib.json";
+  String trajectoryJSON = "paths/5ball+defence.wpilib.json";
   Trajectory trajectory = new Trajectory();
   DriveSubsystem drive;
+  double desiredTime [] = new double[] {1,3,4,5}; // change these values to key waypoints on the trajectory
+  int temp = 0;
+  HolonomicDriveController controller = new HolonomicDriveController(
+    new PIDController(1, 0, 0), new PIDController(1, 0, 0),
+    new ProfiledPIDController(1, 0, 0, new TrapezoidProfile.Constraints(6.28, 3.14)));
+
   // Called when the command is initially scheduled.
   public TrajectoryGeneration(DriveSubsystem drive){
     this.drive = drive;
@@ -45,29 +58,19 @@ public class TrajectoryGeneration extends CommandBase {
    } catch (IOException ex) {
       DriverStation.reportError("Unable to open trajectory: " + trajectoryJSON, ex.getStackTrace());
    }
-
   }
 
-  // Called every time the scheduler runs while the command is scheduled.
+
   @Override
   public void execute() {
-
-      RamseteCommand command = new RamseteCommand(
-        trajectory,
-        drive::getpose,
-        new RamseteController(2, .7),
-        drive.getFeedForward(),
-        drive.getKinematics(),
-        drive::getSpeeds,
-        new PIDController(9, 0, 0),
-        new PIDController(9, 0, 0),
-        drive::setOutputVolts,
-        drive
-    );
-      
-      
-    return command.andThen(() -> drive.setOutputVolts(0, 0));
-  
+    Trajectory.State goal = trajectory.sample(desiredTime[temp]);
+    ChassisSpeeds adjustedSpeeds = controller.calculate(
+      drive.getpose(), goal, Rotation2d.fromDegrees(70.0));
+    double vx = adjustedSpeeds.vxMetersPerSecond;
+    double vy = adjustedSpeeds.vyMetersPerSecond;
+    double rotation = adjustedSpeeds.omegaRadiansPerSecond;
+    drive.drive(vx,vy,rotation,false);
+    temp++;
   }
 
   // Called once the command ends or is interrupted.

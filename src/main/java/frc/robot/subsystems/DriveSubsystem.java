@@ -28,6 +28,7 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj.SPI;
+import edu.wpi.first.wpilibj.drive.MecanumDrive;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive.WheelSpeeds;
 import frc.robot.Gains;
 import frc.robot.commands.LimelightAlign;
@@ -414,6 +415,13 @@ sHAKUANDO WAS HERE
   }
   public MecanumDriveWheelSpeeds getSpeeds(){
     return new MecanumDriveWheelSpeeds(getFrontLeftPos(), getFrontRightPos(), getRearLeftPos(),getRearRightPos());
+  }
+  public void setSpeeds(double frontLeft,double frontRight,double backLeft,double backRight){
+    m_frontLeftSpark.set(frontLeft);
+    m_frontRightSpark.set(frontRight);
+    m_backLeftSpark.set(backLeft);
+    m_backRightSpark.set(backRight);
+    
   }
   public double getAngle() {
     return gyro.getAngle();
