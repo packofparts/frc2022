@@ -28,18 +28,14 @@ import frc.robot.commands.MoveBy;
 import frc.robot.commands.TurnBy;
 import frc.robot.commands.TimerCommand;
 import frc.robot.subsystems.DriveSubsystem;
-import frc.robot.subsystems.Limelight;
-import frc.robot.subsystems.Shooter;
-import frc.robot.subsystems.Tube;
-import frc.robot.subsystems.Shooter.ShooterMode;
-import frc.robot.subsystems.Tube.TubeMode;
 
 public class TrajectoryGeneration extends CommandBase {
   boolean isFinished = false;
   String trajectoryJSON = "paths/5ball+defence.wpilib.json";
   Trajectory trajectory = new Trajectory();
   DriveSubsystem drive;
-  double desiredTime [] = new double[] {1,3,4,5}; // change these values to key waypoints on the trajectory
+  double desiredTime [] = new double[] {1,3,4,5,-5}; // change these values to key waypoints on the trajectory
+  // -5 is a stopper number
   int temp = 0;
   HolonomicDriveController controller = new HolonomicDriveController(
     new PIDController(0, 0, 0), new PIDController(0, 0, 0),
@@ -59,19 +55,23 @@ public class TrajectoryGeneration extends CommandBase {
    } catch (IOException ex) {
       DriverStation.reportError("Unable to open trajectory: " + trajectoryJSON, ex.getStackTrace());
    }
-  }
+  } 
 
 
   @Override
   public void execute() {
     Trajectory.State goal = trajectory.sample(desiredTime[temp]);
-    ChassisSpeeds adjustedSpeeds = controller.calculate(
-      drive.getpose(), goal, Rotation2d.fromDegrees(70.0));
-    double vx = adjustedSpeeds.vxMetersPerSecond;
-    double vy = adjustedSpeeds.vyMetersPerSecond;
-    double rotation = adjustedSpeeds.omegaRadiansPerSecond;
-    drive.drive(vx,vy,rotation,false);
-    temp++;
+    if (desiredTime[temp]!= -5){
+      ChassisSpeeds adjustedSpeeds = controller.calculate(
+        drive.getpose(), goal, Rotation2d.fromDegrees(70.0));
+      double vx = adjustedSpeeds.vxMetersPerSecond;
+      double vy = adjustedSpeeds.vyMetersPerSecond;
+      double rotation = adjustedSpeeds.omegaRadiansPerSecond;
+      drive.drive(vx,vy,rotation,false);
+      temp++;
+    }
+    isFinished = true;
+
   }
 
   // Called once the command ends or is interrupted.
