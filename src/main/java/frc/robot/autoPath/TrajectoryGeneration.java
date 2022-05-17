@@ -20,6 +20,7 @@ import edu.wpi.first.math.trajectory.TrajectoryUtil;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
@@ -34,7 +35,7 @@ public class TrajectoryGeneration extends CommandBase {
   String trajectoryJSON = "paths/5ball+defence.wpilib.json";
   Trajectory trajectory = new Trajectory();
   DriveSubsystem drive;
-  double desiredTime [] = new double[] {1,3,4,5,-5}; // change these values to key waypoints on the trajectory
+  Timer sus = new Timer();
   // -5 is a stopper number
   int temp = 0;
   HolonomicDriveController controller = new HolonomicDriveController(
@@ -60,17 +61,13 @@ public class TrajectoryGeneration extends CommandBase {
 
   @Override
   public void execute() {
-    Trajectory.State goal = trajectory.sample(desiredTime[temp]);
-    if (desiredTime[temp]!= -5){
-      ChassisSpeeds adjustedSpeeds = controller.calculate(
-        drive.getpose(), goal, Rotation2d.fromDegrees(70.0));
-      double vx = adjustedSpeeds.vxMetersPerSecond;
-      double vy = adjustedSpeeds.vyMetersPerSecond;
-      double rotation = adjustedSpeeds.omegaRadiansPerSecond;
-      drive.drive(vx,vy,rotation,false);
-      temp++;
-    }
-    isFinished = true;
+    Trajectory.State goal = trajectory.sample(sus.get());
+    ChassisSpeeds adjustedSpeeds = controller.calculate(
+      drive.getpose(), goal, Rotation2d.fromDegrees(70.0));
+    double vx = adjustedSpeeds.vxMetersPerSecond;
+    double vy = adjustedSpeeds.vyMetersPerSecond;
+    double rotation = adjustedSpeeds.omegaRadiansPerSecond;
+    drive.drive(vx,vy,rotation,false);
 
   }
 
