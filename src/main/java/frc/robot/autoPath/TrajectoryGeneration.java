@@ -50,6 +50,7 @@ public class TrajectoryGeneration extends CommandBase {
   @Override
 
   public void initialize() {
+    sus.start();
     try {
       Path trajectoryPath = Filesystem.getDeployDirectory().toPath().resolve(trajectoryJSON);
       trajectory = TrajectoryUtil.fromPathweaverJson(trajectoryPath);
