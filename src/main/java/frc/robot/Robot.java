@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.AddressableLED;
+import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -28,6 +30,11 @@ import frc.robot.subsystems.Limelight.Pipeline;
 public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
   private RobotContainer m_robotContainer;
+  private AddressableLED m_led = new AddressableLED(11);
+
+  // Reuse buffer
+  // Default to a length of 60, start empty output
+  private AddressableLEDBuffer m_ledBuffer = new AddressableLEDBuffer(60);
   
   private SendableChooser<Pipeline> ballColor = new SendableChooser<>();
   private SendableChooser<Command> autoCommand = new SendableChooser<>();
@@ -56,6 +63,18 @@ public class Robot extends TimedRobot {
     autoCommand.addOption("Three Ball (Auto)", new ThreeBallAuto(m_robotContainer.drive, m_robotContainer.tube, m_robotContainer.shooter, m_robotContainer.limelight));
     
     SmartDashboard.putData("Auto Command", autoCommand);
+    // LED code
+
+    m_led.setLength(m_ledBuffer.getLength());
+
+    // Set the data
+    m_led.setData(m_ledBuffer);
+    m_led.start();
+    
+    for (var i = 0; i < m_ledBuffer.getLength(); i++) {
+      // Sets the specified LED to the RGB values for red
+      m_ledBuffer.setRGB(i, 255, 0, 0);
+   }
   }
 
   public Pipeline getBallColor() {
@@ -76,6 +95,9 @@ public class Robot extends TimedRobot {
     // and running subsystem periodic() methods.  This must be called from the robot's periodic
     // block in order for anything in the Command-based framework to work.
     CommandScheduler.getInstance().run();
+
+   
+   m_led.setData(m_ledBuffer);
   }
 
   /** This function is called once each time the robot enters Disabled mode. */
