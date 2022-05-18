@@ -19,12 +19,13 @@ import frc.robot.commands.MoveBy;
 public class Shooter extends SubsystemBase {
   /** Creates a new Shooter. */
   Joysticks joysticks;
-  TalonFX mainTalon = new TalonFX(IDs.flyWheelID);
-  TalonFX rollerTalon = new TalonFX(IDs.rollerID);
+  public TalonFX mainTalon = new TalonFX(IDs.flyWheelID);
+  public TalonFX rollerTalon = new TalonFX(IDs.rollerID);
   int shooterModeIndex = 0;
   ShooterMode shooterMode = ShooterMode.off;
   boolean shooterReady = true;
   boolean shooterScrollPressed = false;
+  public boolean isMusicPlaying = false;
   double setVelocityMain = 0;
   double setVelocityRoller = 0;
 
@@ -105,6 +106,7 @@ public class Shooter extends SubsystemBase {
   }
 
   public void runShooter() {
+   
     if (tuningRPM) {
       mainTalon.set(TalonFXControlMode.Velocity, SmartDashboard.getNumber("mainRoll", 0));
       rollerTalon.set(TalonFXControlMode.Velocity, SmartDashboard.getNumber("secondRoll", 0));
@@ -152,13 +154,16 @@ public class Shooter extends SubsystemBase {
       setVelocityMain = 0;
       setVelocityRoller = 0;
     }
-
-    if (setVelocityMain == 0) mainTalon.set(TalonFXControlMode.PercentOutput, 0);
-    else mainTalon.set(TalonFXControlMode.Velocity, setVelocityMain);
-
-    if (setVelocityRoller == 0) rollerTalon.set(TalonFXControlMode.PercentOutput, 0);
-    else rollerTalon.set(TalonFXControlMode.Velocity, setVelocityRoller);
-
+    if(!isMusicPlaying) {
+      if (setVelocityMain == 0) mainTalon.set(TalonFXControlMode.PercentOutput, 0);
+    
+      else mainTalon.set(TalonFXControlMode.Velocity, setVelocityMain);
+  
+      if (setVelocityRoller == 0) rollerTalon.set(TalonFXControlMode.PercentOutput, 0);
+      else rollerTalon.set(TalonFXControlMode.Velocity, setVelocityRoller);
+  
+    }
+    
     shooterReady = Math.abs(Math.abs(setVelocityMain)-Math.abs(mainTalon.getSelectedSensorVelocity())) <= Constants.shooterDeadzone &&
     Math.abs(Math.abs(setVelocityRoller)-Math.abs(rollerTalon.getSelectedSensorVelocity())) <= Constants.shooterDeadzone && 
                     setVelocityMain != 0 && setVelocityRoller != 0;

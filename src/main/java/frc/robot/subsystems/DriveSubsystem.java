@@ -51,7 +51,7 @@ public class DriveSubsystem extends SubsystemBase {
 
   // Creating my kinematics object using the wheel locations.
   MecanumDriveKinematics m_kinematics = new MecanumDriveKinematics(m_frontLeftLocation, m_frontRightLocation, m_backLeftLocation, m_backRightLocation);
-  MecanumDriveOdometry m_odometry = new MecanumDriveOdometry(m_kinematics, Rotation2d.fromDegrees(-getAngle()));
+  // MecanumDriveOdometry m_odometry = new MecanumDriveOdometry(m_kinematics, Rotation2d.fromDegrees(-getAngle()));
   String bruh = "Ask me who Joe is";
   AHRS initGyro;
   AHRS gyro;
@@ -186,7 +186,7 @@ sHAKUANDO WAS HERE
     drive();
 
     limelight.getHubDist();
-    pose = m_odometry.update(Rotation2d.fromDegrees(getAngle()),getSpeeds());
+    // pose = m_odometry.update(Rotation2d.fromDegrees(getAngle()),getSpeeds());
   }
 
   //drive with joystick inputs
@@ -426,9 +426,9 @@ sHAKUANDO WAS HERE
   public double getAngle() {
     return gyro.getAngle();
   }
-  public MecanumDriveOdometry getOdometry(){
-    return m_odometry;
-  }
+  // public MecanumDriveOdometry getOdometry(){
+  //   return m_odometry;
+  // }
   public MecanumDriveKinematics getKinematics(){
     return m_kinematics;
   }

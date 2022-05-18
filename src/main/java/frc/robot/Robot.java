@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import com.ctre.phoenix.schedulers.SequentialScheduler;
+
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj.TimedRobot;
@@ -18,6 +20,7 @@ import frc.robot.autoPath.ThreeBallAuto;
 import frc.robot.autoPath.TwoBallComplex;
 import frc.robot.autoPath.TwoBallSimple;
 import frc.robot.commands.MoveBy;
+import frc.robot.commands.PlayMusic;
 import frc.robot.commands.TurnBy;
 import frc.robot.subsystems.Limelight.Pipeline;
 
@@ -29,12 +32,12 @@ import frc.robot.subsystems.Limelight.Pipeline;
  */
 public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
-  private RobotContainer m_robotContainer;
-  private AddressableLED m_led = new AddressableLED(11);
+  public static RobotContainer m_robotContainer;
+  // private AddressableLED m_led = new AddressableLED(11);
 
   // Reuse buffer
   // Default to a length of 60, start empty output
-  private AddressableLEDBuffer m_ledBuffer = new AddressableLEDBuffer(60);
+  // private AddressableLEDBuffer m_ledBuffer = new AddressableLEDBuffer(100);
   
   private SendableChooser<Pipeline> ballColor = new SendableChooser<>();
   private SendableChooser<Command> autoCommand = new SendableChooser<>();
@@ -64,7 +67,7 @@ public class Robot extends TimedRobot {
     
     SmartDashboard.putData("Auto Command", autoCommand);
     // LED code
-
+    /**
     m_led.setLength(m_ledBuffer.getLength());
 
     // Set the data
@@ -73,8 +76,8 @@ public class Robot extends TimedRobot {
     
     for (var i = 0; i < m_ledBuffer.getLength(); i++) {
       // Sets the specified LED to the RGB values for red
-      m_ledBuffer.setRGB(i, 255, 0, 0);
-   }
+      m_ledBuffer.setRGB(i, 55, 100, 100);
+   } */
   }
 
   public Pipeline getBallColor() {
@@ -97,7 +100,7 @@ public class Robot extends TimedRobot {
     CommandScheduler.getInstance().run();
 
    
-   m_led.setData(m_ledBuffer);
+  //  m_led.setData(m_ledBuffer);
   }
 
   /** This function is called once each time the robot enters Disabled mode. */
@@ -156,7 +159,11 @@ public class Robot extends TimedRobot {
 
   /** This function is called periodically during operator control. */
   @Override
-  public void teleopPeriodic() {}
+  public void teleopPeriodic() {
+    if(m_robotContainer.joysticks.getMusicButton()) {
+      CommandScheduler.getInstance().schedule(new PlayMusic());
+    }
+  }
 
   @Override
   public void testInit() {

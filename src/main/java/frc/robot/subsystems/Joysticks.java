@@ -22,6 +22,7 @@ public class Joysticks {
   public boolean getLimeLightAlignPressed() {return driveJoystickMain.getRawButtonPressed(3);}
   public boolean getLimeLightAlignReleased() {return driveJoystickMain.getRawButtonReleased(3);}
   public boolean getRobotOrientedToggle() {return driveJoystickMain.getRawButton(1);}
+  
   public boolean getGyroResetButton() {return driveJoystickMain.getRawButtonPressed(8);}
   public boolean getEncoderResetButton() {return driveJoystickMain.getRawButtonPressed(9);}
 
@@ -38,6 +39,9 @@ public class Joysticks {
   public boolean getDDecrease() {return driveJoystickSide.getRawButtonReleased(10);}
   public boolean getPIDLeft() {return driveJoystickSide.getRawButton(4);}
   public boolean getPIDRight() {return driveJoystickSide.getRawButton(5);}
+
+
+ 
 
 
   //operator controls
@@ -70,4 +74,13 @@ public class Joysticks {
   public boolean getShooterScrollLeft() {return operatorController.getPOV() == 270;}
   public boolean getShooterScrollDown() {return operatorController.getPOV() == 180;}
   public boolean getShooterToggle() {return operatorController.getAButtonPressed();}
+
+   //Music controls
+  public boolean getMusicButton() {
+    return driveJoystickMain.getRawButtonPressed(2);
+  }
+  public boolean getEndMusicButton() {
+    return driveJoystickMain.getRawButtonPressed(3);
+  }
+   
 }
