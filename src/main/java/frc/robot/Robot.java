@@ -66,6 +66,9 @@ public class Robot extends TimedRobot {
     autoCommand.addOption("turnBy 180", new TurnBy(m_robotContainer.drive, 180));
     autoCommand.addOption("Three Ball (Auto)", new ThreeBallAuto(m_robotContainer.drive, m_robotContainer.tube, m_robotContainer.shooter, m_robotContainer.limelight));
     autoCommand.addOption("SUsYeet", new TrajectoryGeneration(m_robotContainer.drive));
+
+    SmartDashboard.putData("Auto Command", autoCommand);
+    
     // LED code
     /**
     m_led.setLength(m_ledBuffer.getLength());
@@ -133,9 +136,9 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during autonomous. */
   @Override
   public void autonomousPeriodic() {
-    // if (!m_autonomousCommand.isFinished() && !m_autonomousCommand.isScheduled()) {
-    //   m_autonomousCommand.schedule();
-    // }
+    //if (!m_autonomousCommand.isFinished() && !m_autonomousCommand.isScheduled()) {
+       //m_autonomousCommand.schedule();
+    //}
   }
 
   @Override
