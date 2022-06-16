@@ -35,6 +35,7 @@ public class TrajectoryGeneration extends CommandBase {
   String trajectoryJSON = "paths/5ball+defence.wpilib.json";
   Trajectory trajectory = new Trajectory();
   DriveSubsystem drive;
+  Trajectory.State goal;
   Timer sus = new Timer();
   // -5 is a stopper number
   int temp = 0;
@@ -57,25 +58,32 @@ public class TrajectoryGeneration extends CommandBase {
    } catch (IOException ex) {
       DriverStation.reportError("Unable to open trajectory: " + trajectoryJSON, ex.getStackTrace());
    }
+   Trajectory.State goal = trajectory.sample(0);
   } 
 
 
   @Override
   public void execute() {
-    Trajectory.State goal = trajectory.sample(sus.get());
-    ChassisSpeeds adjustedSpeeds = controller.calculate(
-      drive.getpose(), goal, Rotation2d.fromDegrees(70.0));
-    double vx = adjustedSpeeds.vxMetersPerSecond;
-    double vy = adjustedSpeeds.vyMetersPerSecond;
-    double rotation = adjustedSpeeds.omegaRadiansPerSecond;
-    drive.drive(vx,vy,rotation,false);
-
+    if (sus.get()< 8.75){
+      Trajectory.State goal = trajectory.sample(sus.get());
+      ChassisSpeeds adjustedSpeeds = controller.calculate(
+        drive.getpose(), goal, Rotation2d.fromDegrees(70.0));
+      double vx = adjustedSpeeds.vxMetersPerSecond;
+      double vy = adjustedSpeeds.vyMetersPerSecond;
+      double rotation = adjustedSpeeds.omegaRadiansPerSecond;
+      drive.drive(vx,vy,rotation,false);
+      System.out.println(" goal "+ goal);
+    }else{
+      end(false);
+    }
+    
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-
+    sus.stop();
+    sus.reset();
   }
 
   // Returns true when the command should end.
