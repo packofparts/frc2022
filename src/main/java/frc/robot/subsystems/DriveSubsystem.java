@@ -75,7 +75,7 @@ public class DriveSubsystem extends SubsystemBase {
     /*
 sHAKUANDO WAS HERE
     */
-    CameraServer.getInstance().startAutomaticCapture();
+    CameraServer.startAutomaticCapture();
     //CameraServer.getInstance().startAutomaticCapture();
 
     this.joysticks = joysticks;
