@@ -31,14 +31,17 @@ public class Camera extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-
+    Mat orImage = Imgcodecs.imread("rage.jpeg");
     List<Mat> colors = new ArrayList<Mat>();
-    cvSink.grabFrame(img);
-    Core.split(img,colors);
+    //cvSink.grabFrame(orImage);
+    Core.split(orImage,colors);
     Mat sheesh[] = new Mat[colors.size()]; 
     colors.toArray(sheesh);
     Mat BlueMask = sheesh[0];
     Mat RedMask = sheesh[2];
+    HighGui.imshow("BlueBalls", BlueMask);
+    HighGui.imshow("RedBalls", RedMask);
+    HighGui.waitKey();
     
 
 
