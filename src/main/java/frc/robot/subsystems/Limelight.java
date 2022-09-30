@@ -18,10 +18,14 @@ public class Limelight {
     switch(pipeline) {
       case drive:
         table.getEntry("pipeline").setNumber(0);
+
+        // cammode 1 is drive camera
         table.getEntry("camMode").setNumber(1);
         break;
       case hub:
         table.getEntry("pipeline").setNumber(3);
+
+        // cammode 2 is budget open cv
         table.getEntry("camMode").setNumber(0);
         break;
     }

@@ -59,7 +59,6 @@ public class DriveSubsystem extends SubsystemBase {
   final boolean useGyroHold = false;
   final boolean usingXboxController = false;
   final boolean tuningPID = false;
-
   Limelight limelight;
   LimelightAlign align;
 
@@ -235,7 +234,7 @@ public class DriveSubsystem extends SubsystemBase {
     m_frontLeftSpark.getEncoder().setPosition(0);
     m_frontRightSpark.getEncoder().setPosition(0);
     m_backLeftSpark.getEncoder().setPosition(0);
-    m_backRightSpark.getEncoder().setPosition(0);
+     m_backRightSpark.getEncoder().setPosition(0);
   }
 
   public void resetGyro() {

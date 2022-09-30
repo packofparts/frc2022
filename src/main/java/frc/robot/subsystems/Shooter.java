@@ -111,8 +111,8 @@ public class Shooter extends SubsystemBase {
       return;
     }
     else if (shooterMode == ShooterMode.normal) {
-      setVelocityMain = 5200;//7000//6000;//5100;//5600;//5200;//6400;
-      setVelocityRoller = -4600-rpmOffset;//-3600//-2000;//-4650;//-4300;//-4600;//-4200;
+      setVelocityMain = 6880;//7000//6000;//5100;//5600;//5200;//6400;
+      setVelocityRoller = -3345-rpmOffset;//-3600//-2000;//-4650;//-4300;//-4600;//-4200;
     }
     else if (shooterMode == ShooterMode.normalLess) {
       setVelocityMain = 5200;
