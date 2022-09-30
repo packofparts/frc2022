@@ -25,7 +25,7 @@ public class Shooter extends SubsystemBase {
 
   final double rpmDiff = 200;
   double rpmOffset = -400;
-
+ //gaming starts here 
   final boolean tuningRPM = false;
   final ShooterMode[] modes = new ShooterMode[] 
   {ShooterMode.normal};
